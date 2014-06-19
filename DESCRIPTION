@@ -1,0 +1,12 @@
+Package: fitR
+Title: Tool box for fitting dynamic infectious disease models to time series.
+Version: 0.1
+Authors@R: c(person(given="Anton", family="Camacho", email="ntncmch@gmail.com",
+    role=c("aut","cre")),person(given="Sebastian", family="Funk",
+    email="sebastian.funk@lshtm.ac.uk", role=c("aut","cre")))
+Description: This package contains helper functions for model fitting and inference
+Depends:
+    R (>= 3.0.2),deSolve,adaptivetau,ggplot2,reshape2,plyr,tmvtnorm,parallel,doParallel,lubridate
+License: GPL-2
+LazyData: true
+Roxygen: list(wrap = FALSE)
