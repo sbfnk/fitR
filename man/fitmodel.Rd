@@ -18,7 +18,7 @@ fitmodel(name = NULL, state.names = NULL, theta.names = NULL,
 \itemize{
 \item \code{theta} named numeric vector. Parameter values.
 \item \code{state.init} named numeric vector. Initial state of the model.
-\item \code{times} numeric vector. Time sequence for which state of the model is wanted; the first value of times must be the initial time, i.e. the time of \code{initial.state}.
+\item \code{times} numeric vector. Time sequence for which state of the model is wanted; the first value of times must be the initial time, i.e. the time of \code{state.init}.
 }
 and returns a \code{data.fame} containing the simulated trajectories that is the values of the state variables (1 per column) at each observation time (1 per row). The first column is \code{time}.}
 
@@ -70,7 +70,7 @@ SIR_simulateDeterministic <- function(theta,state.init,times) {
 
                 ## parameters
                 beta <- parameters[["R0"]] / parameters[["infectious.period"]]
-                gamma <- 1 / parameters[["infectious.period"]]
+                nu <- 1 / parameters[["infectious.period"]]
 
                 ## states
                 S <- state[["S"]]
@@ -80,8 +80,8 @@ SIR_simulateDeterministic <- function(theta,state.init,times) {
                 N <- S + I + R
 
                 dS <- -beta * S * I/N
-                dI <- beta * S * I/N-gamma * I
-                dR <- gamma * I
+                dI <- beta * S * I/N - nu * I
+                dR <- nu * I
 
                 return(list(c(dS, dI, dR)))
         }

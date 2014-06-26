@@ -57,3 +57,43 @@ targetPosteriorABC <- function(theta,fitmodel,epsilon) {
 	return(list(log.dist=theta.log.posterior, trace=c(theta,logPrior=theta.logPrior,distance.ABC=theta.dist.ABC,log.posterior=theta.log.posterior)))
 
 }
+
+
+#'ABC distance with oscillations
+#'
+#'This positive distance is the mean squared differences between the simulation and the observation, divided by the square of the number of times the simulation oscillates around the observation.
+#' @param simu.traj.obs \code{data.frame} of simulated trajectory with observation, as returned by \code{\link{SEITL_generateObservation}}.
+#' @param data \code{data.frame} of times and observations. Must have two columns: \code{time} and \code{Inc}.
+#' @export
+#' @seealso distanceOscillation
+#' @examples \dontrun{
+#' # Suppose we observed a time series:
+#' data <- data.frame(time=1:7,Inc=c(1,3,5,7,5,3,1))
+#' # and we have two simulated time series:
+#' traj1 <- data.frame(time=1:7,observation=c(3,5,7,9,7,5,3))
+#' traj2 <- data.frame(time=1:7,observation=c(3,5,3,5,7,5,3))
+#' # traj1 is consistently above data and traj2 oscillates around data:
+#' plot(data$time,data$Inc,t='l',ylim=c(0,10))
+#' lines(traj1$time,traj1$observation,col="red")
+#' lines(traj2$time,traj2$observation,col="blue")
+#' # While the squared differences are the same, we obtain a smaller distance for traj2:
+#' d1 <- SEITL_distanceOscillation(traj1,data)
+#' # d1 = 4
+#' d2 <- SEITL_distanceOscillation(traj2,data)
+#' # d2 = 1.3
+#'}
+SEITL_distanceOscillation <- function(simu.traj.obs, data) {
+
+	# match model and data on time
+	keep.time <- intersect(simu.traj.obs$time,data$time)
+	simu.traj.obs <- subset(simu.traj.obs,time%in%keep.time)
+	data <- subset(data,time%in%keep.time)
+	
+	x <- simu.traj.obs$observation
+	y <- data$Inc
+
+	return(distanceOscillation(x,y))
+}
+
+
+

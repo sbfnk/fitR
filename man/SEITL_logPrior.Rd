@@ -3,19 +3,16 @@
 \alias{SEITL_logPrior}
 \title{Log-prior for SEITL model}
 \usage{
-SEITL_logPrior(list.fitparam)
+SEITL_logPrior(theta)
 }
 \arguments{
-\item{list.fitparam}{list of \code{fitparam} objects.}
+\item{theta}{named numeric vector. Parameter values. Must include the following parameters: "R0", "LP", "IP", "alpha", "TIP" and "rho"}
 }
 \value{
 the value of the log-prior.
 }
 \description{
-Compute the log of the prior density distribution for the parameter set \code{theta}, by composing the univariate priors of all estimated theta.
-}
-\note{
-This function returns \code{-Inf} if the sum of all compartments is higher than the population size N.
+Evaluate the log of the prior density distribution of the parameter values \code{theta}.
 }
 \seealso{
 fitmodel, compositeLogPrior

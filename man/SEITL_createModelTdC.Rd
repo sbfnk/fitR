@@ -3,10 +3,10 @@
 \alias{SEITL_createModelTdC}
 \title{Create the SEITL model as a fitmodel object}
 \usage{
-SEITL_createModelTdC(deterministic = TRUE, verbose = TRUE)
+SEITL_createModelTdC(simulate = c("deterministic", "stochastic"))
 }
 \arguments{
-\item{deterministic}{if \code{TRUE} then the model will be deterministic, and stochastic otherwise.}
+\item{simulate}{character. Either \code{"deterministic"} or \code{"stochastic"}.}
 }
 \value{
 a fitmodel object

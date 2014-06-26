@@ -32,7 +32,7 @@ SIR_simulateDeterministic <- function(theta,state.init,times) {
 
                 ## parameters
                 beta <- parameters[["R0"]] / parameters[["infectious.period"]]
-                gamma <- 1 / parameters[["infectious.period"]]
+                nu <- 1 / parameters[["infectious.period"]]
 
                 ## states
                 S <- state[["S"]]
@@ -42,8 +42,8 @@ SIR_simulateDeterministic <- function(theta,state.init,times) {
                 N <- S + I + R
 
                 dS <- -beta * S * I/N
-                dI <- beta * S * I/N-gamma * I
-                dR <- gamma * I
+                dI <- beta * S * I/N - nu * I
+                dR <- nu * I
 
                 return(list(c(dS, dI, dR)))
         }

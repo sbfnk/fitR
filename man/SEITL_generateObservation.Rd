@@ -6,9 +6,9 @@
 SEITL_generateObservation(simu.traj, theta)
 }
 \arguments{
-\item{simu.traj}{simulated trajectory, as returned by \code{\link{SEITL_simulateDeterministic}} or \code{\link{SEITL_simulateStochastic}}.}
+\item{simu.traj}{data frame returned by \code{\link{SEITL_simulateDeterministic}} or \code{\link{SEITL_simulateStochastic}}}
 
-\item{theta}{named vector of parameters for the SEITL model.}
+\item{theta}{named numeric vector. Parameter values. Must include the following parameters: "R0", "LP", "IP", "alpha", "TIP" and "rho"}
 }
 \value{
 the \code{simu.traj} data.frame with an additional variable: "observation".
@@ -17,6 +17,6 @@ the \code{simu.traj} data.frame with an additional variable: "observation".
 Generate a daily incidence time serie under a Poisson observation process.
 }
 \seealso{
-SEITL_likelihood
+\code{\link{SEITL_simulateDeterministic}}, \code{\link{SEITL_simulateStochastic}}
 }
 

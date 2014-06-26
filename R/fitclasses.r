@@ -8,7 +8,7 @@
 #' \itemize{
 #' \item \code{theta} named numeric vector. Parameter values.
 #' \item \code{state.init} named numeric vector. Initial state of the model.
-#' \item \code{times} numeric vector. Time sequence for which state of the model is wanted; the first value of times must be the initial time, i.e. the time of \code{initial.state}.
+#' \item \code{times} numeric vector. Time sequence for which state of the model is wanted; the first value of times must be the initial time, i.e. the time of \code{state.init}.
 #' }
 #' and returns a \code{data.fame} containing the simulated trajectories that is the values of the state variables (1 per column) at each observation time (1 per row). The first column is \code{time}.
 #' @param generateObservation \R-function that generates simulated data from a simulated trajectory using an observation model (optional). This function takes 2 arguments:

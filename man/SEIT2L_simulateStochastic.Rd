@@ -6,19 +6,23 @@
 SEIT2L_simulateStochastic(theta, state.init, times)
 }
 \arguments{
-\item{theta}{named vector of parameters for the SEIT2L model.}
+\item{theta}{named numeric vector. Parameter values. Must include the following parameters: "R0", "LP", "IP", "alpha", "TIP" and "rho"}
 
-\item{state.init}{a named vector with the initial state values for the SEIT2L model.}
+\item{state.init}{named numeric vector. Initial state of the SEIT2L model. Must include the following states: "S", "E", "I", "T1", "T2", "L" and "Inc".}
 
-\item{times}{time sequence for which output is wanted; the first value of \code{times} must be the initial time.}
+\item{times}{numeric vector. Time sequence for which state of the model is wanted; the first value of times must be the initial time, i.e. the time of \code{state.init}.}
 }
 \value{
-a \code{data.fame} containing the values of the state variables (columns) at each observation times (rows).
+a \code{data.fame} containing the simulated trajectories that is the values of the state variables (1 per column) at each observation time (1 per row). The first column is \code{time}.
 }
 \description{
-Simulate realisation of the stochastic version of the SEIT2L model using the \code{simulateModelStochastic} function.
+Simulate realisation of the stochastic version of the SEIT2L model using the \code{\link{simulateModelStochastic}} function.
+}
+\note{
+The incidence \code{state.init[["Inc"]]} will be set to 0 at the start of the simulation and computed for each time interval of the vector \code{times}.
+For instance, if \code{times} contains daily time steps, then the returned data frame will contain daily incidence.
 }
 \seealso{
-fitmodel, simulateModelStochastic
+\code{\link{fitmodel}}, \code{\link{simulateModelStochastic}}
 }
 
