@@ -3,15 +3,15 @@
 \alias{SEIT2L_generateObservation}
 \title{Generate an observed incidence time series}
 \usage{
-SEIT2L_generateObservation(model.traj, theta)
+SEIT2L_generateObservation(simu.traj, theta)
 }
 \arguments{
-\item{model.traj}{simulated trajectory, as returned by \code{\link{SEIT2L_simulateDeterministic}} or \code{\link{SEIT2L_simulateStochastic}}.}
+\item{simu.traj}{simulated trajectory, as returned by \code{\link{SEIT2L_simulateDeterministic}} or \code{\link{SEIT2L_simulateStochastic}}.}
 
 \item{theta}{named vector of parameters for the SEIT2L model.}
 }
 \value{
-the \code{model.traj} data.frame with an additional variable: "observation".
+the \code{simu.traj} data.frame with an additional variable: "observation".
 }
 \description{
 Generate a daily incidence time serie under a Poisson observation process.

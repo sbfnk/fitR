@@ -36,7 +36,7 @@ mcmcMH(target, target.args, theta.init, gaussian.proposal = list(covmat =
 
 \item{print.info.every}{frequency of information on the chain: acceptance rate and state of the chain. Default value to \code{n.iterations/100}. Set to \code{NULL} to avoid any info.}
 
-\item{...}{other arguments to be passed to function \code{log.likelihood}.}
+\item{...}{other arguments to be passed to function \code{logLikePoint}.}
 }
 \value{
 a list with 3 elements:
@@ -50,8 +50,8 @@ a list with 3 elements:
 Run \code{n.iterations} of a Metropolis-Hasting MCMC to sample from the target distribution using a gaussian proposal kernel, possibly truncated.
 }
 \note{
-By specifying \code{log.likelihood}, this function offers the possibility to run a MCMC independently of the method used for likelihood computation.
-Although for a deterministic model \code{log.likelihood} is quite straightforward, fitting a stochastic model will require a call to a SMC algorithm to evaluate the log-likelihood.
+By specifying \code{logLikePoint}, this function offers the possibility to run a MCMC independently of the method used for likelihood computation.
+Although for a deterministic model \code{logLikePoint} is quite straightforward, fitting a stochastic model will require a call to a SMC algorithm to evaluate the log-likelihood.
 Finally, this function can also implement an ABC procedure to decide whether to accept or reject the parameter set.
 
 The size of the proposal covariance matrix is adapted using the following formulae: \deqn{\Sigma_{n+1}=\sigma_n * \Sigma_n} with \eqn{\sigma_n=\sigma_{n-1}*exp(\alpha^n*(acc - 0.234))},

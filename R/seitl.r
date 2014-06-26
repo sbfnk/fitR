@@ -85,7 +85,11 @@ SEITL_simulateDeterministic <- function(theta,state.init,times) {
 	}
 
 
+	# put incidence at 0 in state.init
+
 	traj <- as.data.frame(ode(state.init, times, SEITL_ode, theta))
+
+	# compute daily incidence here
 
 	return(traj)
 
@@ -100,6 +104,7 @@ SEITL_simulateDeterministic <- function(theta,state.init,times) {
 #' @return a \code{data.fame} containing the values of the state variables (columns) at each observation times (rows). 
 SEITL_simulateStochastic <- function(theta,state.init,times) {
 
+	
 	SEITL_transitions <- list(
 		c(S=-1,E=1),# infection
 		c(E=-1,I=1,Inc=1),# infectiousness + incidence
@@ -136,7 +141,13 @@ SEITL_simulateStochastic <- function(theta,state.init,times) {
 		)
 	}
 
-	return(simulateModelStochastic(theta,state.init,times,SEITL_transitions,SEITL_rateFunc))
+	# put incidence at 0 in state.init
+
+	traj <- simulateModelStochastic(theta,state.init,times,SEITL_transitions,SEITL_rateFunc) 
+	
+	# compute daily incidence here
+
+	return(traj)
 
 }
 
@@ -144,20 +155,20 @@ SEITL_simulateStochastic <- function(theta,state.init,times) {
 #'Likelihood of the data for SEITL model
 #'
 #'Computes the log-likelihood of a subset of the data for a fixed trajectory and under a poisson observation process.
-#' @param data subset of the \code{\link{FluTdC1971}} dataset that contains the observations corresponding to \code{model.traj}.
-#' @param model.traj simulated trajectory, as returned by \code{\link{SEITL_simulateDeterministic}} or \code{\link{SEITL_simulateStochastic}}.
+#' @param data subset of the \code{\link{FluTdC1971}} dataset that contains the observations corresponding to \code{simu.traj}.
+#' @param simu.traj simulated trajectory, as returned by \code{\link{SEITL_simulateDeterministic}} or \code{\link{SEITL_simulateStochastic}}.
 #' @inheritParams SEITL_initialiseState
 #' @note This function can be used to compute the likelihood of the data given a deterministic trajectory or the weight of a SMC particle at a given observation time.
 #' @export
 #' @seealso SEITL_generateObservation
 #' @return the log-likelihood value.
-SEITL_logLikelihood <- function(data, theta, model.traj){
+SEITL_logLikelihood <- function(data, theta, simu.traj){
 
 	# daily incidence needed
-	daily.incidence <- diff(model.traj$Inc)
+	daily.incidence <- diff(simu.traj$Inc)
 
 	# keep only data incidence corresponding to simulated times
-	data <- subset(data,time%in%model.traj$time[-1]) # [-1] to remove initial simulation time
+	data <- subset(data,time%in%simu.traj$time[-1]) # [-1] to remove initial simulation time
 
 	x <- sum(dpois(x=data$Inc,lambda=theta[["rho"]]*daily.incidence,log=TRUE))
 
@@ -172,24 +183,24 @@ SEITL_logLikelihood <- function(data, theta, model.traj){
 #' @inheritParams SEITL_initialiseState
 #' @export
 #' @seealso SEITL_likelihood
-#' @return the \code{model.traj} data.frame with an additional variable: "observation".
-SEITL_generateObservation <- function(model.traj, theta){
+#' @return the \code{simu.traj} data.frame with an additional variable: "observation".
+SEITL_generateObservation <- function(simu.traj, theta){
 
 	# daily incidence needed
-	daily.incidence <- diff(model.traj$Inc)
+	daily.incidence <- diff(simu.traj$Inc)
 
 	x <- rpois(length(daily.incidence),lambda=theta[["rho"]]*daily.incidence)
 
-	model.traj$observation <- c(0,x)
+	simu.traj$observation <- c(0,x)
 
-	return(model.traj)
+	return(simu.traj)
 }
 
 
 #'ABC distance with oscillations
 #'
 #'This positive distance is the mean squared differences between the simulation and the observation, divided by the square of the number of times the simulation oscillates around the observation.
-#' @param model.traj.obs \code{data.frame} of simulated trajectory with observation, as returned by \code{\link{SEITL_generateObservation}}.
+#' @param simu.traj.obs \code{data.frame} of simulated trajectory with observation, as returned by \code{\link{SEITL_generateObservation}}.
 #' @param data \code{data.frame} of times and observations. Must have two columns: \code{time} and \code{Inc}.
 #' @export
 #' @seealso distanceOscillation
@@ -209,14 +220,14 @@ SEITL_generateObservation <- function(model.traj, theta){
 #' d2 <- SEITL_distanceOscillation(traj2,data)
 #' # d2 = 1.3
 #'}
-SEITL_distanceOscillation <- function(model.traj.obs, data) {
+SEITL_distanceOscillation <- function(simu.traj.obs, data) {
 
 	# match model and data on time
-	keep.time <- intersect(model.traj.obs$time,data$time)
-	model.traj.obs <- subset(model.traj.obs,time%in%keep.time)
+	keep.time <- intersect(simu.traj.obs$time,data$time)
+	simu.traj.obs <- subset(simu.traj.obs,time%in%keep.time)
 	data <- subset(data,time%in%keep.time)
 	
-	x <- model.traj.obs$observation
+	x <- simu.traj.obs$observation
 	y <- data$Inc
 
 	return(distanceOscillation(x,y))
@@ -258,23 +269,23 @@ SEITL_createModelTdC <- function(deterministic=TRUE, verbose=TRUE) {
 
 	# simulator
 	if(deterministic){
-		simulate.model <- SEITL_simulateDeterministic
+		simulateTraj <- SEITL_simulateDeterministic
 	}else{
-		simulate.model <- SEITL_simulateStochastic
+		simulateTraj <- SEITL_simulateStochastic
 	}
 
 	# create fitmodel
 	SEITL <- fitmodel(
 		verbose=verbose,
 		name="SEITL",
-		state.variables=c("S","E","I","T","L","Inc"),
+		state.names=c("S","E","I","T","L","Inc"),
 		list.fitparam=list(R0,LatentPeriod,InfectiousPeriod,TemporaryImmunePeriod,ProbLongTermImmunity,ReportingRate,proportionI0,proportionL0,PopSize), 
 		initialise.state=SEITL_initialiseState,
-		log.prior.fitparam=SEITL_logPrior,
-		simulate.model=simulate.model, 
-		generate.observation=SEITL_generateObservation, 
+		logPrior.fitparam=SEITL_logPrior,
+		simulateTraj=simulateTraj, 
+		generateObservation=SEITL_generateObservation, 
 		data=data, 
-		log.likelihood=SEITL_logLikelihood,
+		logLikePoint=SEITL_logLikelihood,
 		distance.ABC=SEITL_distanceOscillation
 		) 
 

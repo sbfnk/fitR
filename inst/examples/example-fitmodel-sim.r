@@ -90,16 +90,16 @@ SIR_simulateStochastic <- function(theta,state.init,times) {
 
 }
 
-SIR_generateObservation <- function(model.traj, theta){
+SIR_generateObservation <- function(simu.traj, theta){
 
 	# daily incidence needed
-	daily.incidence <- diff(model.traj$Inc)
+	daily.incidence <- diff(simu.traj$Inc)
 
 	x <- rpois(length(daily.incidence),lambda=theta[["rho"]]*daily.incidence)
 
-	model.traj$observation <- c(0,x)
+	simu.traj$observation <- c(0,x)
 
-	return(model.traj)
+	return(simu.traj)
 }
 
 # function to compute log-prior
@@ -118,13 +118,13 @@ SIR_logPrior <- function(list.fitparam) {
 # TODO: use SIR mock data set
 data <- data.frame(time=1,Inc=0)
 
-SIR_logLikelihood <- function(data, theta, model.traj){
+SIR_logLikelihood <- function(data, theta, simu.traj){
 
 	# daily incidence needed
-	daily.incidence <- diff(model.traj$Inc)
+	daily.incidence <- diff(simu.traj$Inc)
 
 	# keep only data incidence corresponding to simulated times
-	data <- subset(data,time%in%model.traj$time[-1]) # [-1] to remove initial simulation time
+	data <- subset(data,time%in%simu.traj$time[-1]) # [-1] to remove initial simulation time
 
         x <- sum(dpois(x=data$cases,lambda=(theta[["rho"]]*daily.incidence),log=TRUE))
 
@@ -133,12 +133,12 @@ SIR_logLikelihood <- function(data, theta, model.traj){
 
 modelPosterior <- function(fitmodel) {
   return(function(theta) {
-    prior <- fitmodel$log.prior(theta)
+    prior <- fitmodel$logPrior(theta)
 
     state.init <- fitmodel$initialise.state(theta)
 
-    trajectory <- fitmodel$simulate.model(theta, state.init, fitmodel$data$time)
-    likelihood <- fitmodel$log.likelihood(fitmodel$data, theta, trajectory)
+    trajectory <- fitmodel$simulateTraj(theta, state.init, fitmodel$data$time)
+    likelihood <- fitmodel$logLikePoint(fitmodel$data, theta, trajectory)
 
     return(list(log.dist = prior + likelihood))
 
@@ -147,14 +147,14 @@ modelPosterior <- function(fitmodel) {
 
 SIR <- fitmodel(
 	name="SIR",
-	state.variables=c("S","I","R","Inc"),
+	state.names=c("S","I","R","Inc"),
 	list.fitparam=list(R0,InfectiousPeriod,ReportingRate,nI0,proportionR0,PopSize),
 	initialise.state=SIR_initialiseState,
-	log.prior.fitparam=SIR_logPrior,
-	simulate.model=SIR_simulateDeterministic,
-	generate.observation=SIR_generateObservation,
+	logPrior.fitparam=SIR_logPrior,
+	simulateTraj=SIR_simulateDeterministic,
+	generateObservation=SIR_generateObservation,
 	data=measles,
-	log.likelihood=SIR_logLikelihood)
+	logLikePoint=SIR_logLikelihood)
 
 
 SIR_posterior <- modelPosterior(SIR)
@@ -175,7 +175,7 @@ theta["pR0"] <- median(mcmc.res$trace[n > burn_in]$theta.pR0)
 theta["N"] <- median(mcmc.res$trace[n > burn_in]$theta.N)
 theta["rho"] <- median(mcmc.res$trace[n > burn_in]$theta.rho)
 
-trajectory <- SIR$simulate.model(theta, SIR_initialiseState(theta), seq_len(nrow(measles) + 1))
+trajectory <- SIR$simulateTraj(theta, SIR_initialiseState(theta), seq_len(nrow(measles) + 1))
 trajectory$cases <- c(diff(trajectory$Inc), 0)
 
 trajectory <- trajectory[-nrow(trajectory),  ]

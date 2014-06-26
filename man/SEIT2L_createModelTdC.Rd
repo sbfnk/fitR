@@ -7,8 +7,6 @@ SEIT2L_createModelTdC(deterministic = TRUE, verbose = TRUE)
 }
 \arguments{
 \item{deterministic}{if \code{TRUE} then the model will be deterministic, and stochastic otherwise.}
-
-\item{verbose}{if \code{TRUE}, print details of the test performed to check validity of the arguments}
 }
 \value{
 a fitmodel object

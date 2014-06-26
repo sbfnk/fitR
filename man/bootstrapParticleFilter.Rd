@@ -18,7 +18,7 @@ bootstrapParticleFilter(fitmodel, n.particles, progress = FALSE,
 \value{
 A list of 3 elements:
 \itemize{
-\item \code{log.likelihood} the marginal log-likelihood of the theta.
+\item \code{logLikePoint} the marginal log-likelihood of the theta.
 \item \code{traj} a list of size \code{n.particles} with all filtered trajectories.
 \item \code{traj.weight} a vector of size \code{n.particles} with the normalised weight of the filtered trajectories.
 }

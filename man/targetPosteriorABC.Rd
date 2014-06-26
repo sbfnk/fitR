@@ -16,7 +16,7 @@ targetPosteriorABC(theta, fitmodel, epsilon)
 a list of two elements
 \itemize{
 	\item \code{log.dist} numeric, logged value of the ABC posterior distribution evaluated at \code{theta}
-	\item \code{trace} named vector with trace information (theta, log.prior, distance.ABC, log.posterior)
+	\item \code{trace} named vector with trace information (theta, logPrior, distance.ABC, log.posterior)
 }
 }
 \description{

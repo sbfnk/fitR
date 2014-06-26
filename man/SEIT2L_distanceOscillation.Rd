@@ -3,10 +3,10 @@
 \alias{SEIT2L_distanceOscillation}
 \title{ABC distance with oscillations}
 \usage{
-SEIT2L_distanceOscillation(model.traj.obs, data)
+SEIT2L_distanceOscillation(simu.traj.obs, data)
 }
 \arguments{
-\item{model.traj.obs}{\code{data.frame} of simulated trajectory with observation, as returned by \code{\link{SEIT2L_generateObservation}}.}
+\item{simu.traj.obs}{\code{data.frame} of simulated trajectory with observation, as returned by \code{\link{SEIT2L_generateObservation}}.}
 
 \item{data}{\code{data.frame} of times and observations. Must have two columns: \code{time} and \code{Inc}.}
 }

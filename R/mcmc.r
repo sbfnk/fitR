@@ -19,10 +19,10 @@
 #' @param adapt.size.cooling cooling factor for the scaling factor of the covariance matrix during size adaptation (see note below).
 #' @param adapt.shape.start number of accepted jumps before adapting the shape of the proposal covariance matrix (see note below).
 #' @param print.info.every frequency of information on the chain: acceptance rate and state of the chain. Default value to \code{n.iterations/100}. Set to \code{NULL} to avoid any info.
-#' @param ... other arguments to be passed to function \code{log.likelihood}.
+#' @param ... other arguments to be passed to function \code{logLikePoint}.
 #' @inheritParams marginalLogLikelihoodDeterministic
-#' @note By specifying \code{log.likelihood}, this function offers the possibility to run a MCMC independently of the method used for likelihood computation.
-#' Although for a deterministic model \code{log.likelihood} is quite straightforward, fitting a stochastic model will require a call to a SMC algorithm to evaluate the log-likelihood.
+#' @note By specifying \code{logLikePoint}, this function offers the possibility to run a MCMC independently of the method used for likelihood computation.
+#' Although for a deterministic model \code{logLikePoint} is quite straightforward, fitting a stochastic model will require a call to a SMC algorithm to evaluate the log-likelihood.
 #' Finally, this function can also implement an ABC procedure to decide whether to accept or reject the parameter set.
 #'
 #' The size of the proposal covariance matrix is adapted using the following formulae: \deqn{\Sigma_{n+1}=\sigma_n * \Sigma_n} with \eqn{\sigma_n=\sigma_{n-1}*exp(\alpha^n*(acc - 0.234))},

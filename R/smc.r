@@ -12,7 +12,7 @@
 #' @import parallel doParallel
 #' @return A list of 3 elements:
 #' \itemize{
-#' \item \code{log.likelihood} the marginal log-likelihood of the theta.
+#' \item \code{logLikePoint} the marginal log-likelihood of the theta.
 #' \item \code{traj} a list of size \code{n.particles} with all filtered trajectories.
 #' \item \code{traj.weight} a vector of size \code{n.particles} with the normalised weight of the filtered trajectories.
 #' }
@@ -28,7 +28,7 @@ bootstrapParticleFilter <- function(fitmodel, n.particles, progress = FALSE, n.c
         registerDoParallel(cores=n.cores)
     }
 
-    ## compute the log.likelihood using a particle filter
+    ## compute the logLikePoint using a particle filter
 
     # useful variable (avoid repetition of long names)
     data <- fitmodel$data
@@ -37,7 +37,7 @@ bootstrapParticleFilter <- function(fitmodel, n.particles, progress = FALSE, n.c
     # initialisation
 
     # marginal log-likelihood of the theta
-    log.likelihood <- 0
+    logLikePoint <- 0
 
     # initial state of particles
     initialise.particle  <- fitmodel$initialise.state(theta)
@@ -64,8 +64,8 @@ bootstrapParticleFilter <- function(fitmodel, n.particles, progress = FALSE, n.c
             # resample particles according to their weight (normalization is done in the function sample())
             index.resampled <- sample(x=n.particles,size=n.particles,replace=T,prob=weight.particles)
         }else{
-            warning("All particles depleted at step ",i," of SMC. Return log.likelihood = -Inf for theta set: ",paste(getParameterValues(theta),collapse=", "))
-            return(list(log.likelihood=-Inf,traj=NA,traj.weight=NA))
+            warning("All particles depleted at step ",i," of SMC. Return logLikePoint = -Inf for theta set: ",paste(getParameterValues(theta),collapse=", "))
+            return(list(logLikePoint=-Inf,traj=NA,traj.weight=NA))
         }
 
         # update traj and current state after resampling
@@ -75,23 +75,23 @@ bootstrapParticleFilter <- function(fitmodel, n.particles, progress = FALSE, n.c
         # propagate particles (this for loop could be parallelized)
         propagate <- llply(current.state.particles,function(current.state) {
 
-            # simulate from previous observation to current observation time
-            traj <- fitmodel$simulate.model(theta=theta,state.init=unlist(current.state),times=times)
+            # simulateTraj from previous observation to current observation time
+            traj <- fitmodel$simulateTraj(theta=theta,state.init=unlist(current.state),times=times)
 
             # compute particle weight
-            weight <- exp(fitmodel$log.likelihood( data=data, model.traj=traj, theta= theta))
+            weight <- exp(fitmodel$logLikePoint( data=data, simu.traj=traj, theta= theta))
 
             return(list(traj=traj[-1,],weight=weight))
 
         },.parallel=(n.cores > 1))
 
         # collect parallel jobs
-        current.state.particles <- llply(propagate,function(x) {x$traj[fitmodel$state.variables]})
+        current.state.particles <- llply(propagate,function(x) {x$traj[fitmodel$state.names]})
         weight.particles <- unlist(llply(propagate,function(x) {x$weight}))
         traj.particles <- llply(seq_along(propagate),function(j) {rbind(traj.particles[[j]],propagate[[j]]$traj)})
 
         # update marginal log-likelihood
-        log.likelihood <- log.likelihood + log(mean(weight.particles))
+        logLikePoint <- logLikePoint + log(mean(weight.particles))
 
         if(progress){
             # advance progress bar
@@ -104,7 +104,7 @@ bootstrapParticleFilter <- function(fitmodel, n.particles, progress = FALSE, n.c
     }
 
     # return marginal log-likelihood, filtered trajectories, normalised weight of each trajectory
-    ans <- list(log.likelihood=log.likelihood,traj=traj.particles,traj.weight=weight.particles/sum(weight.particles))
+    ans <- list(logLikePoint=logLikePoint,traj=traj.particles,traj.weight=weight.particles/sum(weight.particles))
 
     return(ans)
 
@@ -115,7 +115,7 @@ bootstrapParticleFilter <- function(fitmodel, n.particles, progress = FALSE, n.c
 # {
 
 #     ############################################################################################
-#     ## This function compute the marginal log.likelihood of the data (fitmodel$data) 
+#     ## This function compute the marginal logLikePoint of the data (fitmodel$data) 
 #     ## given the parameters (fitmodel$theta) using a particle filter
 #     ############################################################################################
 
@@ -128,7 +128,7 @@ bootstrapParticleFilter <- function(fitmodel, n.particles, progress = FALSE, n.c
 #     ############################################################################################
 
 #     # Marginal log-likelihood is set to 0 and will be updated during the fitering steps
-#     log.likelihood <- 0
+#     logLikePoint <- 0
 
 #     # Initialise the particles:
 #     # initial state: vector calculated by the function fitmodel$initialise.state evaluated at theta
@@ -161,16 +161,16 @@ bootstrapParticleFilter <- function(fitmodel, n.particles, progress = FALSE, n.c
 #             # extract current state of the particle 
 #             current.state.particle <- unlist(state.particles[p])
 
-#             # simulate from current observation time to next observation time
-#             traj <- fitmodel$simulate.model(theta=theta,state.init=current.state.particle,times=c(current.time,next.time))
+#             # simulateTraj from current observation time to next observation time
+#             traj <- fitmodel$simulateTraj(theta=theta,state.init=current.state.particle,times=c(current.time,next.time))
 
 #             # compute particle weight
-#             weight.particles[p] <- exp(fitmodel$log.likelihood( data=data, model.traj=traj, theta= theta))
+#             weight.particles[p] <- exp(fitmodel$logLikePoint( data=data, simu.traj=traj, theta= theta))
 
 #             # Update state of the p particle
 #             # You need to take last row of the traj data frame which corresponds to the next observation time
 #             # Also make sure to only take state variables (traj contains also a time variable)
-#             state.particles[[p]] <- traj[2,fitmodel$state.variables]
+#             state.particles[[p]] <- traj[2,fitmodel$state.names]
 
 #         }
 
@@ -178,12 +178,12 @@ bootstrapParticleFilter <- function(fitmodel, n.particles, progress = FALSE, n.c
 #         current.time <- next.time
 
 #         # Update marginal log-likelihood
-#         log.likelihood <- log.likelihood + log(mean(weight.particles))
+#         logLikePoint <- logLikePoint + log(mean(weight.particles))
 
 #     }
 
 
 #     # Return marginal log-likelihood
-#     return(log.likelihood)
+#     return(logLikePoint)
 
 # }

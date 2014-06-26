@@ -3,12 +3,12 @@
 \alias{SEIT2L_logLikelihood}
 \title{Likelihood of the data for SEIT2L model}
 \usage{
-SEIT2L_logLikelihood(data, theta, model.traj)
+SEIT2L_logLikelihood(data, theta, simu.traj)
 }
 \arguments{
-\item{data}{subset of the \code{\link{FluTdC1971}} dataset that contains the observations corresponding to \code{model.traj}.}
+\item{data}{subset of the \code{\link{FluTdC1971}} dataset that contains the observations corresponding to \code{simu.traj}.}
 
-\item{model.traj}{simulated trajectory, as returned by \code{\link{SEIT2L_simulateDeterministic}} or \code{\link{SEIT2L_simulateStochastic}}.}
+\item{simu.traj}{simulated trajectory, as returned by \code{\link{SEIT2L_simulateDeterministic}} or \code{\link{SEIT2L_simulateStochastic}}.}
 
 \item{theta}{named vector of parameters for the SEIT2L model.}
 }

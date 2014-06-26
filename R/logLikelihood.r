@@ -12,13 +12,13 @@ marginalLogLikelihoodDeterministic <- function(theta, fitmodel) {
 	# time sequence (must include initial time)
 	times <- c(0,data$time)
 
-	# simulate model at successive observation times of data
-	traj <- fitmodel$simulate.model(theta,fitmodel$initialise.state(theta),times)
+	# simulateTraj model at successive observation times of data
+	traj <- fitmodel$simulateTraj(theta,fitmodel$initialise.state(theta),times)
 
 	# compute log-likelihood
-	log.likelihood <- fitmodel$log.likelihood(data=data,theta=theta,model.traj=traj)
+	logLikePoint <- fitmodel$logLikePoint(data=data,theta=theta,simu.traj=traj)
 
-	return(log.likelihood)
+	return(logLikePoint)
 }
 
 #'Marginal log-likelihood for a stochastic model
@@ -37,37 +37,37 @@ marginalLogLikelihoodStochastic <- function(theta, fitmodel, n.particles, n.core
 	# run SMC
 	smc <- bootstrapParticleFilter(fitmodel=fitmodel, n.particles=n.particles, n.cores=n.cores)
 
-	return(smc$log.likelihood)
+	return(smc$logLikePoint)
 }
 
 #'Target posterior distribution for a fitmodel
 #'
 #'This function evaluates the posterior distribution at \code{theta} and returns the result in a suitable format for \code{\link{mcmcMH}}.
 #' @param theta named vector of estimated theta
-#' @param log.prior \R-function to compute the log-prior of \code{theta}, as returned by \code{\link{fitmodel}}
-#' @param log.prior.args list of arguments passed to \code{log.prior}
-#' @param marginal.log.likelihood \R-function to compute the marginal log-likelihood of \code{theta}
-#' @param marginal.log.likelihood.args list of arguments passed to \code{marginal.log.likelihood}
+#' @param logPrior \R-function to compute the log-prior of \code{theta}, as returned by \code{\link{fitmodel}}
+#' @param logPrior.args list of arguments passed to \code{logPrior}
+#' @param marginal.logLikePoint \R-function to compute the marginal log-likelihood of \code{theta}
+#' @param marginal.logLikePoint.args list of arguments passed to \code{marginal.logLikePoint}
 #' @export
 #' @return a list of two elements
 #' \itemize{
 #' 	\item \code{log.dist} numeric, logged value of the posterior distribution evaluated at \code{theta}
-#' 	\item \code{trace} named vector with trace information (theta, log.prior, marginal.log.likelihood, log.posterior)
+#' 	\item \code{trace} named vector with trace information (theta, logPrior, marginal.logLikePoint, log.posterior)
 #' }
-targetPosterior <- function(theta, log.prior, log.prior.args=list(), marginal.log.likelihood, marginal.log.likelihood.args=list()) {
+targetPosterior <- function(theta, logPrior, logPrior.args=list(), marginal.logLikePoint, marginal.logLikePoint.args=list()) {
 
-	theta.log.prior <- do.call(log.prior, c(list(theta=theta),log.prior.args))
+	theta.logPrior <- do.call(logPrior, c(list(theta=theta),logPrior.args))
 
-	if(is.finite(theta.log.prior)){
-		theta.marginal.log.likelihood <- do.call(marginal.log.likelihood, c(list(theta=theta), marginal.log.likelihood.args))
+	if(is.finite(theta.logPrior)){
+		theta.marginal.logLikePoint <- do.call(marginal.logLikePoint, c(list(theta=theta), marginal.logLikePoint.args))
 	}else{
-		# do not compute log.likelihood	(theta prior is 0)
-		theta.marginal.log.likelihood  <-  -Inf
+		# do not compute logLikePoint	(theta prior is 0)
+		theta.marginal.logLikePoint  <-  -Inf
 	}
 
-	theta.log.posterior <- theta.log.prior + theta.marginal.log.likelihood
+	theta.log.posterior <- theta.logPrior + theta.marginal.logLikePoint
 
-	return(list(log.dist=theta.log.posterior, trace=c(theta,log.prior=theta.log.prior,marginal.log.likelihood=theta.marginal.log.likelihood,log.posterior=theta.log.posterior)))
+	return(list(log.dist=theta.log.posterior, trace=c(theta,logPrior=theta.logPrior,marginal.logLikePoint=theta.marginal.logLikePoint,log.posterior=theta.log.posterior)))
 
 }
 

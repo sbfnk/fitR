@@ -1,25 +1,25 @@
 #'Plot one or more model trajectories
 #'
-#'This function use faceting to plot all state.variables trajectories. Convenient to see results of several simulations.
+#'This function use faceting to plot all state.names trajectories. Convenient to see results of several simulations.
 #' @param fitmodel a \code{\link{fitmodel}} object.
-#' @param traj data.frame, output of \code{fitmodel$simulate.model} or \code{simulateModelReplicates}.
-#' @param state.variables subset of state.variables to plot. If \code{NULL} (default) all state variables are plotted.
+#' @param traj data.frame, output of \code{fitmodel$simulateTraj} or \code{simulateModelReplicates}.
+#' @param state.names subset of state.names to plot. If \code{NULL} (default) all state variables are plotted.
 #' @param alpha transparency of the trajectories (between 0 and 1).
 #' @param plot if \code{TRUE} the plot is displayed, and returned otherwise.
 #' @export
 #' @import reshape2 ggplot2
 #' @seealso simulateModelReplicates
-plotModelTraj <- function(fitmodel,traj,state.variables=NULL,alpha=1, plot=TRUE) {
+plotModelTraj <- function(fitmodel,traj,state.names=NULL,alpha=1, plot=TRUE) {
 
-    if(is.null(state.variables)){
-        state.variables <- fitmodel$state.variables
+    if(is.null(state.names)){
+        state.names <- fitmodel$state.names
     }
 
     if(!"replicate"%in%names(traj) && !any(duplicated(traj$time))){
         traj$replicate <- 1
     }
 
-    df <- melt(traj,measure.vars=state.variables)
+    df <- melt(traj,measure.vars=state.names)
 
     p <- ggplot(df,aes(x=time,y=value,group=replicate))+facet_wrap(~variable, scales="free_y")
     p <- p + geom_line(alpha=alpha)
@@ -62,11 +62,11 @@ plotThetaFit <- function(theta,fitmodel,n.replicates=1, alpha=min(1,10/n.replica
     cat("Simulate ",n.replicates," replicate(s)\n")
     fit <- ldply(replicates,function(i) {
 
-        # simulate model at successive observation times of data
-        traj <- fitmodel$simulate.model(theta,fitmodel$initialise.state(theta),times)
+        # simulateTraj model at successive observation times of data
+        traj <- fitmodel$simulateTraj(theta,fitmodel$initialise.state(theta),times)
 
         # generate observation
-        traj.obs <- fitmodel$generate.observation(traj,theta)
+        traj.obs <- fitmodel$generateObservation(traj,theta)
 
         return(traj.obs)        
 
@@ -100,7 +100,7 @@ plotSMC <- function(smc,fitmodel,alpha=1,plot=TRUE) {
     names(traj) <- 1:length(traj)
 
     traj <- ldply(traj,function(df) {
-        return(fitmodel$generate.observation(df,fitmodel$theta))
+        return(fitmodel$generateObservation(df,fitmodel$theta))
     },.id="particle")
 
     p <- ggplot()
@@ -213,11 +213,11 @@ plotPosteriorFit <- function(trace, fitmodel, posterior.median=FALSE, summary=FA
             # extract posterior parameter set
             theta <- trace[ind,names.theta]
 
-            # simulate model at successive observation times of data
-            traj <- fitmodel$simulate.model(theta,fitmodel$initialise.state(theta),times)
+            # simulateTraj model at successive observation times of data
+            traj <- fitmodel$simulateTraj(theta,fitmodel$initialise.state(theta),times)
 
             # generate observation
-            traj <- fitmodel$generate.observation(traj,theta)
+            traj <- fitmodel$generateObservation(traj,theta)
 
             return(traj)
         },.progress="text",.id="index")

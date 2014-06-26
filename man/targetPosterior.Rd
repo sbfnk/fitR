@@ -3,25 +3,25 @@
 \alias{targetPosterior}
 \title{Target posterior distribution for a fitmodel}
 \usage{
-targetPosterior(theta, log.prior, log.prior.args = list(),
-  marginal.log.likelihood, marginal.log.likelihood.args = list())
+targetPosterior(theta, logPrior, logPrior.args = list(),
+  marginal.logLikePoint, marginal.logLikePoint.args = list())
 }
 \arguments{
 \item{theta}{named vector of estimated theta}
 
-\item{log.prior}{\R-function to compute the log-prior of \code{theta}, as returned by \code{\link{fitmodel}}}
+\item{logPrior}{\R-function to compute the log-prior of \code{theta}, as returned by \code{\link{fitmodel}}}
 
-\item{log.prior.args}{list of arguments passed to \code{log.prior}}
+\item{logPrior.args}{list of arguments passed to \code{logPrior}}
 
-\item{marginal.log.likelihood}{\R-function to compute the marginal log-likelihood of \code{theta}}
+\item{marginal.logLikePoint}{\R-function to compute the marginal log-likelihood of \code{theta}}
 
-\item{marginal.log.likelihood.args}{list of arguments passed to \code{marginal.log.likelihood}}
+\item{marginal.logLikePoint.args}{list of arguments passed to \code{marginal.logLikePoint}}
 }
 \value{
 a list of two elements
 \itemize{
 	\item \code{log.dist} numeric, logged value of the posterior distribution evaluated at \code{theta}
-	\item \code{trace} named vector with trace information (theta, log.prior, marginal.log.likelihood, log.posterior)
+	\item \code{trace} named vector with trace information (theta, logPrior, marginal.logLikePoint, log.posterior)
 }
 }
 \description{
