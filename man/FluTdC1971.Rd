@@ -12,8 +12,8 @@ A dataset containing the daily incidence recorded during the 1971 influenza A/H3
 \details{
 \itemize{
   \item \code{date} calendar date of the record
-  \item \code{day} day of record since beginning of epidemic
-  \item \code{incidence} daily count incidence of influenza-like-illness
+  \item \code{time} day of record since beginning of epidemic
+  \item \code{Inc} daily count incidence of influenza-like-illness
 }
 }
 
