@@ -1,7 +1,7 @@
 #'Compute the distance to the data for ABC
 #'
 #'Compute the distance (using \code{fitmodel$distance.ABC}) between the observed time series and a simulated time series obtained by running the model with parameters \code{theta}.
-#' @inheritParams marginalLogLikelihoodDeterministic
+#' @inheritParams testFitmodel
 #' @export
 #' @return numeric value of the log-likelihood
 computeDistanceABC <- function(theta, fitmodel) {
@@ -27,8 +27,7 @@ computeDistanceABC <- function(theta, fitmodel) {
 #'
 #'This function evaluates the ABC posterior distribution at \code{theta} and returns the result in a suitable format for \code{\link{mcmcMH}}.
 #' @param epsilon numeric vector, ABC tolerances for distances between data and simulations.
-#' @inheritParams targetPosterior
-#' @inheritParams marginalLogLikelihoodDeterministic
+#' @inheritParams testFitmodel
 #' @export
 #' @seealso computeDistanceABC
 #' @return a list of two elements

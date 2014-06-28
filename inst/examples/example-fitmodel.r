@@ -114,9 +114,9 @@ state.init <- c(S=99,I=1,R=0)
 data <- data.frame(time=1:5,I=1:5)
 
 ## SIR_deter
-testFitmodel(model=SIR_deter, theta=theta, state.init=state.init, data= data, verbose=TRUE)
+testFitmodel(fitmodel=SIR_deter, theta=theta, state.init=state.init, data= data, verbose=TRUE)
 
 ## SIR_sto
-testFitmodel(model=SIR_sto, theta=theta, state.init=state.init, data= data, verbose=TRUE)
+testFitmodel(fitmodel=SIR_sto, theta=theta, state.init=state.init, data= data, verbose=TRUE)
 
 

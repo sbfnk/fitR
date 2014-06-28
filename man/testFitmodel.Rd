@@ -3,16 +3,16 @@
 \alias{testFitmodel}
 \title{Test a fitmodel}
 \usage{
-testFitmodel(model, theta, state.init, data = NULL, verbose = TRUE)
+testFitmodel(fitmodel, theta, state.init, data = NULL, verbose = TRUE)
 }
 \arguments{
-\item{model}{a \code{\link{fitmodel}} object}
+\item{fitmodel}{a \code{\link{fitmodel}} object}
 
-\item{theta}{named vector of parameter values. Names should match \code{model$theta.names}.}
+\item{theta}{named numeric vector. Values of the parameters. Names should match \code{fitmodel$theta.names}.}
 
-\item{state.init}{named vector of initial state values. Names should match \code{model$state.names}.}
+\item{state.init}{named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.}
 
-\item{data}{data frame containing the observation times and observed data. The time column must be named \code{time}, whereas the data column should match the data name used in the function \code{model$logLikePoint}.}
+\item{data}{data frame. Observation times and observed data. The time column must be named \code{time}, whereas the name of the data column should match the one used in the function \code{fitmodel$logLikePoint}.}
 
 \item{verbose}{if \code{TRUE}, print details of the test performed to check validity of the arguments}
 }
@@ -137,10 +137,10 @@ state.init <- c(S=99,I=1,R=0)
 data <- data.frame(time=1:5,I=1:5)
 
 ## SIR_deter
-testFitmodel(model=SIR_deter, theta=theta, state.init=state.init, data= data, verbose=TRUE)
+testFitmodel(fitmodel=SIR_deter, theta=theta, state.init=state.init, data= data, verbose=TRUE)
 
 ## SIR_sto
-testFitmodel(model=SIR_sto, theta=theta, state.init=state.init, data= data, verbose=TRUE)
+testFitmodel(fitmodel=SIR_sto, theta=theta, state.init=state.init, data= data, verbose=TRUE)
 
 
 }

@@ -6,9 +6,9 @@
 computeDistanceABC(theta, fitmodel)
 }
 \arguments{
-\item{theta}{named vector of model parameters. Names must correspond to those of \code{names(fitmodel$theta)}.}
+\item{theta}{named numeric vector. Values of the parameters. Names should match \code{fitmodel$theta.names}.}
 
-\item{fitmodel}{\code{\link{fitmodel}} object.}
+\item{fitmodel}{a \code{\link{fitmodel}} object}
 }
 \value{
 numeric value of the log-likelihood

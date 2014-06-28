@@ -11,8 +11,8 @@ NULL
 #'
 #' \itemize{
 #'   \item \code{date} calendar date of the record 
-#'   \item \code{day} day of record since beginning of epidemic
-#'   \item \code{incidence} daily count incidence of influenza-like-illness
+#'   \item \code{time} day of record since beginning of epidemic
+#'   \item \code{Inc} daily count incidence of influenza-like-illness
 #' }
 #'
 #' @format A data frame with 59 rows and 3 variables

@@ -3,28 +3,32 @@
 \alias{targetPosterior}
 \title{Target posterior distribution for a fitmodel}
 \usage{
-targetPosterior(theta, logPrior, logPrior.args = list(),
-  marginal.logLikePoint, marginal.logLikePoint.args = list())
+targetPosterior(fitmodel, theta, state.init, data, margLogLike, ...)
 }
 \arguments{
-\item{theta}{named vector of estimated theta}
+\item{margLogLike}{\R-function to compute the marginal log-likelihood of \code{theta}.}
 
-\item{logPrior}{\R-function to compute the log-prior of \code{theta}, as returned by \code{\link{fitmodel}}}
+\item{...}{further arguments to be passed to \code{margLogLike}}
 
-\item{logPrior.args}{list of arguments passed to \code{logPrior}}
+\item{fitmodel}{a \code{\link{fitmodel}} object}
 
-\item{marginal.logLikePoint}{\R-function to compute the marginal log-likelihood of \code{theta}}
+\item{theta}{named numeric vector. Values of the parameters. Names should match \code{fitmodel$theta.names}.}
 
-\item{marginal.logLikePoint.args}{list of arguments passed to \code{marginal.logLikePoint}}
+\item{state.init}{named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.}
+
+\item{data}{data frame. Observation times and observed data. The time column must be named \code{time}, whereas the name of the data column should match the one used in the function \code{fitmodel$logLikePoint}.}
 }
 \value{
 a list of two elements
 \itemize{
-	\item \code{log.dist} numeric, logged value of the posterior distribution evaluated at \code{theta}
-	\item \code{trace} named vector with trace information (theta, logPrior, marginal.logLikePoint, log.posterior)
+	\item \code{log.density} numeric, logged value of the posterior density evaluated at \code{theta}
+	\item \code{trace} named vector with trace information (theta, log.prior, marg.log.like, log.posterior)
 }
 }
 \description{
 This function evaluates the posterior distribution at \code{theta} and returns the result in a suitable format for \code{\link{mcmcMH}}.
+}
+\seealso{
+\code{\link{margLogLikeDeter}}, \code{\link{margLogLikeSto}}
 }
 

@@ -22,14 +22,13 @@ test_that("constructor for SEITL model",{
 	state.init <- c("S"=280,"E"=0,"I"=2,"T"=0,"L"=4,"Inc"=0)
 
 	data("FluTdC1971",envir = environment())
-	data <- rename(FluTdC1971,c("day"="time","incidence"="Inc"))[c("time","Inc")]
 
-	testFitmodel(model=SEITL_det, theta=theta, state.init=state.init, data=data, verbose=TRUE)
-	testFitmodel(model=SEITL_sto, theta=theta, state.init=state.init, data=data, verbose=TRUE)
+	testFitmodel(fitmodel=SEITL_det, theta=theta, state.init=state.init, data=FluTdC1971, verbose=TRUE)
+	testFitmodel(fitmodel=SEITL_sto, theta=theta, state.init=state.init, data=FluTdC1971, verbose=TRUE)
 
 	state.init <- c("S"=280,"E"=0,"I"=2,"T1"=0,"T2"=0,"L"=4,"Inc"=0)
 
-	testFitmodel(model=SEIT2L_det, theta=theta, state.init=state.init, data=data, verbose=TRUE)
-	testFitmodel(model=SEIT2L_sto, theta=theta, state.init=state.init, data=data, verbose=TRUE)
+	testFitmodel(fitmodel=SEIT2L_det, theta=theta, state.init=state.init, data=FluTdC1971, verbose=TRUE)
+	testFitmodel(fitmodel=SEIT2L_sto, theta=theta, state.init=state.init, data=FluTdC1971, verbose=TRUE)
 
 })

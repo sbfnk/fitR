@@ -20,7 +20,7 @@
 #' @param adapt.shape.start number of accepted jumps before adapting the shape of the proposal covariance matrix (see note below).
 #' @param print.info.every frequency of information on the chain: acceptance rate and state of the chain. Default value to \code{n.iterations/100}. Set to \code{NULL} to avoid any info.
 #' @param ... other arguments to be passed to function \code{logLikePoint}.
-#' @inheritParams marginalLogLikelihoodDeterministic
+#' @inheritParams margLogLikeDeter
 #' @note By specifying \code{logLikePoint}, this function offers the possibility to run a MCMC independently of the method used for likelihood computation.
 #' Although for a deterministic model \code{logLikePoint} is quite straightforward, fitting a stochastic model will require a call to a SMC algorithm to evaluate the log-likelihood.
 #' Finally, this function can also implement an ABC procedure to decide whether to accept or reject the parameter set.

@@ -1,73 +1,78 @@
 #'Marginal log-likelihood for a deterministic model
 #'
 #'Compute the marginal log-likelihood of \code{theta} for a deterministic model defined in a \code{\link{fitmodel}} object.
-#' @param theta named vector of model parameters. Names must correspond to those of \code{names(fitmodel$theta)}.
-#' @param fitmodel \code{\link{fitmodel}} object.
+#' @inheritParams testFitmodel
 #' @export
 #' @return numeric value of the log-likelihood
-marginalLogLikelihoodDeterministic <- function(theta, fitmodel) {
-
-	data <- fitmodel$data
+margLogLikeDeter <- function(fitmodel, theta, state.init, data) {
 
 	# time sequence (must include initial time)
 	times <- c(0,data$time)
 
 	# simulateTraj model at successive observation times of data
-	traj <- fitmodel$simulateTraj(theta,fitmodel$initialise.state(theta),times)
+	traj <- fitmodel$simulateTraj(theta,state.init,times)
 
-	# compute log-likelihood
-	logLikePoint <- fitmodel$logLikePoint(data=data,theta=theta,simu.traj=traj)
+	# compute log-likelihood by summing the log-likelihood of each data point
+	margLogLike <- 0
+	for(i in 1:nrow(data)){ 
 
-	return(logLikePoint)
+		# extract data point
+		data.point <- unlist(data[i,])
+		
+		# extract state point
+		# we use i+1 since the first row of traj contains the initial state.
+		state.point <- unlist(traj[i+1,fitmodel$state.names])
+		
+		# update marginal log-likelihood
+		margLogLike <- margLogLike + fitmodel$logLikePoint(data.point=data.point, state.point=state.point, theta=theta)		
+	}
+
+	return(margLogLike)
 }
 
 #'Marginal log-likelihood for a stochastic model
 #'
-#'Compute a Monte-Carlo estimate of the log-likelihood of \code{theta} for a stochastic model defined in a \code{\link{fitmodel}} object, using \code{\link{bootstrapParticleFilter}}
-#' @inheritParams marginalLogLikelihoodDeterministic
-#' @inheritParams bootstrapParticleFilter
+#'Compute a Monte-Carlo estimate of the log-likelihood of \code{theta} for a stochastic model defined in a \code{\link{fitmodel}} object, using \code{\link{particleFilter}}
+#' @inheritParams testFitmodel
+#' @inheritParams particleFilter
 #' @export
-#' @seealso bootstrapParticleFilter
+#' @seealso particleFilter
 #' @return Monte-Carlo estimate of the marginal log-likelihood of \code{theta}
-marginalLogLikelihoodStochastic <- function(theta, fitmodel, n.particles, n.cores = 1) {
-
-	# replace parameter values
-	fitmodel$theta[names(theta)] <- theta
+margLogLikeSto <- function(fitmodel, theta, state.init, data, n.particles, n.cores = 1) {
 
 	# run SMC
-	smc <- bootstrapParticleFilter(fitmodel=fitmodel, n.particles=n.particles, n.cores=n.cores)
+	smc <- particleFilter(fitmodel=fitmodel, theta=theta, state.init=state.init, data=data, n.particles=n.particles, n.cores=n.cores)
 
-	return(smc$logLikePoint)
+	return(smc$margLogLike)
 }
 
 #'Target posterior distribution for a fitmodel
 #'
 #'This function evaluates the posterior distribution at \code{theta} and returns the result in a suitable format for \code{\link{mcmcMH}}.
-#' @param theta named vector of estimated theta
-#' @param logPrior \R-function to compute the log-prior of \code{theta}, as returned by \code{\link{fitmodel}}
-#' @param logPrior.args list of arguments passed to \code{logPrior}
-#' @param marginal.logLikePoint \R-function to compute the marginal log-likelihood of \code{theta}
-#' @param marginal.logLikePoint.args list of arguments passed to \code{marginal.logLikePoint}
+#' @param margLogLike \R-function to compute the marginal log-likelihood of \code{theta}.
+#' @param ... further arguments to be passed to \code{margLogLike}
+#' @inheritParams testFitmodel
 #' @export
+#' @seealso \code{\link{margLogLikeDeter}}, \code{\link{margLogLikeSto}}
 #' @return a list of two elements
 #' \itemize{
-#' 	\item \code{log.dist} numeric, logged value of the posterior distribution evaluated at \code{theta}
-#' 	\item \code{trace} named vector with trace information (theta, logPrior, marginal.logLikePoint, log.posterior)
+#' 	\item \code{log.density} numeric, logged value of the posterior density evaluated at \code{theta}
+#' 	\item \code{trace} named vector with trace information (theta, log.prior, marg.log.like, log.posterior)
 #' }
-targetPosterior <- function(theta, logPrior, logPrior.args=list(), marginal.logLikePoint, marginal.logLikePoint.args=list()) {
+targetPosterior <- function(fitmodel, theta, state.init, data, margLogLike, ...) {
 
-	theta.logPrior <- do.call(logPrior, c(list(theta=theta),logPrior.args))
+	theta.log.prior <- fitmodel$logPrior(theta=theta)
 
-	if(is.finite(theta.logPrior)){
-		theta.marginal.logLikePoint <- do.call(marginal.logLikePoint, c(list(theta=theta), marginal.logLikePoint.args))
+	if(is.finite(theta.log.prior)){
+		theta.log.like <- margLogLike(fitmodel=fitmodel, theta=theta, state.init=state.init, data=data, ...)
 	}else{
-		# do not compute logLikePoint	(theta prior is 0)
-		theta.marginal.logLikePoint  <-  -Inf
+		# do not compute log-likelihood (theta prior is 0)
+		theta.log.like  <-  -Inf
 	}
 
-	theta.log.posterior <- theta.logPrior + theta.marginal.logLikePoint
+	theta.log.posterior <- theta.log.prior + theta.log.like
 
-	return(list(log.dist=theta.log.posterior, trace=c(theta,logPrior=theta.logPrior,marginal.logLikePoint=theta.marginal.logLikePoint,log.posterior=theta.log.posterior)))
+	return(list(log.density=theta.log.posterior, trace=c(theta,log.prior=theta.log.prior,marg.log.like=theta.log.like,log.posterior=theta.log.posterior)))
 
 }
 

@@ -16,41 +16,41 @@ fitmodel(name = NULL, state.names = NULL, theta.names = NULL,
 
 \item{simulateTraj}{\R-function to simulate forward the model (required). This function takes 3 arguments:
 \itemize{
-\item \code{theta} named numeric vector. Parameter values.
-\item \code{state.init} named numeric vector. Initial state of the model.
-\item \code{times} numeric vector. Time sequence for which state of the model is wanted; the first value of times must be the initial time, i.e. the time of \code{state.init}.
+\item \code{theta} named numeric vector. Values of the parameters. Names should match \code{theta.names}.
+\item \code{state.init} named numeric vector. Initial values of the state variables. Names should match \code{state.names}.
+\item \code{times} numeric vector. Time sequence for which the state of the model is wanted; the first value of times must be the initial time, i.e. the time of \code{state.init}.
 }
 and returns a \code{data.fame} containing the simulated trajectories that is the values of the state variables (1 per column) at each observation time (1 per row). The first column is \code{time}.}
 
 \item{generateObservation}{\R-function that generates simulated data from a simulated trajectory using an observation model (optional). This function takes 2 arguments:
 \itemize{
 \item \code{simu.traj} data.frame of simulated trajectories, as returned by \code{simulateTraj}.
-\item \code{theta} named numeric vector. Parameter values.
+\item \code{theta} named numeric vector. Values of the parameters. Names should match \code{theta.names}.
 }
 and returns the \code{simu.traj} data.frame with an additional \code{observation} column.}
 
 \item{logPrior}{\R-function that evaluates the log-prior density of the parameters at a given \code{theta} (optional). The function should take 1 argument:
 \itemize{
-    \item \code{theta} named numeric vector. Parameter values.
+    \item \code{theta} named numeric vector. Values of the parameters. Names should match \code{theta.names}.
 }
 and returns the logged value of the prior density distribution.}
 
 \item{logLikePoint}{\R-function that evaluates the log-likelihood of one data point given the state of the model at the same time point. This function takes 3 arguments:
 \itemize{
-\item \code{data.point} named vector containing the observation time and the value of the data point.
-\item \code{state.point} named vector containing the state of the model at the observation time point.
+\item \code{data.point} named numeric vector. Observation time and observed data point.
+\item \code{state.point} named numeric vector containing the state of the model at the observation time point.
 \item \code{theta} named numeric vector. Parameter values. Useful since parameters are usually needed to compute the likelihood (i.e. reporting rate).
 }
 and returns the log-likelihood. (optional)}
 }
 \value{
-a \code{fitmodel} object that is a \code{list} of 9 elements:
+a \code{fitmodel} object that is a \code{list} of 7 elements:
 \itemize{
 	\item \code{name} character, name of the model
 	\item \code{state.names} vector, names of the state variables.
 	\item \code{theta.names} vector, names of the parameters.
 	\item \code{simulateTraj} \R-function to simulateTraj forward the model; usage: \code{simulateTraj(theta,state.init,times)}.
-	\item \code{generateObservation} \R-function to generate simulated observation; usage: \code{generateObservation(simu.traj, theta)}.
+	\item \code{generateObservation} \R-function to generate simulated observations; usage: \code{generateObservation(simu.traj, theta)}.
 	\item \code{logPrior} \R-function to evaluate the log-prior of the parameter values; usage: \code{logPrior(theta)}.
 	\item \code{logLikePoint} \R-function to evaluate the log-likelihood of one data point; usage: \code{logLikePoint(data.point, state.point, theta)}.
 }
@@ -175,10 +175,10 @@ state.init <- c(S=99,I=1,R=0)
 data <- data.frame(time=1:5,I=1:5)
 
 ## SIR_deter
-testFitmodel(model=SIR_deter, theta=theta, state.init=state.init, data= data, verbose=TRUE)
+testFitmodel(fitmodel=SIR_deter, theta=theta, state.init=state.init, data= data, verbose=TRUE)
 
 ## SIR_sto
-testFitmodel(model=SIR_sto, theta=theta, state.init=state.init, data= data, verbose=TRUE)
+testFitmodel(fitmodel=SIR_sto, theta=theta, state.init=state.init, data= data, verbose=TRUE)
 
 
 }

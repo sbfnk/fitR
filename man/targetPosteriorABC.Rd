@@ -8,9 +8,9 @@ targetPosteriorABC(theta, fitmodel, epsilon)
 \arguments{
 \item{epsilon}{numeric vector, ABC tolerances for distances between data and simulations.}
 
-\item{theta}{named vector of estimated theta}
+\item{theta}{named numeric vector. Values of the parameters. Names should match \code{fitmodel$theta.names}.}
 
-\item{fitmodel}{\code{\link{fitmodel}} object.}
+\item{fitmodel}{a \code{\link{fitmodel}} object}
 }
 \value{
 a list of two elements
