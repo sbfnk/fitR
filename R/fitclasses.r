@@ -4,7 +4,7 @@
 #' @param name character. Name of the model (required).
 #' @param state.names character vector. Names of the state variables i.e. \code{c("S","I","R")} (required).
 #' @param theta.names character vector. Names of the parameters i.e. \code{c("R0","infectious.period")} (required).
-#' @param simulateTraj \R-function to simulate forward the model (required). This function takes 3 arguments:
+#' @param simulate \R-function to simulate forward the model (required). This function takes 3 arguments:
 #' \itemize{
 #' \item \code{theta} named numeric vector. Values of the parameters. Names should match \code{theta.names}. 
 #' \item \code{state.init} named numeric vector. Initial values of the state variables. Names should match \code{state.names}. 
@@ -13,7 +13,7 @@
 #' and returns a \code{data.fame} containing the simulated trajectories that is the values of the state variables (1 per column) at each observation time (1 per row). The first column is \code{time}.
 #' @param generateObservation \R-function that generates simulated data from a simulated trajectory using an observation model (optional). This function takes 2 arguments:
 #' \itemize{
-#' \item \code{simu.traj} data.frame of simulated trajectories, as returned by \code{simulateTraj}.
+#' \item \code{simu.traj} data.frame of simulated trajectories, as returned by \code{simulate}.
 #' \item \code{theta} named numeric vector. Values of the parameters. Names should match \code{theta.names}. 
 #' }
 #' and returns the \code{simu.traj} data.frame with an additional \code{observation} column. 
@@ -35,14 +35,14 @@
 #' 	\item \code{name} character, name of the model
 #' 	\item \code{state.names} vector, names of the state variables.
 #' 	\item \code{theta.names} vector, names of the parameters.
-#' 	\item \code{simulateTraj} \R-function to simulateTraj forward the model; usage: \code{simulateTraj(theta,state.init,times)}.
+#' 	\item \code{simulate} \R-function to simulate forward the model; usage: \code{simulate(theta,state.init,times)}.
 #' 	\item \code{generateObservation} \R-function to generate simulated observations; usage: \code{generateObservation(simu.traj, theta)}.
 #' 	\item \code{logPrior} \R-function to evaluate the log-prior of the parameter values; usage: \code{logPrior(theta)}.
 #' 	\item \code{logLikePoint} \R-function to evaluate the log-likelihood of one data point; usage: \code{logLikePoint(data.point, state.point, theta)}.
 #' }
 #' @seealso \code{\link{testFitmodel}}
 #' @example inst/examples/example-fitmodel.r
-fitmodel <- function(name=NULL, state.names=NULL, theta.names=NULL, simulateTraj=NULL, generateObservation=NULL, logPrior=NULL, logLikePoint=NULL){
+fitmodel <- function(name=NULL, state.names=NULL, theta.names=NULL, simulate=NULL, generateObservation=NULL, logPrior=NULL, logLikePoint=NULL){
 
 	# mandatory
 	if(!is.character(name)){
@@ -54,8 +54,8 @@ fitmodel <- function(name=NULL, state.names=NULL, theta.names=NULL, simulateTraj
 	if(!is.character(theta.names)){
 		stop(sQuote("theta.names")," argument is not a character vector")
 	}
-	if(!is.function(simulateTraj)){
-		stop(sQuote("simulateTraj")," argument is not an R function")
+	if(!is.function(simulate)){
+		stop(sQuote("simulate")," argument is not an R function")
 	}
 	
 	# optional
@@ -74,7 +74,7 @@ fitmodel <- function(name=NULL, state.names=NULL, theta.names=NULL, simulateTraj
 		name=name,
 		state.names=state.names,
 		theta.names=theta.names,
-		simulateTraj=simulateTraj,
+		simulate=simulate,
 		generateObservation=generateObservation,
 		logPrior=logPrior,
 		logLikePoint=logLikePoint), class="fitmodel"))
@@ -133,48 +133,48 @@ testFitmodel <- function(fitmodel, theta, state.init, data = NULL, verbose=TRUE)
 
 	test.traj <- NULL
 
-	## check simulateTraj
-	if(!is.null(fitmodel$simulateTraj)) {
+	## check simulate
+	if(!is.null(fitmodel$simulate)) {
 		if(verbose){
-			cat("--- checking simulateTraj\n")
+			cat("--- checking simulate\n")
 		}
                 ## check arguments
 		fun_args <- c("theta","state.init","times")
-		if(!(all(x <- fun_args%in%names(formals(fitmodel$simulateTraj))))){
-			stop("argument(s) ",sQuote(fun_args[!x])," missing in function simulateTraj, see ?fitmodel.")
+		if(!(all(x <- fun_args%in%names(formals(fitmodel$simulate))))){
+			stop("argument(s) ",sQuote(fun_args[!x])," missing in function simulate, see ?fitmodel.")
 		}
 
 		if (!is.null(state.init)) {
 			times <- 0:10
-			test.traj <- fitmodel$simulateTraj(theta=theta,state.init=state.init,times=times)
+			test.traj <- fitmodel$simulate(theta=theta,state.init=state.init,times=times)
 			# must return a data.frame of dimension 11x(length(state.names)+1)
 			if(verbose){
-				cat("simulateTraj(theta, state.init, times=0:10) should return a non-negative data.frame of dimension",length(times),"x",length(fitmodel$state.names)+1,"with column names:",sQuote(c("time",fitmodel$state.names)),"\nTest:\n")
+				cat("simulate(theta, state.init, times=0:10) should return a non-negative data.frame of dimension",length(times),"x",length(fitmodel$state.names)+1,"with column names:",sQuote(c("time",fitmodel$state.names)),"\nTest:\n")
 				print(test.traj)
 			}
 			if(!is.data.frame(test.traj)){
-				stop("simulateTraj must return a data.frame")
+				stop("simulate must return a data.frame")
 			}
 			if(!all(x <- c("time",fitmodel$state.names)%in%names(test.traj))){
-				stop("Column(s) missing in the data.frame returned by simulateTraj: ",sQuote(c("time",fitmodel$state.names)[!x]))
+				stop("Column(s) missing in the data.frame returned by simulate: ",sQuote(c("time",fitmodel$state.names)[!x]))
 			}
 			if(!all(x <- names(test.traj)%in%c("time",fitmodel$state.names))){
-				warning("The following columns are not required in the data.frame returned by simulateTraj: ",sQuote(names(test.traj)[!x]))
+				warning("The following columns are not required in the data.frame returned by simulate: ",sQuote(names(test.traj)[!x]))
 			}
 			if(any(test.traj$time!=times)){
-				stop("The time column of the data.frame returned by simulateTraj is different from its times argument",call.=FALSE)
+				stop("The time column of the data.frame returned by simulate is different from its times argument",call.=FALSE)
 			}
 			if(any(test.traj<0)){
-				stop("simulateTraj returned negative values during the test, use verbose argument of fitmodel to check")
+				stop("simulate returned negative values during the test, use verbose argument of fitmodel to check")
 			}
 			if(verbose){
-				cat("--> simulateTraj looks good!\n")
+				cat("--> simulate looks good!\n")
 			}
 		} else {
 			warning("state.init not given, not creating test trajectory\n")
 		}
 	} else {
-		warning("fitmodel does not contain a simulateTraj method -- not tested\n")
+		warning("fitmodel does not contain a simulate method -- not tested\n")
 	}
 
 	## check generateObservation

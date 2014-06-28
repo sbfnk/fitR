@@ -71,8 +71,8 @@ particleFilter <- function(fitmodel, theta, state.init, data, n.particles, progr
         # propagate particles (this for loop could be parallelized)
         propagate <- llply(current.state.particles,function(current.state) {
 
-            # simulateTraj from previous observation to current observation time
-            traj <- fitmodel$simulateTraj(theta=theta,state.init=current.state,times=times)
+            # simulate from previous observation to current observation time
+            traj <- fitmodel$simulate(theta=theta,state.init=current.state,times=times)
 
             # compute particle weight
             state.point <- unlist(traj[2,fitmodel$state.names])
@@ -158,8 +158,8 @@ particleFilter <- function(fitmodel, theta, state.init, data, n.particles, progr
 #             # extract current state of the particle 
 #             current.state.particle <- unlist(state.particles[p])
 
-#             # simulateTraj from current observation time to next observation time
-#             traj <- fitmodel$simulateTraj(theta=theta,state.init=current.state.particle,times=c(current.time,next.time))
+#             # simulate from current observation time to next observation time
+#             traj <- fitmodel$simulate(theta=theta,state.init=current.state.particle,times=c(current.time,next.time))
 
 #             # compute particle weight
 #             weight.particles[p] <- exp(fitmodel$logLikePoint( data=data, simu.traj=traj, theta= theta))

@@ -13,7 +13,7 @@ test_that("simulate and generate observation",{
 
 	for(SEITL in list_model){
 		
-		traj <- SEITL$simulateTraj(theta=theta, state.init, times=times)
+		traj <- SEITL$simulate(theta=theta, state.init, times=times)
 		expect_true(inherits(traj,"data.frame"))
 
 		traj.obs <- SEITL$generateObservation(traj,theta)	
@@ -30,7 +30,7 @@ test_that("simulate and generate observation",{
 
 	for(SEIT2L in list_model){
 		
-		traj <- SEIT2L$simulateTraj(theta=theta, state.init, times=times)
+		traj <- SEIT2L$simulate(theta=theta, state.init, times=times)
 		expect_true(inherits(traj,"data.frame"))
 
 		traj.obs <- SEIT2L$generateObservation(traj,theta)	

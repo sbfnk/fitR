@@ -116,7 +116,7 @@ SIR_deter <- fitmodel(
 	name=SIR_name,
         state.names=SIR_state.names,
 	theta.names=SIR_theta.names,
-        simulateTraj=SIR_simulateDeterministic,
+        simulate=SIR_simulateDeterministic,
 	generateObservation=SIR_generateObservation,
 	logPrior=SIR_logPrior,
 	logLikePoint=SIR_logLikePoint)
@@ -126,7 +126,7 @@ SIR_sto <- fitmodel(
         name=SIR_name,
         state.names=SIR_state.names,
         theta.names=SIR_theta.names,
-        simulateTraj=SIR_simulateStochastic,
+        simulate=SIR_simulateStochastic,
         generateObservation=SIR_generateObservation,
         logPrior=SIR_logPrior,
         logLikePoint=SIR_logLikePoint)

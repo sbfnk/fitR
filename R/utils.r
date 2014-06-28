@@ -31,7 +31,7 @@ compositeLogPrior <- function(list.fitparam)
 
 #' Simulate forward a stochastic model
 #'
-#' This function uses the function \code{\link[adaptivetau]{ssa.adaptivetau}} to simulateTraj the model and returns the trajectories in a valid format for the class \code{\link{fitmodel}}.
+#' This function uses the function \code{\link[adaptivetau]{ssa.adaptivetau}} to simulate the model and returns the trajectories in a valid format for the class \code{\link{fitmodel}}.
 #' @param theta named vector of model parameters.
 #' @param state.init named vector of initial state of the model.
 #' @param times time sequence for which state of the model is wanted; the first value of times must be the initial time.
@@ -58,7 +58,7 @@ simulateModelStochastic <- function(theta,state.init,times,transitions,rateFunc)
 
 #'Simulate several replicate of the model
 #'
-#'Simulate several replicate of a fitmodel using its function simulateTraj
+#'Simulate several replicate of a fitmodel using its function simulate
 #' @param fitmodel a \code{\link{fitmodel}} object.
 #' @param theta named vector of parameters. If \code{NULL}, use \code{fitmodel$theta} (default). 
 #' @param times vector of times at which you want to observe the states of the model.
@@ -84,7 +84,7 @@ simulateModelReplicates <- function(fitmodel,theta=NULL,times,n,observation=FALS
 
     traj.rep <- ldply(rep,function(x) {
 
-        traj <- fitmodel$simulateTraj(theta,fitmodel$initialise.state(theta),times)
+        traj <- fitmodel$simulate(theta,fitmodel$initialise.state(theta),times)
 
         if(observation){
             traj <- fitmodel$generateObservation(traj,theta)

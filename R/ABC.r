@@ -11,8 +11,8 @@ computeDistanceABC <- function(theta, fitmodel) {
 	# time sequence (must include initial time)
 	times <- c(0,data$time)
 
-	# simulateTraj model at successive observation times of data
-	traj <- fitmodel$simulateTraj(theta,fitmodel$initialise.state(theta),times)
+	# simulate model at successive observation times of data
+	traj <- fitmodel$simulate(theta,fitmodel$initialise.state(theta),times)
 
 	# generate simulated observation
 	traj.obs <- fitmodel$generateObservation(simu.traj=traj,theta=theta)

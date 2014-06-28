@@ -10,7 +10,7 @@ margLogLikeDeter <- function(fitmodel, theta, state.init, data) {
 	times <- c(0,data$time)
 
 	# simulateTraj model at successive observation times of data
-	traj <- fitmodel$simulateTraj(theta,state.init,times)
+	traj <- fitmodel$simulate(theta,state.init,times)
 
 	# compute log-likelihood by summing the log-likelihood of each data point
 	margLogLike <- 0

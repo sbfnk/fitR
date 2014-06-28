@@ -21,6 +21,6 @@ simulateModelReplicates(fitmodel, theta = NULL, times, n,
 a data.frame of dimension \code{[nxlength(times)]x[length(state.init)+2]} with column names equal to \code{c("replicate","time",names(state.init))}.
 }
 \description{
-Simulate several replicate of a fitmodel using its function simulateTraj
+Simulate several replicate of a fitmodel using its function simulate
 }
 

@@ -183,9 +183,9 @@ SEITL_createFitmodel <- function(simulate=c("deterministic","stochastic")) {
 
 	# simulator
 	if(simulate=="deterministic"){
-		simulateTraj <- SEITL_simulateDeterministic
+		simulate <- SEITL_simulateDeterministic
 	} else {
-		simulateTraj <- SEITL_simulateStochastic
+		simulate <- SEITL_simulateStochastic
 	}
 
 	SEITL_name <- "SEITL model with daily incidence and constant population size"
@@ -197,7 +197,7 @@ SEITL_createFitmodel <- function(simulate=c("deterministic","stochastic")) {
 		name=SEITL_name,
 		state.names=SEITL_state.names,
 		theta.names=SEITL_theta.names,
-		simulateTraj=simulateTraj,
+		simulate=simulate,
 		generateObservation=SEITL_generateObservation,
 		logPrior=SEITL_logPrior,
 		logLikePoint=SEITL_logLikePoint) 
