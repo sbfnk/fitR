@@ -4,16 +4,16 @@ test_that("constructor for SEITL model",{
 
 # load and rename data
 	
-	SEITL_det <- SEITL_createModelTdC(simulate="deterministic")
+	SEITL_det <- SEITL_createFitmodel(simulate="deterministic")
 	expect_true(inherits(SEITL_det,"fitmodel"))
 
-	SEITL_sto <- SEITL_createModelTdC(simulate="stochastic")
+	SEITL_sto <- SEITL_createFitmodel(simulate="stochastic")
 	expect_true(inherits(SEITL_sto,"fitmodel"))
 
-	SEIT2L_det <- SEIT2L_createModelTdC(simulate="deterministic")
+	SEIT2L_det <- SEIT2L_createFitmodel(simulate="deterministic")
 	expect_true(inherits(SEIT2L_det,"fitmodel"))
 
-	SEIT2L_sto <- SEIT2L_createModelTdC(simulate="stochastic")
+	SEIT2L_sto <- SEIT2L_createFitmodel(simulate="stochastic")
 	expect_true(inherits(SEIT2L_sto,"fitmodel"))
 
 

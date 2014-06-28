@@ -3,7 +3,7 @@ context("mcmc")
 test_that("mcmcMH for deterministic SEITL model",{
 
 
-	fitmodel <- SEITL_createModelTdC("deterministic")
+	fitmodel <- SEITL_createFitmodel("deterministic")
 
 	theta <- c("R0"=10, "LP"=2 , "IP"=3, "alpha"=0.5, "TIP"=15, "rho"=0.7)
 	state.init <- c("S"=280,"E"=0,"I"=2,"T"=0,"L"=4,"Inc"=0)
@@ -26,7 +26,7 @@ test_that("mcmcMH for deterministic SEITL model",{
 test_that("mcmcMH for deterministic SEIT2L model",{
 
 
-	fitmodel <- SEIT2L_createModelTdC("deterministic")
+	fitmodel <- SEIT2L_createFitmodel("deterministic")
 
 	theta <- c("R0"=10, "LP"=2 , "IP"=3, "alpha"=0.5, "TIP"=15, "rho"=0.7)
 	state.init <- c("S"=280,"E"=0,"I"=2,"T1"=0,"T2"=0,"L"=4,"Inc"=0)
@@ -49,7 +49,7 @@ test_that("mcmcMH for deterministic SEIT2L model",{
 
 test_that("mcmcMH for stochastic SEITL model",{
 
-	fitmodel <- SEITL_createModelTdC("stochastic")
+	fitmodel <- SEITL_createFitmodel("stochastic")
 
 	theta <- c("R0"=10, "LP"=2 , "IP"=3, "alpha"=0.5, "TIP"=15, "rho"=0.7)
 	state.init <- c("S"=280,"E"=0,"I"=2,"T"=0,"L"=4,"Inc"=0)
@@ -73,7 +73,7 @@ test_that("mcmcMH for stochastic SEITL model",{
 
 test_that("mcmcMH for stochastic SEIT2L model",{
 
-	fitmodel <- SEIT2L_createModelTdC("stochastic")
+	fitmodel <- SEIT2L_createFitmodel("stochastic")
 
 	theta <- c("R0"=10, "LP"=2 , "IP"=3, "alpha"=0.5, "TIP"=15, "rho"=0.7)
 	state.init <- c("S"=280,"E"=0,"I"=2,"T1"=0,"T2"=0,"L"=4,"Inc"=0)
@@ -97,7 +97,7 @@ test_that("mcmcMH for stochastic SEIT2L model",{
 
 # test_that("mcmcMH ABC for deterministic SEIT2L model",{
 
-# 	SEIT2L <- SEIT2L_createModelTdC(deterministic=TRUE, verbose=FALSE) 
+# 	SEIT2L <- SEIT2L_createFitmodel(deterministic=TRUE, verbose=FALSE) 
 
 # 	theta.init <- SEIT2L$theta
 

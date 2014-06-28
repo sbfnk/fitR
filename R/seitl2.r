@@ -128,7 +128,7 @@ SEIT2L_simulateStochastic <- function(theta,state.init,times) {
 #' @export
 #' @import plyr
 #' @return a fitmodel object
-SEIT2L_createModelTdC <- function(simulate=c("deterministic","stochastic")) {
+SEIT2L_createFitmodel <- function(simulate=c("deterministic","stochastic")) {
 
 	# simulate
 	simulate <- match.arg(simulate)

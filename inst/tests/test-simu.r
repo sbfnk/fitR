@@ -3,8 +3,8 @@ context("simu")
 test_that("simulate and generate observation",{
 
 	# SEITL
-	SEITL_deter <- SEITL_createModelTdC("deterministic")
-	SEITL_sto <- SEITL_createModelTdC("stochastic")
+	SEITL_deter <- SEITL_createFitmodel("deterministic")
+	SEITL_sto <- SEITL_createFitmodel("stochastic")
 	list_model <- list(SEITL_deter,SEITL_sto)
 
 	theta <- c("R0"=10, "LP"=2 , "IP"=3, "alpha"=0.5, "TIP"=15, "rho"=0.7)
@@ -22,8 +22,8 @@ test_that("simulate and generate observation",{
 	}
 	
 	# SEITL2
-	SEIT2L_deter <- SEIT2L_createModelTdC("deterministic")
-	SEIT2L_sto <- SEIT2L_createModelTdC("stochastic")
+	SEIT2L_deter <- SEIT2L_createFitmodel("deterministic")
+	SEIT2L_sto <- SEIT2L_createFitmodel("stochastic")
 	list_model <- list(SEIT2L_deter,SEIT2L_sto)
 
 	state.init <- c("S"=280,"E"=0,"I"=2,"T1"=0,"T2"=0,"L"=4,"Inc"=0)

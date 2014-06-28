@@ -176,7 +176,7 @@ SEITL_logLikePoint <- function(data.point, state.point, theta){
 #' @export
 #' @import plyr
 #' @return a fitmodel object
-SEITL_createModelTdC <- function(simulate=c("deterministic","stochastic")) {
+SEITL_createFitmodel <- function(simulate=c("deterministic","stochastic")) {
 
 	# simulate
 	simulate <- match.arg(simulate)
