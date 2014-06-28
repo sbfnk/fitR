@@ -46,7 +46,7 @@ margLogLikeSto <- function(fitmodel, theta, state.init, data, n.particles, n.cor
 	return(smc$margLogLike)
 }
 
-#'Target posterior distribution for a fitmodel
+#'Posterior distribution for a fitmodel
 #'
 #'This function evaluates the posterior distribution at \code{theta} and returns the result in a suitable format for \code{\link{mcmcMH}}.
 #' @param margLogLike \R-function to compute the marginal log-likelihood of \code{theta}.
@@ -59,7 +59,7 @@ margLogLikeSto <- function(fitmodel, theta, state.init, data, n.particles, n.cor
 #' 	\item \code{log.density} numeric, logged value of the posterior density evaluated at \code{theta}
 #' 	\item \code{trace} named vector with trace information (theta, log.prior, marg.log.like, log.posterior)
 #' }
-targetPosterior <- function(fitmodel, theta, state.init, data, margLogLike, ...) {
+posteriorDensity <- function(fitmodel, theta, state.init, data, margLogLike, ...) {
 
 	theta.log.prior <- fitmodel$logPrior(theta=theta)
 
