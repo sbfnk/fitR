@@ -76,7 +76,7 @@ SIR_logPrior <- function(theta) {
 SIR_logLikePoint <- function(data.point, state.point, theta){
 
         ## the prevalence is observed through a Poisson process with a reporting rate
-	return(dpois(x=data.point["I"], lambda=theta["reporting.rate"]*state.point["I"], log=TRUE))
+	return(dpois(x=data.point[["I"]], lambda=theta[["reporting.rate"]]*state.point[["I"]], log=TRUE))
 }
 
 ## function to generate observation from a model simulation
