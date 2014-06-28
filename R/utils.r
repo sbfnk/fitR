@@ -200,5 +200,19 @@ export2Tracer <- function(trace, file) {
 }
 
 
+#'Print named vector
+#'
+#'Print named vector with format specified by \code{fmt} (2 decimal places by default).
+#' @param x named vector
+#' @inheritParams base::sprintf
+#' @inheritParams base::paste
+#' @export
+#' @seealso \code{\link[base]{sprintf}}
+printNamedVector <- function(x, fmt="%.2f", sep="|") {
+
+    paste(paste(names(x),sprintf(fmt,x),sep="="),collapse=sep)
+
+}
+
 
 
