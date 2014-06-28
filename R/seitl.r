@@ -44,7 +44,7 @@ SEITL_simulateDeterministic <- function(theta,state.init,times) {
 	# put incidence at 0 in state.init
 	state.init["Inc"] <- 0
 
-	traj <- as.data.frame(ode(state.init, times, SEITL_ode, theta))
+	traj <- as.data.frame(ode(state.init, times, SEITL_ode, theta, method = "ode45"))
 
 	# compute incidence of each time interval
 	traj <- mutate(traj,Inc=c(0,diff(Inc)))

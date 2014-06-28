@@ -25,7 +25,7 @@ SIR_simulateDeterministic <- function(theta,state.init,times) {
                 return(list(c(dS, dI, dR)))
         }
 
-	trajectory <- data.frame(ode(y=state.init,times=times,func=SIR_ode,parms=theta))
+	trajectory <- data.frame(ode(y=state.init,times=times,func=SIR_ode,parms=theta, method = "ode45"))
 
 	return(trajectory)
 }
