@@ -3,27 +3,25 @@
 \alias{mcmcMH}
 \title{Metropolis-Hasting MCMC}
 \usage{
-mcmcMH(target, target.args, theta.init, gaussian.proposal = list(covmat =
-  NULL, lower = NULL, upper = NULL), n.iterations,
-  adapt.size.start = n.iterations, adapt.size.cooling = 0.99,
-  adapt.shape.start = n.iterations, print.info.every = n.iterations/100)
+mcmcMH(target, theta.init, gaussian.proposal = list(covmat = NULL, lower =
+  NULL, upper = NULL), n.iterations, adapt.size.start = n.iterations,
+  adapt.size.cooling = 0.99, adapt.shape.start = n.iterations,
+  print.info.every = n.iterations/100)
 }
 \arguments{
-\item{target}{\R-function that takes at least one argument, called \code{theta}, which is the named vector of parameter of the model. This function returns a list of 2 elements:
+\item{target}{\R-function that takes a single argument: \code{theta} (named numeric vector of parameter values) and returns a list of 2 elements:
 \itemize{
-\item \code{log.dist} the logged value of the target distribution, evaluated at \code{theta}.
-\item \code{trace} a named vector of value that will be printed in the \code{trace} data.frame returned by \code{mcmcMH}.
+\item \code{log.density} the logged value of the target density, evaluated at \code{theta}.
+\item \code{trace} a named numeric vector of values to be printed in the \code{trace} data.frame returned by \code{mcmcMH}.
 }}
-
-\item{target.args}{list of additional arguments to be passed to the function \code{target}.}
 
 \item{theta.init}{named vector of initial parameter values to start the chain.}
 
-\item{gaussian.proposal}{list of theta for the - potentially truncated - multi-variate normal proposal kernel of the MCMC. Contains 3 elements:
+\item{gaussian.proposal}{list of parameters for the - potentially truncated - multi-variate normal proposal kernel of the MCMC. Contains 3 elements:
 \itemize{
-    \item \code{covmat} covariance matrix. Must have named rows and columns with at least all estimated theta.
-    \item \code{lower} named vector of lower truncation points.
-    \item \code{upper} named vector of upper truncation points.
+    \item \code{covmat} named numeric matrix. Covariance of the gaussian kernel. Must have named rows and columns with at least all estimated theta. By default it is a diagonal matrix with diagonal elements equal to \code{theta.init/10}.
+    \item \code{lower} named numeric vector. Lower truncation points in each dimension of the gaussian kernel. By default they are set to \code{-Inf}.
+    \item \code{upper} named numeric vector. Upper truncation points in each dimension of the gaussian kernel. By default they are set to \code{Inf}.
 }}
 
 \item{n.iterations}{number of iterations to run the MCMC chain.}
@@ -35,25 +33,20 @@ mcmcMH(target, target.args, theta.init, gaussian.proposal = list(covmat =
 \item{adapt.shape.start}{number of accepted jumps before adapting the shape of the proposal covariance matrix (see note below).}
 
 \item{print.info.every}{frequency of information on the chain: acceptance rate and state of the chain. Default value to \code{n.iterations/100}. Set to \code{NULL} to avoid any info.}
-
-\item{...}{other arguments to be passed to function \code{logLikePoint}.}
 }
 \value{
 a list with 3 elements:
 \itemize{
-	\item \code{trace} a \code{data.frame}. Each row contains a state of the chain (as returned by \code{target}) and the last column "weight" is the number of iteration the chain stayed in that state. This offers a compact storage for the full trace of the chain.
+	\item \code{trace} a \code{data.frame}. Each row contains a state of the chain (as returned by \code{target}) and the last column \code{weight} is the number of iteration the chain stayed in that state. This offers a compact storage for the full trace of the chain.
 	\item \code{acceptance.rate} acceptance rate of the MCMC chain.
 	\item \code{covmat.empirical} empirical covariance matrix of the target sample.
 }
 }
 \description{
-Run \code{n.iterations} of a Metropolis-Hasting MCMC to sample from the target distribution using a gaussian proposal kernel, possibly truncated.
+Run \code{n.iterations} of a Metropolis-Hasting MCMC to sample from the target distribution using a gaussian proposal kernel.
+Two optional optimizations are also implemented: truncated gaussian proposal (to match the support of the target distribution, i.e. boundary of the parameters) and adaptative gaussian proposal (to match the size and the shape of the target distribution).
 }
 \note{
-By specifying \code{logLikePoint}, this function offers the possibility to run a MCMC independently of the method used for likelihood computation.
-Although for a deterministic model \code{logLikePoint} is quite straightforward, fitting a stochastic model will require a call to a SMC algorithm to evaluate the log-likelihood.
-Finally, this function can also implement an ABC procedure to decide whether to accept or reject the parameter set.
-
 The size of the proposal covariance matrix is adapted using the following formulae: \deqn{\Sigma_{n+1}=\sigma_n * \Sigma_n} with \eqn{\sigma_n=\sigma_{n-1}*exp(\alpha^n*(acc - 0.234))},
 where \eqn{\alpha} is equal to \code{adapt.size.cooling} and \eqn{acc} is the acceptance rate of the chain.
 

@@ -1,31 +1,25 @@
 #'Metropolis-Hasting MCMC
 #'
-#'Run \code{n.iterations} of a Metropolis-Hasting MCMC to sample from the target distribution using a gaussian proposal kernel, possibly truncated.
-#' @param target \R-function that takes at least one argument, called \code{theta}, which is the named vector of parameter of the model. This function returns a list of 2 elements:
+#'Run \code{n.iterations} of a Metropolis-Hasting MCMC to sample from the target distribution using a gaussian proposal kernel.
+#'Two optional optimizations are also implemented: truncated gaussian proposal (to match the support of the target distribution, i.e. boundary of the parameters) and adaptative gaussian proposal (to match the size and the shape of the target distribution).
+#' @param target \R-function that takes a single argument: \code{theta} (named numeric vector of parameter values) and returns a list of 2 elements:
 #' \itemize{
-#' \item \code{log.dist} the logged value of the target distribution, evaluated at \code{theta}.
-#' \item \code{trace} a named vector of value that will be printed in the \code{trace} data.frame returned by \code{mcmcMH}.
+#' \item \code{log.density} the logged value of the target density, evaluated at \code{theta}.
+#' \item \code{trace} a named numeric vector of values to be printed in the \code{trace} data.frame returned by \code{mcmcMH}.
 #' }
-#' @param target.args list of additional arguments to be passed to the function \code{target}.
 #' @param theta.init named vector of initial parameter values to start the chain.
-#' @param gaussian.proposal list of theta for the - potentially truncated - multi-variate normal proposal kernel of the MCMC. Contains 3 elements:
+#' @param gaussian.proposal list of parameters for the - potentially truncated - multi-variate normal proposal kernel of the MCMC. Contains 3 elements:
 #'\itemize{
-#'	\item \code{covmat} covariance matrix. Must have named rows and columns with at least all estimated theta.
-#'	\item \code{lower} named vector of lower truncation points.
-#'	\item \code{upper} named vector of upper truncation points.
+#'	\item \code{covmat} named numeric matrix. Covariance of the gaussian kernel. Must have named rows and columns with at least all estimated theta. By default it is a diagonal matrix with diagonal elements equal to \code{theta.init/10}.
+#'	\item \code{lower} named numeric vector. Lower truncation points in each dimension of the gaussian kernel. By default they are set to \code{-Inf}.
+#'	\item \code{upper} named numeric vector. Upper truncation points in each dimension of the gaussian kernel. By default they are set to \code{Inf}.
 #'} 
 #' @param n.iterations number of iterations to run the MCMC chain.
 #' @param adapt.size.start number of iterations to run before adapting the size of the proposal covariance matrix (see note below).
 #' @param adapt.size.cooling cooling factor for the scaling factor of the covariance matrix during size adaptation (see note below).
 #' @param adapt.shape.start number of accepted jumps before adapting the shape of the proposal covariance matrix (see note below).
 #' @param print.info.every frequency of information on the chain: acceptance rate and state of the chain. Default value to \code{n.iterations/100}. Set to \code{NULL} to avoid any info.
-#' @param ... other arguments to be passed to function \code{logLikePoint}.
-#' @inheritParams margLogLikeDeter
-#' @note By specifying \code{logLikePoint}, this function offers the possibility to run a MCMC independently of the method used for likelihood computation.
-#' Although for a deterministic model \code{logLikePoint} is quite straightforward, fitting a stochastic model will require a call to a SMC algorithm to evaluate the log-likelihood.
-#' Finally, this function can also implement an ABC procedure to decide whether to accept or reject the parameter set.
-#'
-#' The size of the proposal covariance matrix is adapted using the following formulae: \deqn{\Sigma_{n+1}=\sigma_n * \Sigma_n} with \eqn{\sigma_n=\sigma_{n-1}*exp(\alpha^n*(acc - 0.234))},
+#' @note The size of the proposal covariance matrix is adapted using the following formulae: \deqn{\Sigma_{n+1}=\sigma_n * \Sigma_n} with \eqn{\sigma_n=\sigma_{n-1}*exp(\alpha^n*(acc - 0.234))},
 #' where \eqn{\alpha} is equal to \code{adapt.size.cooling} and \eqn{acc} is the acceptance rate of the chain.
 #'
 #' The shape of the proposal covariance matrix is adapted using the following formulae: \deqn{\Sigma_{n+1}=2.38^2/d * \Sigma_n} with \eqn{\Sigma_n} the empirical covariance matrix
@@ -36,11 +30,11 @@
 #' @importFrom lubridate as.period
 #' @return a list with 3 elements:
 #'\itemize{
-#'	\item \code{trace} a \code{data.frame}. Each row contains a state of the chain (as returned by \code{target}) and the last column "weight" is the number of iteration the chain stayed in that state. This offers a compact storage for the full trace of the chain.
+#'	\item \code{trace} a \code{data.frame}. Each row contains a state of the chain (as returned by \code{target}) and the last column \code{weight} is the number of iteration the chain stayed in that state. This offers a compact storage for the full trace of the chain.
 #'	\item \code{acceptance.rate} acceptance rate of the MCMC chain.
 #'	\item \code{covmat.empirical} empirical covariance matrix of the target sample.
 #'}
-mcmcMH <- function(target, target.args, theta.init, gaussian.proposal=list(covmat=NULL, lower=NULL, upper=NULL), n.iterations, adapt.size.start=n.iterations, adapt.size.cooling=0.99, adapt.shape.start=n.iterations, print.info.every=n.iterations/100) {
+mcmcMH <- function(target, theta.init, gaussian.proposal=list(covmat=NULL, lower=NULL, upper=NULL), n.iterations, adapt.size.start=n.iterations, adapt.size.cooling=0.99, adapt.shape.start=n.iterations, print.info.every=n.iterations/100) {
 
 	# initialise theta
 	theta.current <- theta.init
@@ -51,11 +45,25 @@ mcmcMH <- function(target, target.args, theta.init, gaussian.proposal=list(covma
 	lower.proposal <- gaussian.proposal$lower
 	upper.proposal <- gaussian.proposal$upper
 
-	# reorder all vector and matrix by names
+	# reorder vector and matrix by names, set to default if necessary 
 	theta.names <- names(theta.init)
-	covmat.proposal <- covmat.proposal[theta.names,theta.names]
-	lower.proposal <- lower.proposal[theta.names]
-	upper.proposal <- upper.proposal[theta.names]
+	if(is.null(covmat.proposal)){
+		covmat.proposal <- matrix(diag(theta.init/10),nrow=length(theta.names),dimnames=list(theta.names,theta.names))
+	} else {
+		covmat.proposal <- covmat.proposal[theta.names,theta.names]		
+	}
+	if(is.null(lower.proposal)){
+		lower.proposal <- theta.init
+		lower.proposal[] <- -Inf
+	} else {
+		lower.proposal <- lower.proposal[theta.names]		
+	}
+	if(is.null(upper.proposal)){
+		upper.proposal <- theta.init
+		upper.proposal[] <- Inf
+	} else {
+		upper.proposal <- upper.proposal[theta.names]		
+	}
 
 	# covmat init
 	covmat.proposal.init <- covmat.proposal
@@ -66,7 +74,7 @@ mcmcMH <- function(target, target.args, theta.init, gaussian.proposal=list(covma
 	theta.estimated.names <- names(which(diag(covmat.proposal)>0))
 
 	# evaluate target at theta init
-	target.theta.current <- do.call(target, c(list(theta=theta.current), target.args))
+	target.theta.current <- target(theta=theta.current)
 
 	# initialise trace data.frame
 	trace <- data.frame(t(target.theta.current$trace), weight=1)
@@ -116,10 +124,9 @@ mcmcMH <- function(target, target.args, theta.init, gaussian.proposal=list(covma
 		# print info
 		if(i.iteration%%round(print.info.every)==0){
 			end_iteration_time <- Sys.time()
-			x <- trace[nrow(trace),]
-			x <- paste(paste0(names(x),"=",sprintf("%.2f",x)),collapse="|")
+			state.mcmc <- trace[nrow(trace),]
 			suppressMessages(time.estimation <- round(as.period((end_iteration_time-start_iteration_time)*10000/round(print.info.every))))
-			message("Iteration: ",i.iteration,"/",n.iterations," Time 10000 iter: ",time.estimation," Acceptance rate: ",sprintf("%.3f",acceptance.rate)," Scaling.sd: ",sprintf("%.3f",scaling.sd)," State:",x)
+			message("Iteration: ",i.iteration,"/",n.iterations," Time 10000 iter: ",time.estimation," Acceptance rate: ",sprintf("%.3f",acceptance.rate)," Scaling.sd: ",sprintf("%.3f",scaling.sd)," State:",printNamedVector(state.mcmc))
 			start_iteration_time <- end_iteration_time
 		}
 
@@ -131,16 +138,16 @@ mcmcMH <- function(target, target.args, theta.init, gaussian.proposal=list(covma
 		theta.propose[theta.estimated.names] <- as.vector(rtmvnorm(1,mean=theta.current[theta.estimated.names],sigma=covmat.proposal[theta.estimated.names,theta.estimated.names],lower=lower.proposal[theta.estimated.names],upper=upper.proposal[theta.estimated.names]))
 
 		# evaluate posterior of proposed parameter
-		target.theta.propose <- do.call(target, c(list(theta=theta.propose), target.args))
+		target.theta.propose <- target(theta=theta.propose)
 
-		if(!is.finite(target.theta.propose$log.dist)){
+		if(!is.finite(target.theta.propose$log.density)){
 			# if posterior is 0 then do not compute anything else and don't accept
 			log.acceptance <- -Inf
 
 		}else{
 
 			# compute Metropolis-Hastings ratio (acceptance probability)
-			log.acceptance <- target.theta.propose$log.dist - target.theta.current$log.dist + dtmvnorm(x=theta.current[theta.estimated.names],mean=theta.propose[theta.estimated.names],sigma=covmat.proposal[theta.estimated.names,theta.estimated.names],lower=lower.proposal[theta.estimated.names],upper=upper.proposal[theta.estimated.names],log=TRUE) - dtmvnorm(x=theta.propose[theta.estimated.names],mean=theta.current[theta.estimated.names],sigma=covmat.proposal[theta.estimated.names,theta.estimated.names],lower=lower.proposal[theta.estimated.names],upper=upper.proposal[theta.estimated.names],log=TRUE)
+			log.acceptance <- target.theta.propose$log.density - target.theta.current$log.density + dtmvnorm(x=theta.current[theta.estimated.names],mean=theta.propose[theta.estimated.names],sigma=covmat.proposal[theta.estimated.names,theta.estimated.names],lower=lower.proposal[theta.estimated.names],upper=upper.proposal[theta.estimated.names],log=TRUE) - dtmvnorm(x=theta.propose[theta.estimated.names],mean=theta.current[theta.estimated.names],sigma=covmat.proposal[theta.estimated.names,theta.estimated.names],lower=lower.proposal[theta.estimated.names],upper=upper.proposal[theta.estimated.names],log=TRUE)
 
 		}
 
