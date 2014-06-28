@@ -11,7 +11,7 @@
 #' \item \code{times} numeric vector. Time sequence for which the state of the model is wanted; the first value of times must be the initial time, i.e. the time of \code{state.init}.
 #' }
 #' and returns a \code{data.fame} containing the simulated trajectories that is the values of the state variables (1 per column) at each observation time (1 per row). The first column is \code{time}.
-#' @param generateObservation \R-function that generates simulated data from a simulated trajectory using an observation model (optional). This function takes 2 arguments:
+#' @param generateObs \R-function that generates simulated data from a simulated trajectory using an observation model (optional). This function takes 2 arguments:
 #' \itemize{
 #' \item \code{simu.traj} data.frame of simulated trajectories, as returned by \code{simulate}.
 #' \item \code{theta} named numeric vector. Values of the parameters. Names should match \code{theta.names}. 
@@ -36,13 +36,13 @@
 #' 	\item \code{state.names} vector, names of the state variables.
 #' 	\item \code{theta.names} vector, names of the parameters.
 #' 	\item \code{simulate} \R-function to simulate forward the model; usage: \code{simulate(theta,state.init,times)}.
-#' 	\item \code{generateObservation} \R-function to generate simulated observations; usage: \code{generateObservation(simu.traj, theta)}.
+#' 	\item \code{generateObs} \R-function to generate simulated observations; usage: \code{generateObs(simu.traj, theta)}.
 #' 	\item \code{logPrior} \R-function to evaluate the log-prior of the parameter values; usage: \code{logPrior(theta)}.
 #' 	\item \code{logLikePoint} \R-function to evaluate the log-likelihood of one data point; usage: \code{logLikePoint(data.point, state.point, theta)}.
 #' }
 #' @seealso \code{\link{testFitmodel}}
 #' @example inst/examples/example-fitmodel.r
-fitmodel <- function(name=NULL, state.names=NULL, theta.names=NULL, simulate=NULL, generateObservation=NULL, logPrior=NULL, logLikePoint=NULL){
+fitmodel <- function(name=NULL, state.names=NULL, theta.names=NULL, simulate=NULL, generateObs=NULL, logPrior=NULL, logLikePoint=NULL){
 
 	# mandatory
 	if(!is.character(name)){
@@ -59,8 +59,8 @@ fitmodel <- function(name=NULL, state.names=NULL, theta.names=NULL, simulate=NUL
 	}
 	
 	# optional
-	if(!is.null(generateObservation) && !is.function(generateObservation)){
-		stop(sQuote("generateObservation")," argument is not an R function")
+	if(!is.null(generateObs) && !is.function(generateObs)){
+		stop(sQuote("generateObs")," argument is not an R function")
 	}
 	if(!is.null(logPrior) && !is.function(logPrior)){
 		stop(sQuote("logPrior")," argument is not an R function")
@@ -75,7 +75,7 @@ fitmodel <- function(name=NULL, state.names=NULL, theta.names=NULL, simulate=NUL
 		state.names=state.names,
 		theta.names=theta.names,
 		simulate=simulate,
-		generateObservation=generateObservation,
+		generateObs=generateObs,
 		logPrior=logPrior,
 		logLikePoint=logLikePoint), class="fitmodel"))
 
@@ -177,40 +177,40 @@ testFitmodel <- function(fitmodel, theta, state.init, data = NULL, verbose=TRUE)
 		warning("fitmodel does not contain a simulate method -- not tested\n")
 	}
 
-	## check generateObservation
-	if(!is.null(fitmodel$generateObservation)) {
+	## check generateObs
+	if(!is.null(fitmodel$generateObs)) {
 		if(verbose){
-			cat("--- checking generateObservation\n")
+			cat("--- checking generateObs\n")
 		}
                 ## check arguments
 		fun_args <- c("simu.traj","theta")
-		if(!(all(x <- fun_args%in%names(formals(fitmodel$generateObservation))))){
-			stop("argument(s) ",sQuote(fun_args[!x])," missing in function generateObservation, see ?fitmodel.")
+		if(!(all(x <- fun_args%in%names(formals(fitmodel$generateObs))))){
+			stop("argument(s) ",sQuote(fun_args[!x])," missing in function generateObs, see ?fitmodel.")
 		}
 
 		if (!is.null(test.traj)) {
-			test.generateObservation <- fitmodel$generateObservation(test.traj, theta)
+			test.generateObs <- fitmodel$generateObs(test.traj, theta)
 			if(verbose){
-				cat("generateObservation(test.traj, theta) should return a non-negative data.frame of dimension",nrow(test.traj),"x",ncol(test.traj)+1,"with column names:",sQuote(c(names(test.traj),"observation")),"\nTest:\n")
-				print(test.generateObservation)
+				cat("generateObs(test.traj, theta) should return a non-negative data.frame of dimension",nrow(test.traj),"x",ncol(test.traj)+1,"with column names:",sQuote(c(names(test.traj),"observation")),"\nTest:\n")
+				print(test.generateObs)
 			}
-			if(!is.data.frame(test.generateObservation)){
-				stop("generateObservation must return a data.frame")
+			if(!is.data.frame(test.generateObs)){
+				stop("generateObs must return a data.frame")
 			}
-			if(!all(x <- c(names(test.generateObservation),"observation")%in%names(test.generateObservation))){
-				stop("Column(s) missing in the data.frame returned by generateObservation:",sQuote(c("time",fitmodel$state.names)[x]))
+			if(!all(x <- c(names(test.generateObs),"observation")%in%names(test.generateObs))){
+				stop("Column(s) missing in the data.frame returned by generateObs:",sQuote(c("time",fitmodel$state.names)[x]))
 			}
-			if(!all(x <- names(test.generateObservation)%in%c(names(test.generateObservation),"observation"))){
-				warning("The following columns are not required in the data.frame returned by generateObservation:",sQuote(names(test.generateObservation)[x]))
+			if(!all(x <- names(test.generateObs)%in%c(names(test.generateObs),"observation"))){
+				warning("The following columns are not required in the data.frame returned by generateObs:",sQuote(names(test.generateObs)[x]))
 			}
-			if(nrow(test.generateObservation)!=nrow(test.traj)){
-				stop("The data.frame returned by generateObservation must have the same number of rows as the simu.traj argument",call.=FALSE)
+			if(nrow(test.generateObs)!=nrow(test.traj)){
+				stop("The data.frame returned by generateObs must have the same number of rows as the simu.traj argument",call.=FALSE)
 			}
-			if(any(test.generateObservation$observation<0)){
-				stop("generateObservation returned negative observation during the test, use verbose argument of fitmodel to check")
+			if(any(test.generateObs$observation<0)){
+				stop("generateObs returned negative observation during the test, use verbose argument of fitmodel to check")
 			}
 			if(verbose){
-				cat("--> generateObservation looks good!\n")
+				cat("--> generateObs looks good!\n")
 			}
 		} else {
 			warning("no test trajectory created, not creating test observation\n")

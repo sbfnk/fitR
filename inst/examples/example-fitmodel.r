@@ -80,7 +80,7 @@ SIR_logLikePoint <- function(data.point, state.point, theta){
 }
 
 ## function to generate observation from a model simulation
-SIR_generateObservation <- function(simu.traj, theta){
+SIR_generateObs <- function(simu.traj, theta){
 
         ## the prevalence is observed through a Poisson process with a reporting rate 
         simu.traj$observation <- rpois(n=nrow(simu.traj), lambda=theta["reporting.rate"]*simu.traj$I)
@@ -94,7 +94,7 @@ SIR_deter <- fitmodel(
         state.names=SIR_state.names,
 	theta.names=SIR_theta.names,
         simulate=SIR_simulateDeterministic,
-	generateObservation=SIR_generateObservation,
+	generateObs=SIR_generateObs,
 	logPrior=SIR_logPrior,
 	logLikePoint=SIR_logLikePoint)
 
@@ -104,7 +104,7 @@ SIR_sto <- fitmodel(
         state.names=SIR_state.names,
         theta.names=SIR_theta.names,
         simulate=SIR_simulateStochastic,
-        generateObservation=SIR_generateObservation,
+        generateObs=SIR_generateObs,
         logPrior=SIR_logPrior,
         logLikePoint=SIR_logLikePoint)
 
