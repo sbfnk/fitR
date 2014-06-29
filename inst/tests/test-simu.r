@@ -16,7 +16,7 @@ test_that("simulate and generate observation",{
 		traj <- SEITL$simulate(theta=theta, state.init, times=times)
 		expect_true(inherits(traj,"data.frame"))
 
-		traj.obs <- SEITL$generateObservation(traj,theta)	
+		traj.obs <- SEITL$generateObs(traj,theta)	
 		expect_true(inherits(traj.obs,"data.frame"))
 
 	}
@@ -33,7 +33,7 @@ test_that("simulate and generate observation",{
 		traj <- SEIT2L$simulate(theta=theta, state.init, times=times)
 		expect_true(inherits(traj,"data.frame"))
 
-		traj.obs <- SEIT2L$generateObservation(traj,theta)	
+		traj.obs <- SEIT2L$generateObs(traj,theta)	
 		expect_true(inherits(traj.obs,"data.frame"))
 
 	}
