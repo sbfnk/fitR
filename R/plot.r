@@ -12,7 +12,7 @@
 plotModelTraj <- function(fitmodel,traj,state.variables=NULL,alpha=1, plot=TRUE) {
 
     if(is.null(state.variables)){
-        state.variables <- fitmodel$state.variables
+        state.variables <- fitmodel$state.names
     }
 
     if(!"replicate"%in%names(traj) && !any(duplicated(traj$time))){
