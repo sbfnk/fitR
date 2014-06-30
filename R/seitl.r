@@ -160,7 +160,7 @@ SEITL_logPrior <- function(theta) {
 #' @export
 #' @seealso SEITL_generateObs
 #' @return the log-likelihood value.
-SEITL_logLikePoint <- function(data.point, state.point, theta){
+SEITL_pointLogLike <- function(data.point, state.point, theta){
 
 	return(dpois(x=data.point[["Inc"]],lambda=theta[["rho"]]*state.point[["Inc"]],log=TRUE))
 
@@ -200,7 +200,7 @@ SEITL_createFitmodel <- function(simulate=c("deterministic","stochastic")) {
 		simulate=simulate,
 		generateObs=SEITL_generateObs,
 		logPrior=SEITL_logPrior,
-		logLikePoint=SEITL_logLikePoint) 
+		pointLogLike=SEITL_pointLogLike)
 
 	return(SEITL)
 }

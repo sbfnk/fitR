@@ -12,7 +12,7 @@ testFitmodel(fitmodel, theta, state.init, data = NULL, verbose = TRUE)
 
 \item{state.init}{named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.}
 
-\item{data}{data frame. Observation times and observed data. The time column must be named \code{time}, whereas the name of the data column should match the one used in the function \code{fitmodel$logLikePoint}.}
+\item{data}{data frame. Observation times and observed data. The time column must be named \code{time}, whereas the name of the data column should match the one used in the function \code{fitmodel$pointLogLike}.}
 
 \item{verbose}{if \code{TRUE}, print details of the test performed to check validity of the arguments}
 }
@@ -96,7 +96,7 @@ SIR_logPrior <- function(theta) {
 }
 
 ## function to compute the log-likelihood of one data point
-SIR_logLikePoint <- function(data.point, state.point, theta){
+SIR_pointLogLike <- function(data.point, model.point, theta){
 
         ## the prevalence is observed through a Poisson process with a reporting rate
 	return(dpois(x=data.point[["I"]], lambda=theta[["reporting.rate"]]*state.point[["I"]], log=TRUE))
@@ -119,7 +119,7 @@ SIR_deter <- fitmodel(
         simulate=SIR_simulateDeterministic,
 	generateObs=SIR_generateObs,
 	logPrior=SIR_logPrior,
-	logLikePoint=SIR_logLikePoint)
+	pointLogLike=SIR_pointLogLike)
 
 ## create stochastic SIR fitmodel
 SIR_sto <- fitmodel(
@@ -129,7 +129,7 @@ SIR_sto <- fitmodel(
         simulate=SIR_simulateStochastic,
         generateObs=SIR_generateObs,
         logPrior=SIR_logPrior,
-        logLikePoint=SIR_logLikePoint)
+        pointLogLike=SIR_pointLogLike)
 
 ## test them
 theta <- c(R0=3, infectious.period=4, reporting.rate=0.7)

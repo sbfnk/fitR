@@ -13,21 +13,21 @@ margLogLikeDeter <- function(fitmodel, theta, state.init, data) {
 	traj <- fitmodel$simulate(theta,state.init,times)
 
 	# compute log-likelihood by summing the log-likelihood of each data point
-	margLogLike <- 0
 	for(i in 1:nrow(data)){ 
+	logLike <- 0
 
 		# extract data point
 		data.point <- unlist(data[i,])
-		
-		# extract state point
+
+		# extract model point
 		# we use i+1 since the first row of traj contains the initial state.
-		state.point <- unlist(traj[i+1,fitmodel$state.names])
-		
+		model.point <- unlist(traj[i+1,fitmodel$state.names])
+
 		# update marginal log-likelihood
-		margLogLike <- margLogLike + fitmodel$logLikePoint(data.point=data.point, state.point=state.point, theta=theta)		
+		logLike <- logLike + fitmodel$pointLogLike(data.point=data.point, model.point=model.point, theta=theta)
 	}
 
-	return(margLogLike)
+	return(logLike)
 }
 
 #'Marginal log-likelihood for a stochastic model

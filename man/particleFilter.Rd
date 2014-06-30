@@ -19,7 +19,7 @@ particleFilter(fitmodel, theta, state.init, data, n.particles,
 
 \item{state.init}{named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.}
 
-\item{data}{data frame. Observation times and observed data. The time column must be named \code{time}, whereas the name of the data column should match the one used in the function \code{fitmodel$logLikePoint}.}
+\item{data}{data frame. Observation times and observed data. The time column must be named \code{time}, whereas the name of the data column should match the one used in the function \code{fitmodel$pointLogLike}.}
 }
 \value{
 A list of 3 elements:

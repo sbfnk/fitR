@@ -12,7 +12,7 @@
 #' @import parallel doParallel
 #' @return A list of 3 elements:
 #' \itemize{
-#' \item \code{logLikePoint} the marginal log-likelihood of the theta.
+#' \item \code{pointLogLike} the marginal log-likelihood of the theta.
 #' \item \code{traj} a list of size \code{n.particles} with all filtered trajectories.
 #' \item \code{traj.weight} a vector of size \code{n.particles} with the normalised weight of the filtered trajectories.
 #' }
@@ -76,7 +76,7 @@ particleFilter <- function(fitmodel, theta, state.init, data, n.particles, progr
 
             # compute particle weight
             state.point <- unlist(traj[2,fitmodel$state.names])
-            weight <- exp(fitmodel$logLikePoint(data.point=data.point, state.point=state.point, theta=theta))
+            weight <- exp(fitmodel$pointLogLike(data.point=data.point, state.point=state.point, theta=theta))
 
             return(list(state=state.point,weight=weight))
 
@@ -112,7 +112,7 @@ particleFilter <- function(fitmodel, theta, state.init, data, n.particles, progr
 # {
 
 #     ############################################################################################
-#     ## This function compute the marginal logLikePoint of the data (fitmodel$data) 
+#     ## This function compute the marginal pointLogLike of the data (fitmodel$data)
 #     ## given the parameters (fitmodel$theta) using a particle filter
 #     ############################################################################################
 
@@ -125,7 +125,7 @@ particleFilter <- function(fitmodel, theta, state.init, data, n.particles, progr
 #     ############################################################################################
 
 #     # Marginal log-likelihood is set to 0 and will be updated during the fitering steps
-#     logLikePoint <- 0
+#     pointLogLike <- 0
 
 #     # Initialise the particles:
 #     # initial state: vector calculated by the function fitmodel$initialise.state evaluated at theta
@@ -162,7 +162,7 @@ particleFilter <- function(fitmodel, theta, state.init, data, n.particles, progr
 #             traj <- fitmodel$simulate(theta=theta,state.init=current.state.particle,times=c(current.time,next.time))
 
 #             # compute particle weight
-#             weight.particles[p] <- exp(fitmodel$logLikePoint( data=data, simu.traj=traj, theta= theta))
+#             weight.particles[p] <- exp(fitmodel$pointLogLike( data=data, simu.traj=traj, theta= theta))
 
 #             # Update state of the p particle
 #             # You need to take last row of the traj data frame which corresponds to the next observation time
@@ -175,12 +175,12 @@ particleFilter <- function(fitmodel, theta, state.init, data, n.particles, progr
 #         current.time <- next.time
 
 #         # Update marginal log-likelihood
-#         logLikePoint <- logLikePoint + log(mean(weight.particles))
+#         pointLogLike <- pointLogLike + log(mean(weight.particles))
 
 #     }
 
 
 #     # Return marginal log-likelihood
-#     return(logLikePoint)
+#     return(pointLogLike)
 
 # }

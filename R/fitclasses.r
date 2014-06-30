@@ -22,7 +22,7 @@
 #' 	\item \code{theta} named numeric vector. Values of the parameters. Names should match \code{theta.names}. 
 #' }
 #' and returns the logged value of the prior density distribution.
-#' @param logLikePoint \R-function that evaluates the log-likelihood of one data point given the state of the model at the same time point. This function takes 3 arguments:
+#' @param pointLogLike \R-function that evaluates the log-likelihood of one data point given the state of the model at the same time point. This function takes 3 arguments:
 #' \itemize{
 #' \item \code{data.point} named numeric vector. Observation time and observed data point.
 #' \item \code{state.point} named numeric vector containing the state of the model at the observation time point.
@@ -38,11 +38,11 @@
 #' 	\item \code{simulate} \R-function to simulate forward the model; usage: \code{simulate(theta,state.init,times)}.
 #' 	\item \code{generateObs} \R-function to generate simulated observations; usage: \code{generateObs(simu.traj, theta)}.
 #' 	\item \code{logPrior} \R-function to evaluate the log-prior of the parameter values; usage: \code{logPrior(theta)}.
-#' 	\item \code{logLikePoint} \R-function to evaluate the log-likelihood of one data point; usage: \code{logLikePoint(data.point, state.point, theta)}.
+#' 	\item \code{pointLogLike} \R-function to evaluate the log-likelihood of one data point; usage: \code{pointLogLike(data.point, state.point, theta)}.
 #' }
 #' @seealso \code{\link{testFitmodel}}
 #' @example inst/examples/example-fitmodel.r
-fitmodel <- function(name=NULL, state.names=NULL, theta.names=NULL, simulate=NULL, generateObs=NULL, logPrior=NULL, logLikePoint=NULL){
+fitmodel <- function(name=NULL, state.names=NULL, theta.names=NULL, simulate=NULL, genObsPoint=NULL, logPrior=NULL, pointLogLike=NULL){
 
 	# mandatory
 	if(!is.character(name)){
@@ -65,8 +65,8 @@ fitmodel <- function(name=NULL, state.names=NULL, theta.names=NULL, simulate=NUL
 	if(!is.null(logPrior) && !is.function(logPrior)){
 		stop(sQuote("logPrior")," argument is not an R function")
 	}
-	if(!is.null(logLikePoint) && !is.function(logLikePoint)){
-		stop(sQuote("logLikePoint") ," argument is not an R function")
+	if(!is.null(pointLogLike) && !is.function(pointLogLike)){
+		stop(sQuote("pointLogLike") ," argument is not an R function")
 	}
 
 	# create and return object
@@ -77,7 +77,7 @@ fitmodel <- function(name=NULL, state.names=NULL, theta.names=NULL, simulate=NUL
 		simulate=simulate,
 		generateObs=generateObs,
 		logPrior=logPrior,
-		logLikePoint=logLikePoint), class="fitmodel"))
+		pointLogLike=pointLogLike), class="fitmodel"))
 
 }
 
@@ -253,17 +253,17 @@ testFitmodel <- function(fitmodel, theta, state.init, data = NULL, verbose=TRUE)
 		}
 	}
 
-    ## check logLikePoint
+    ## check pointLogLike
     ## check arguments, return value
-	if (!is.null(fitmodel$logLikePoint)) {
+	if (!is.null(fitmodel$pointLogLike)) {
 
 		if(verbose){
-			cat("--- checking logLikePoint\n")
+			cat("--- checking pointLogLike\n")
 		}
 		# check arguments
 		fun_args <- c("data.point","state.point","theta")
-		if(!(all(x <- fun_args%in%names(formals(fitmodel$logLikePoint))))){
-			stop("argument(s) ",sQuote(fun_args[!x])," missing in function logLikePoint, see documentation.")
+		if(!(all(x <- fun_args%in%names(formals(fitmodel$pointLogLike))))){
+			stop("argument(s) ",sQuote(fun_args[!x])," missing in function pointLogLike, see documentation.")
 		}
 
 		if (!is.null(data)) {
@@ -272,25 +272,25 @@ testFitmodel <- function(fitmodel, theta, state.init, data = NULL, verbose=TRUE)
                 ## test it, first data point corresponds to second simulation step (first row contain initial state)
 				data.point <- unlist(data[1,])
 				state.point <- unlist(test.traj[2,])
-				test.logLikePoint <- fitmodel$logLikePoint(data.point=data.point, state.point=state.point ,theta=theta)
+				test.pointLogLike <- fitmodel$pointLogLike(data.point=data.point, state.point=state.point ,theta=theta)
 
 				if(verbose){
-					cat("logLikePoint(data.point,state.point,theta) should return a single value\nTest:",test.logLikePoint,"\n")
+					cat("pointLogLike(data.point,state.point,theta) should return a single value\nTest:",test.pointLogLike,"\n")
 				}
-				if(length(test.logLikePoint) > 1 || is.na(test.logLikePoint) || (test.logLikePoint > 0)){
-					stop("logLikePoint must return a single non-positive value")
+				if(length(test.pointLogLike) > 1 || is.na(test.pointLogLike) || (test.pointLogLike > 0)){
+					stop("pointLogLike must return a single non-positive value")
 				}
 				if(verbose){
-					cat("--> logLikePoint looks good!\n")
+					cat("--> pointLogLike looks good!\n")
 				}
 			} else {
 				warning("no test trajectory created, not creating test observation\n")
 			}
 		} else {
-			warning("data argument not given -- not testing logLikePoint function")
+			warning("data argument not given -- not testing pointLogLike function")
 		}
 	} else {
-		warning("fitmodel does not contain a logLikePoint method -- not tested\n")
+		warning("fitmodel does not contain a pointLogLike method -- not tested\n")
 	}
 
 }

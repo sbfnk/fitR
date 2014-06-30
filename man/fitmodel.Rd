@@ -5,7 +5,7 @@
 \usage{
 fitmodel(name = NULL, state.names = NULL, theta.names = NULL,
   simulate = NULL, generateObs = NULL, logPrior = NULL,
-  logLikePoint = NULL)
+  pointLogLike = NULL)
 }
 \arguments{
 \item{name}{character. Name of the model (required).}
@@ -35,7 +35,7 @@ and returns the \code{simu.traj} data.frame with an additional \code{observation
 }
 and returns the logged value of the prior density distribution.}
 
-\item{logLikePoint}{\R-function that evaluates the log-likelihood of one data point given the state of the model at the same time point. This function takes 3 arguments:
+\item{pointLogLike}{\R-function that evaluates the log-likelihood of one data point given the state of the model at the same time point. This function takes 3 arguments:
 \itemize{
 \item \code{data.point} named numeric vector. Observation time and observed data point.
 \item \code{state.point} named numeric vector containing the state of the model at the observation time point.
@@ -52,7 +52,7 @@ a \code{fitmodel} object that is a \code{list} of 7 elements:
 	\item \code{simulate} \R-function to simulate forward the model; usage: \code{simulate(theta,state.init,times)}.
 	\item \code{generateObs} \R-function to generate simulated observations; usage: \code{generateObs(simu.traj, theta)}.
 	\item \code{logPrior} \R-function to evaluate the log-prior of the parameter values; usage: \code{logPrior(theta)}.
-	\item \code{logLikePoint} \R-function to evaluate the log-likelihood of one data point; usage: \code{logLikePoint(data.point, state.point, theta)}.
+	\item \code{pointLogLike} \R-function to evaluate the log-likelihood of one data point; usage: \code{pointLogLike(data.point, state.point, theta)}.
 }
 }
 \description{
@@ -134,7 +134,7 @@ SIR_logPrior <- function(theta) {
 }
 
 ## function to compute the log-likelihood of one data point
-SIR_logLikePoint <- function(data.point, state.point, theta){
+SIR_pointLogLike <- function(data.point, model.point, theta){
 
         ## the prevalence is observed through a Poisson process with a reporting rate
 	return(dpois(x=data.point[["I"]], lambda=theta[["reporting.rate"]]*state.point[["I"]], log=TRUE))
@@ -157,7 +157,7 @@ SIR_deter <- fitmodel(
         simulate=SIR_simulateDeterministic,
 	generateObs=SIR_generateObs,
 	logPrior=SIR_logPrior,
-	logLikePoint=SIR_logLikePoint)
+	pointLogLike=SIR_pointLogLike)
 
 ## create stochastic SIR fitmodel
 SIR_sto <- fitmodel(
@@ -167,7 +167,7 @@ SIR_sto <- fitmodel(
         simulate=SIR_simulateStochastic,
         generateObs=SIR_generateObs,
         logPrior=SIR_logPrior,
-        logLikePoint=SIR_logLikePoint)
+        pointLogLike=SIR_pointLogLike)
 
 ## test them
 theta <- c(R0=3, infectious.period=4, reporting.rate=0.7)

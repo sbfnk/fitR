@@ -16,7 +16,7 @@ posteriorDensity(fitmodel, theta, state.init, data, margLogLike, ...)
 
 \item{state.init}{named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.}
 
-\item{data}{data frame. Observation times and observed data. The time column must be named \code{time}, whereas the name of the data column should match the one used in the function \code{fitmodel$logLikePoint}.}
+\item{data}{data frame. Observation times and observed data. The time column must be named \code{time}, whereas the name of the data column should match the one used in the function \code{fitmodel$pointLogLike}.}
 }
 \value{
 a list of two elements
