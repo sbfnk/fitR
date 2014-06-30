@@ -24,7 +24,7 @@ particleFilter(fitmodel, theta, state.init, data, n.particles,
 \value{
 A list of 3 elements:
 \itemize{
-\item \code{logLikePoint} the marginal log-likelihood of the theta.
+\item \code{pointLogLike} the marginal log-likelihood of the theta.
 \item \code{traj} a list of size \code{n.particles} with all filtered trajectories.
 \item \code{traj.weight} a vector of size \code{n.particles} with the normalised weight of the filtered trajectories.
 }
