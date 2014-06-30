@@ -3,19 +3,24 @@
 \alias{plotPosteriorFit}
 \title{Plot MCMC posterior fit}
 \usage{
-plotPosteriorFit(trace, fitmodel, posterior.median = FALSE, summary = FALSE,
+plotPosteriorFit(trace, fitmodel, theta, state.init,
+  posterior.summary = c("sample", "median", "mean", "max"), summary = TRUE,
   sample.size = 100, alpha = min(1, 10/sample.size), plot = TRUE)
 }
 \arguments{
-\item{posterior.median}{logical, if \code{TRUE} use the median of the posterior distribution.}
+\item{posterior.summary}{character. Set to \code{"sample"} to plot trajectories from a sample of the posterior (default). Set to \code{"median"}, \code{"mean"} or \code{"max"} to plot trajectories corresponding to the median, mean and maximum of the posterior density.}
 
 \item{summary}{logical, if \code{TRUE} trajectories are summarised by their mean, median, 50\% and 95\% quantile distributions. Otheriwse, the trajectories are ploted.}
 
-\item{sample.size}{number of replicated simulations (if \code{posterior.median=TRUE}) or number of theta sampled from posterior distribution (if \code{posterior.median=TRUE}).}
+\item{sample.size}{number of theta sampled from posterior distribution (if \code{posterior.summary=="sample"}). Otherwise, number of replicated simulations.}
+
+\item{fitmodel}{a \code{\link{fitmodel}} object}
+
+\item{theta}{named numeric vector. Values of the parameters. Names should match \code{fitmodel$theta.names}.}
+
+\item{state.init}{named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.}
 
 \item{trace}{a \code{data.frame} with one column per estimated parameter, as returned by \code{\link{burnAndThin}}}
-
-\item{fitmodel}{a \code{\link{fitmodel}} object.}
 
 \item{alpha}{transparency of the trajectories (between 0 and 1).}
 
