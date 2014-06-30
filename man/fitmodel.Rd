@@ -24,8 +24,8 @@ and returns a \code{data.fame} containing the simulated trajectories that is the
 
 \item{genObsPoint}{\R-function that generates a (randomly sampled) observation point from a model point, using an observation model (optional). It thus acts as an inverse of \code{pointLogLike} (see below). This function takes 2 arguments
 \itemize{
+\item \code{model.point} named numeric vector. State of the model at a given point in time.
 \item \code{theta} named numeric vector. Values of the parameters. Names should match \code{theta.names}.
-\item \code{model.point} a data point of the model.
 }
 and returns an observation point}
 
@@ -50,7 +50,7 @@ a \code{fitmodel} object that is a \code{list} of 7 elements:
 	\item \code{state.names} vector, names of the state variables.
 	\item \code{theta.names} vector, names of the parameters.
 	\item \code{simulate} \R-function to simulate forward the model; usage: \code{simulate(theta,state.init,times)}.
-	\item \code{genObsPoint} \R-function to generate simulated observations; usage: \code{genObsPoint(simu.traj, theta)}.
+	\item \code{genObsPoint} \R-function to generate simulated observations; usage: \code{genObsPoint(model.point, theta)}.
 	\item \code{logPrior} \R-function to evaluate the log-prior of the parameter values; usage: \code{logPrior(theta)}.
 	\item \code{pointLogLike} \R-function to evaluate the log-likelihood of one data point; usage: \code{pointLogLike(data.point, model.point, theta)}.
 }
@@ -136,7 +136,7 @@ SIR_logPrior <- function(theta) {
 ## function to compute the log-likelihood of one data point
 SIR_pointLogLike <- function(data.point, model.point, theta){
 
-        ## the prevalence is observed through a Poisson process with a reporting rate
+        ## the prevalence is observed through a Poisson process
 	return(dpois(x=data.point[["obs"]], lambda=model.point[["I"]], log=TRUE))
 }
 
@@ -170,12 +170,12 @@ SIR_sto <- fitmodel(
         pointLogLike=SIR_pointLogLike)
 
 ## test them
-theta <- c(R0=3, D=4, reporting.rate=0.7)
+theta <- c(R0=3, D=4)
 state.init <- c(S=99,I=1,R=0)
-data <- data.frame(time=1:5,I=1:5)
+data <- data.frame(time=1:5,obs=1:5)
 
 ## SIR_deter
-testFitmodel(fitmodel=SIR_deter, theta=theta, state.init=state.init, data= data, verbose=TRUE)
+testFitmodel(fitmodel=SIR, theta=theta, state.init=state.init, data= data, verbose=TRUE)
 
 ## SIR_sto
 testFitmodel(fitmodel=SIR_sto, theta=theta, state.init=state.init, data= data, verbose=TRUE)

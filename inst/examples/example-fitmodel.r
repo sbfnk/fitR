@@ -75,7 +75,7 @@ SIR_logPrior <- function(theta) {
 ## function to compute the log-likelihood of one data point
 SIR_pointLogLike <- function(data.point, model.point, theta){
 
-        ## the prevalence is observed through a Poisson process with a reporting rate
+        ## the prevalence is observed through a Poisson process
 	return(dpois(x=data.point[["obs"]], lambda=model.point[["I"]], log=TRUE))
 }
 
@@ -109,12 +109,12 @@ SIR_sto <- fitmodel(
         pointLogLike=SIR_pointLogLike)
 
 ## test them
-theta <- c(R0=3, D=4, reporting.rate=0.7)
+theta <- c(R0=3, D=4)
 state.init <- c(S=99,I=1,R=0)
-data <- data.frame(time=1:5,I=1:5)
+data <- data.frame(time=1:5,obs=1:5)
 
 ## SIR_deter
-testFitmodel(fitmodel=SIR_deter, theta=theta, state.init=state.init, data= data, verbose=TRUE)
+testFitmodel(fitmodel=SIR, theta=theta, state.init=state.init, data= data, verbose=TRUE)
 
 ## SIR_sto
 testFitmodel(fitmodel=SIR_sto, theta=theta, state.init=state.init, data= data, verbose=TRUE)

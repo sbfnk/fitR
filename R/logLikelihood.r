@@ -1,4 +1,4 @@
-#' Log-likelihood of a trjaectory for a deterministic model
+#' Log-likelihood of a trajectory for a deterministic model
 #'
 #' Compute the trajectory log-likelihood of \code{theta} for a
 #' deterministic model defined in a \code{\link{fitmodel}} object by
