@@ -15,9 +15,10 @@ trajLogLike <- function(fitmodel, theta, state.init, data) {
 	# simulate model at successive observation times of data
 	traj <- fitmodel$simulate(theta,state.init,times)
 
-	# compute log-likelihood by summing the log-likelihood of each data point
-	for(i in 1:nrow(data)){ 
-	logLike <- 0
+        logLike <- 0
+
+        # compute log-likelihood by summing the log-likelihood of each data point
+	for(i in 1:nrow(data)){
 
 		# extract data point
 		data.point <- unlist(data[i,])
