@@ -3,12 +3,12 @@
 \alias{SEITL_pointLogLike}
 \title{Likelihood of the data for SEITL model}
 \usage{
-SEITL_pointLogLike(data.point, state.point, theta)
+SEITL_pointLogLike(data.point, model.point, theta)
 }
 \arguments{
 \item{data.point}{named vector containing the observation time and the value of the data point. Data correspond to the \code{\link{FluTdC1971}} dataset.}
 
-\item{state.point}{named vector containing the state of the model at the observation time point.}
+\item{model.point}{named vector containing the state of the model at the observation time point.}
 
 \item{theta}{named numeric vector. Parameter values. Must include the following parameters: "R0", "LP", "IP", "alpha", "TIP" and "rho"}
 }
