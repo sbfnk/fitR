@@ -31,11 +31,11 @@ SEITL_simulateStochastic <- function(theta,state.init,times) {
 	SEITL_rateFunc <- function(state,theta,t) {
 
 		# param
-		beta <- theta[["R0"]]/theta[["IP"]]
-		epsilon <- 1/theta[["LP"]]
-		nu <- 1/theta[["IP"]]
+		beta <- theta[["R0"]]/theta[["D.inf"]]
+		epsilon <- 1/theta[["D.lat"]]
+		nu <- 1/theta[["D.inf"]]
 		alpha <- theta[["alpha"]]
-		tau <- 1/theta[["TIP"]]
+		tau <- 1/theta[["D.imm"]]
 
 		# states
 		S <- state[["S"]]
