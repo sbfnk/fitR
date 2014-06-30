@@ -68,7 +68,7 @@ SIR <- fitmodel(
 	logPrior=SIR_logPrior,
 	pointLogLike=SIR_pointLogLike)
 
-## test them
+## test it
 theta <- c(R0=3, D=4)
 state.init <- c(S=99,I=1,R=0)
 data(epi)

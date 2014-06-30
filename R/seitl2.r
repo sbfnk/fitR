@@ -1,7 +1,7 @@
 #'Deterministic simulation of SEIT2L model
 #'
 #'Solves the system of ordinary differential equations for the SEIT2L model using the \code{\link[deSolve]{ode}} function.
-#' @param theta named numeric vector. Parameter values. Must include the following parameters: "R0", "LP", "IP", "alpha", "TIP" and "rho"
+#' @param theta named numeric vector. Parameter values. Must include the following parameters: "R0", "D.lat", "D.inf", "alpha", "D.imm" and "rho"
 #' @param state.init named numeric vector. Initial state of the SEIT2L model. Must include the following states: "S", "E", "I", "T1", "T2", "L" and "Inc".
 #' @param times numeric vector. Time sequence for which state of the model is wanted; the first value of times must be the initial time, i.e. the time of \code{state.init}.
 #' @export
@@ -14,11 +14,11 @@ SEIT2L_simulateDeterministic <- function(theta,state.init,times) {
 	SEIT2L_ode <- function(time, state, theta) {
 
 		# param
-		beta <- theta[["R0"]]/theta[["IP"]]
-		epsilon <- 1/theta[["LP"]]
-		nu <- 1/theta[["IP"]]
+		beta <- theta[["R0"]]/theta[["D.inf"]]
+		epsilon <- 1/theta[["D.lat"]]
+		nu <- 1/theta[["D.inf"]]
 		alpha <- theta[["alpha"]]
-		tau <- 1/theta[["TIP"]]
+		tau <- 1/theta[["D.imm"]]
 
 		# states
 		S <- state[["S"]]
@@ -80,11 +80,11 @@ SEIT2L_simulateStochastic <- function(theta,state.init,times) {
 	SEIT2L_rateFunc <- function(state,theta,t) {
 
 		# param
-		beta <- theta[["R0"]]/theta[["IP"]]
-		epsilon <- 1/theta[["LP"]]
-		nu <- 1/theta[["IP"]]
+		beta <- theta[["R0"]]/theta[["D.inf"]]
+		epsilon <- 1/theta[["D.lat"]]
+		nu <- 1/theta[["D.inf"]]
 		alpha <- theta[["alpha"]]
-		tau <- 1/theta[["TIP"]]
+		tau <- 1/theta[["D.imm"]]
 
 		# states
 		S <- state[["S"]]
@@ -142,7 +142,7 @@ SEIT2L_createFitmodel <- function(simulate=c("deterministic","stochastic")) {
 
 	SEIT2L_name <- "SEIT2L model with daily incidence and constant population size"
 	SEIT2L_state.names <- c("S","E","I","T1", "T2","L","Inc")
-	SEIT2L_theta.names <- c("R0", "LP", "IP", "alpha", "TIP", "rho")
+	SEIT2L_theta.names <- c("R0", "D.lat", "D.inf", "alpha", "D.imm", "rho")
 
 	# create fitmodel
 	SEIT2L <- fitmodel(

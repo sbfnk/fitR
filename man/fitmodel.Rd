@@ -59,7 +59,7 @@ a \code{fitmodel} object that is a \code{list} of 7 elements:
 A \code{fitmodel} object is a \code{list} that stores some variables and functions that will be useful to simulate and fit your model during the course.
 }
 \examples{
-# create a simple stochastic SIR model with constant population size
+# create a simple deterministic SIR model with constant population size
 
 SIR_name <- "SIR with constant population size"
 SIR_state.names <- c("S","I","R")
@@ -129,7 +129,7 @@ SIR <- fitmodel(
 	logPrior=SIR_logPrior,
 	pointLogLike=SIR_pointLogLike)
 
-## test them
+## test it
 theta <- c(R0=3, D=4)
 state.init <- c(S=99,I=1,R=0)
 data(epi)
