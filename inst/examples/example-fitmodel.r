@@ -1,4 +1,4 @@
-# create a simple stochastic SIR model with constant population size
+# create a simple deterministic SIR model with constant population size
 
 SIR_name <- "SIR with constant population size"
 SIR_state.names <- c("S","I","R")
