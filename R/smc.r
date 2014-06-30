@@ -75,10 +75,10 @@ particleFilter <- function(fitmodel, theta, state.init, data, n.particles, progr
             traj <- fitmodel$simulate(theta=theta,state.init=current.state,times=times)
 
             # compute particle weight
-            state.point <- unlist(traj[2,fitmodel$state.names])
-            weight <- exp(fitmodel$pointLogLike(data.point=data.point, state.point=state.point, theta=theta))
+            model.point <- unlist(traj[2,fitmodel$state.names])
+            weight <- exp(fitmodel$pointLogLike(data.point=data.point, model.point=model.point, theta=theta))
 
-            return(list(state=state.point,weight=weight))
+            return(list(state=model.point,weight=weight))
 
         },.parallel=(n.cores > 1))
 

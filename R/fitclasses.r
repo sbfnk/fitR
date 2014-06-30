@@ -25,7 +25,7 @@
 #' @param pointLogLike \R-function that evaluates the log-likelihood of one data point given the state of the model at the same time point. This function takes 3 arguments:
 #' \itemize{
 #' \item \code{data.point} named numeric vector. Observation time and observed data point.
-#' \item \code{state.point} named numeric vector containing the state of the model at the observation time point.
+#' \item \code{model.point} named numeric vector containing the state of the model at the observation time point.
 #' \item \code{theta} named numeric vector. Parameter values. Useful since parameters are usually needed to compute the likelihood (i.e. reporting rate).
 #' }
 #' and returns the log-likelihood. (optional)
@@ -38,7 +38,7 @@
 #' 	\item \code{simulate} \R-function to simulate forward the model; usage: \code{simulate(theta,state.init,times)}.
 #' 	\item \code{genObsPoint} \R-function to generate simulated observations; usage: \code{genObsPoint(simu.traj, theta)}.
 #' 	\item \code{logPrior} \R-function to evaluate the log-prior of the parameter values; usage: \code{logPrior(theta)}.
-#' 	\item \code{pointLogLike} \R-function to evaluate the log-likelihood of one data point; usage: \code{pointLogLike(data.point, state.point, theta)}.
+#' 	\item \code{pointLogLike} \R-function to evaluate the log-likelihood of one data point; usage: \code{pointLogLike(data.point, model.point, theta)}.
 #' }
 #' @seealso \code{\link{testFitmodel}}
 #' @example inst/examples/example-fitmodel.r
@@ -252,7 +252,7 @@ testFitmodel <- function(fitmodel, theta, state.init, data = NULL, verbose=TRUE)
 			cat("--- checking pointLogLike\n")
 		}
 		# check arguments
-		fun_args <- c("data.point","state.point","theta")
+		fun_args <- c("data.point","model.point","theta")
 		if(!(all(x <- fun_args%in%names(formals(fitmodel$pointLogLike))))){
 			stop("argument(s) ",sQuote(fun_args[!x])," missing in function pointLogLike, see documentation.")
 		}
@@ -262,11 +262,11 @@ testFitmodel <- function(fitmodel, theta, state.init, data = NULL, verbose=TRUE)
 
                 ## test it, first data point corresponds to second simulation step (first row contain initial state)
 				data.point <- unlist(data[1,])
-				state.point <- unlist(test.traj[2,])
-				test.pointLogLike <- fitmodel$pointLogLike(data.point=data.point, state.point=state.point ,theta=theta)
+				model.point <- unlist(test.traj[2,])
+				test.pointLogLike <- fitmodel$pointLogLike(data.point=data.point, model.point=model.point ,theta=theta)
 
 				if(verbose){
-					cat("pointLogLike(data.point,state.point,theta) should return a single value\nTest:",test.pointLogLike,"\n")
+					cat("pointLogLike(data.point,model.point,theta) should return a single value\nTest:",test.pointLogLike,"\n")
 				}
 				if(length(test.pointLogLike) > 1 || is.na(test.pointLogLike) || (test.pointLogLike > 0)){
 					stop("pointLogLike must return a single non-positive value")

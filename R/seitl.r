@@ -155,14 +155,14 @@ SEITL_logPrior <- function(theta) {
 #'
 #'Computes the log-likelihood of a subset of the data for a fixed trajectory and under a poisson observation process.
 #' @param data.point named vector containing the observation time and the value of the data point. Data correspond to the \code{\link{FluTdC1971}} dataset.
-#' @param state.point named vector containing the state of the model at the observation time point.
+#' @param model.point named vector containing the state of the model at the observation time point.
 #' @inheritParams SEITL_simulateDeterministic
 #' @export
 #' @seealso SEITL_genObsPoint
 #' @return the log-likelihood value.
-SEITL_pointLogLike <- function(data.point, state.point, theta){
+SEITL_pointLogLike <- function(data.point, model.point, theta){
 
-	return(dpois(x=data.point[["Inc"]],lambda=theta[["rho"]]*state.point[["Inc"]],log=TRUE))
+	return(dpois(x=data.point[["Inc"]],lambda=theta[["rho"]]*model.point[["Inc"]],log=TRUE))
 
 }
 
