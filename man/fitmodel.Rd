@@ -38,7 +38,7 @@ and returns the logged value of the prior density distribution.}
 \item{pointLogLike}{\R-function that evaluates the log-likelihood of one data point given the state of the model at the same time point. This function takes 3 arguments:
 \itemize{
 \item \code{data.point} named numeric vector. Observation time and observed data point.
-\item \code{state.point} named numeric vector containing the state of the model at the observation time point.
+\item \code{model.point} named numeric vector containing the state of the model at the observation time point.
 \item \code{theta} named numeric vector. Parameter values. Useful since parameters are usually needed to compute the likelihood (i.e. reporting rate).
 }
 and returns the log-likelihood. (optional)}
@@ -52,7 +52,7 @@ a \code{fitmodel} object that is a \code{list} of 7 elements:
 	\item \code{simulate} \R-function to simulate forward the model; usage: \code{simulate(theta,state.init,times)}.
 	\item \code{genObsPoint} \R-function to generate simulated observations; usage: \code{genObsPoint(simu.traj, theta)}.
 	\item \code{logPrior} \R-function to evaluate the log-prior of the parameter values; usage: \code{logPrior(theta)}.
-	\item \code{pointLogLike} \R-function to evaluate the log-likelihood of one data point; usage: \code{pointLogLike(data.point, state.point, theta)}.
+	\item \code{pointLogLike} \R-function to evaluate the log-likelihood of one data point; usage: \code{pointLogLike(data.point, model.point, theta)}.
 }
 }
 \description{
@@ -62,7 +62,7 @@ A \code{fitmodel} object is a \code{list} that stores some variables and functio
 # create a simple stochastic SIR model with constant population size
 SIR_name <- "SIR with constant population size"
 SIR_state.names <- c("S","I","R")
-SIR_theta.names <- c("R0","D","reporting.rate")
+SIR_theta.names <- c("R0","D")
 
 SIR_simulateDeterministic <- function(theta,state.init,times) {
 

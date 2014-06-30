@@ -25,7 +25,7 @@
 #' @param pointLogLike \R-function that evaluates the log-likelihood of one data point given the state of the model at the same time point. This function takes 3 arguments:
 #' \itemize{
 #' \item \code{data.point} named numeric vector. Observation time and observed data point.
-#' \item \code{state.point} named numeric vector containing the state of the model at the observation time point.
+#' \item \code{model.point} named numeric vector containing the state of the model at the observation time point.
 #' \item \code{theta} named numeric vector. Parameter values. Useful since parameters are usually needed to compute the likelihood (i.e. reporting rate).
 #' }
 #' and returns the log-likelihood. (optional)
@@ -38,7 +38,7 @@
 #' 	\item \code{simulate} \R-function to simulate forward the model; usage: \code{simulate(theta,state.init,times)}.
 #' 	\item \code{genObsPoint} \R-function to generate simulated observations; usage: \code{genObsPoint(simu.traj, theta)}.
 #' 	\item \code{logPrior} \R-function to evaluate the log-prior of the parameter values; usage: \code{logPrior(theta)}.
-#' 	\item \code{pointLogLike} \R-function to evaluate the log-likelihood of one data point; usage: \code{pointLogLike(data.point, state.point, theta)}.
+#' 	\item \code{pointLogLike} \R-function to evaluate the log-likelihood of one data point; usage: \code{pointLogLike(data.point, model.point, theta)}.
 #' }
 #' @seealso \code{\link{testFitmodel}}
 #' @example inst/examples/example-fitmodel.r
@@ -95,11 +95,13 @@ fitmodel <- function(name=NULL, state.names=NULL, theta.names=NULL, simulate=NUL
 #' @example inst/examples/example-fitmodel.r
 testFitmodel <- function(fitmodel, theta, state.init, data = NULL, verbose=TRUE) {
 
+        if (missing(fitmodel)) { stop(sQuote("fitmodel"), " argument missing\n") }
 	if(!inherits(fitmodel,"fitmodel")){
 		stop(sQuote("fitmodel")," argument is not from the class fitmodel")
 	}
 
     ## test of theta
+        if (missing(theta)) { stop(sQuote("theta"), " argument missing\n") }
 	if(verbose){
 		cat("--- checking ", sQuote("theta"), "argument\n")
 		cat("Should contain the parameters:",sQuote(fitmodel$theta.names),"\nTest:\n")
@@ -116,6 +118,7 @@ testFitmodel <- function(fitmodel, theta, state.init, data = NULL, verbose=TRUE)
 	}
 
 	## test of state.init
+        if (missing(state.init)) { stop(sQuote("state.init"), " argument missing\n") }
 	if(verbose){
 		cat("--- checking ", sQuote("state.init"), "argument\n")
 		cat("Should contain the states:",sQuote(fitmodel$state.names),"\nTest:\n")
@@ -177,40 +180,31 @@ testFitmodel <- function(fitmodel, theta, state.init, data = NULL, verbose=TRUE)
 		warning("fitmodel does not contain a simulate method -- not tested\n")
 	}
 
-	## check generateObs
-	if(!is.null(fitmodel$generateObs)) {
+	## check genObsPoint
+	if(!is.null(fitmodel$genObsPoint)) {
 		if(verbose){
-			cat("--- checking generateObs\n")
+			cat("--- checking genObsPoint\n")
 		}
                 ## check arguments
-		fun_args <- c("simu.traj","theta")
-		if(!(all(x <- fun_args%in%names(formals(fitmodel$generateObs))))){
-			stop("argument(s) ",sQuote(fun_args[!x])," missing in function generateObs, see ?fitmodel.")
+		fun_args <- c("model.point","theta")
+		if(!(all(x <- fun_args%in%names(formals(fitmodel$genObsPoint))))){
+			stop("argument(s) ",sQuote(fun_args[!x])," missing in function genObsPoint, see ?fitmodel.")
 		}
 
 		if (!is.null(test.traj)) {
-			test.generateObs <- fitmodel$generateObs(test.traj, theta)
+			test.genObsPoint <- fitmodel$genObsPoint(unlist(test.traj[1, ]), theta)
 			if(verbose){
-				cat("generateObs(test.traj, theta) should return a non-negative data.frame of dimension",nrow(test.traj),"x",ncol(test.traj)+1,"with column names:",sQuote(c(names(test.traj),"observation")),"\nTest:\n")
-				print(test.generateObs)
+				cat("genObsPoint(test.traj, theta) should return a number\nTest:\n")
+				print(test.genObsPoint)
 			}
-			if(!is.data.frame(test.generateObs)){
-				stop("generateObs must return a data.frame")
+			if(!is.numeric(test.genObsPoint)){
+				stop("genObsPoint must return a number")
 			}
-			if(!all(x <- c(names(test.generateObs),"observation")%in%names(test.generateObs))){
-				stop("Column(s) missing in the data.frame returned by generateObs:",sQuote(c("time",fitmodel$state.names)[x]))
-			}
-			if(!all(x <- names(test.generateObs)%in%c(names(test.generateObs),"observation"))){
-				warning("The following columns are not required in the data.frame returned by generateObs:",sQuote(names(test.generateObs)[x]))
-			}
-			if(nrow(test.generateObs)!=nrow(test.traj)){
-				stop("The data.frame returned by generateObs must have the same number of rows as the simu.traj argument",call.=FALSE)
-			}
-			if(any(test.generateObs$observation<0)){
-				stop("generateObs returned negative observation during the test, use verbose argument of fitmodel to check")
+			if(test.genObsPoint<0){
+				stop("genObsPoint returned negative observation during the test, use verbose argument of fitmodel to check")
 			}
 			if(verbose){
-				cat("--> generateObs looks good!\n")
+				cat("--> genObsPoint looks good!\n")
 			}
 		} else {
 			warning("no test trajectory created, not creating test observation\n")
@@ -261,7 +255,7 @@ testFitmodel <- function(fitmodel, theta, state.init, data = NULL, verbose=TRUE)
 			cat("--- checking pointLogLike\n")
 		}
 		# check arguments
-		fun_args <- c("data.point","state.point","theta")
+		fun_args <- c("data.point","model.point","theta")
 		if(!(all(x <- fun_args%in%names(formals(fitmodel$pointLogLike))))){
 			stop("argument(s) ",sQuote(fun_args[!x])," missing in function pointLogLike, see documentation.")
 		}
@@ -271,11 +265,11 @@ testFitmodel <- function(fitmodel, theta, state.init, data = NULL, verbose=TRUE)
 
                 ## test it, first data point corresponds to second simulation step (first row contain initial state)
 				data.point <- unlist(data[1,])
-				state.point <- unlist(test.traj[2,])
-				test.pointLogLike <- fitmodel$pointLogLike(data.point=data.point, state.point=state.point ,theta=theta)
+				model.point <- unlist(test.traj[2,])
+				test.pointLogLike <- fitmodel$pointLogLike(data.point=data.point, model.point=model.point ,theta=theta)
 
 				if(verbose){
-					cat("pointLogLike(data.point,state.point,theta) should return a single value\nTest:",test.pointLogLike,"\n")
+					cat("pointLogLike(data.point,model.point,theta) should return a single value\nTest:",test.pointLogLike,"\n")
 				}
 				if(length(test.pointLogLike) > 1 || is.na(test.pointLogLike) || (test.pointLogLike > 0)){
 					stop("pointLogLike must return a single non-positive value")
