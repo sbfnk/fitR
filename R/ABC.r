@@ -1,7 +1,7 @@
 #'ABC distance with oscillations
 #'
 #'This positive distance is the mean squared differences between the simulation and the observation, divided by the square of the number of times the simulation oscillates around the observation.
-#' @param simu.traj.obs \code{data.frame} of simulated trajectory with observation, as returned by \code{\link{SEITL_generateObservation}}.
+#' @param simu.traj.obs \code{data.frame} of simulated trajectory with observation, as returned by \code{fitmodel$generateObs}.
 #' @param data \code{data.frame} of times and observations. Must have two columns: \code{time} and \code{Inc}.
 #' @export
 #' @seealso distanceOscillation
@@ -48,11 +48,11 @@ computeDistanceABC <- function(theta, fitmodel) {
 	# time sequence (must include initial time)
 	times <- c(0,data$time)
 
-	# simulateTraj model at successive observation times of data
-	traj <- fitmodel$simulateTraj(theta,fitmodel$initialise.state(theta),times)
+	# simulate model at successive observation times of data
+	traj <- fitmodel$simulate(theta,fitmodel$initialise.state(theta),times)
 
 	# generate simulated observation
-	traj.obs <- fitmodel$generateObservation(simu.traj=traj,theta=theta)
+	traj.obs <- fitmodel$generateObs(simu.traj=traj,theta=theta)
 
 	# compute distance
 	dist.ABC <- fitmodel$distance.ABC(data=data,simu.traj.obs=traj.obs)
@@ -93,5 +93,3 @@ targetPosteriorABC <- function(theta,fitmodel,epsilon) {
 	return(list(log.dist=theta.log.posterior, trace=c(theta,logPrior=theta.logPrior,distance.ABC=theta.dist.ABC,log.posterior=theta.log.posterior)))
 
 }
-
-

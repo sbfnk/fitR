@@ -138,7 +138,7 @@ modelPosterior <- function(fitmodel) {
 
     state.init <- fitmodel$initialise.state(theta)
 
-    trajectory <- fitmodel$simulateTraj(theta, state.init, fitmodel$data$time)
+    trajectory <- fitmodel$simulate(theta, state.init, fitmodel$data$time)
     likelihood <- fitmodel$logLikePoint(fitmodel$data, theta, trajectory)
 
     return(list(log.dist = prior + likelihood))
@@ -152,8 +152,8 @@ SIR <- fitmodel(
 	list.fitparam=list(R0,InfectiousPeriod,ReportingRate,nI0,proportionR0,PopSize),
 	initialise.state=SIR_initialiseState,
 	logPrior.fitparam=SIR_logPrior,
-	simulateTraj=SIR_simulateDeterministic,
-	generateObservation=SIR_generateObservation,
+	simulate=SIR_simulateDeterministic,
+	generateObs=SIR_generateObservation,
 	data=measles,
 	logLikePoint=SIR_logLikelihood)
 
@@ -176,7 +176,7 @@ theta["pR0"] <- median(mcmc.res$trace[n > burn_in]$theta.pR0)
 theta["N"] <- median(mcmc.res$trace[n > burn_in]$theta.N)
 theta["rho"] <- median(mcmc.res$trace[n > burn_in]$theta.rho)
 
-trajectory <- SIR$simulateTraj(theta, SIR_initialiseState(theta), seq_len(nrow(measles) + 1))
+trajectory <- SIR$simulate(theta, SIR_initialiseState(theta), seq_len(nrow(measles) + 1))
 trajectory$cases <- c(diff(trajectory$Inc), 0)
 
 trajectory <- trajectory[-nrow(trajectory),  ]

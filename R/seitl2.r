@@ -46,7 +46,7 @@ SEIT2L_simulateDeterministic <- function(theta,state.init,times) {
 	# put incidence at 0 in state.init
 	state.init["Inc"] <- 0
 
-	traj <- as.data.frame(ode(state.init, times, SEIT2L_ode, theta))
+	traj <- as.data.frame(ode(state.init, times, SEIT2L_ode, theta, method = "ode45"))
 
 	# compute incidence of each time interval
 	traj <- mutate(traj,Inc=c(0,diff(Inc)))
@@ -135,9 +135,9 @@ SEIT2L_createFitmodel <- function(simulate=c("deterministic","stochastic")) {
 
 	# simulator
 	if(simulate=="deterministic"){
-		simulateTraj <- SEIT2L_simulateDeterministic
+		simulate <- SEIT2L_simulateDeterministic
 	} else {
-		simulateTraj <- SEIT2L_simulateStochastic
+		simulate <- SEIT2L_simulateStochastic
 	}
 
 	SEIT2L_name <- "SEIT2L model with daily incidence and constant population size"
@@ -149,8 +149,8 @@ SEIT2L_createFitmodel <- function(simulate=c("deterministic","stochastic")) {
 		name=SEIT2L_name,
 		state.names=SEIT2L_state.names,
 		theta.names=SEIT2L_theta.names,
-		simulateTraj=simulateTraj,
-		generateObservation=SEITL_generateObservation,
+		simulate=simulate,
+		generateObs=SEITL_generateObs,
 		logPrior=SEITL_logPrior,
 		logLikePoint=SEITL_logLikePoint) 
 

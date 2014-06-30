@@ -44,7 +44,7 @@ SEITL_simulateDeterministic <- function(theta,state.init,times) {
 	# put incidence at 0 in state.init
 	state.init["Inc"] <- 0
 
-	traj <- as.data.frame(ode(state.init, times, SEITL_ode, theta))
+	traj <- as.data.frame(ode(state.init, times, SEITL_ode, theta, method = "ode45"))
 
 	# compute incidence of each time interval
 	traj <- mutate(traj,Inc=c(0,diff(Inc)))
@@ -123,7 +123,7 @@ SEITL_simulateStochastic <- function(theta,state.init,times) {
 #' @export
 #' @seealso \code{\link{SEITL_simulateDeterministic}}, \code{\link{SEITL_simulateStochastic}}
 #' @return the \code{simu.traj} data.frame with an additional variable: "observation".
-SEITL_generateObservation <- function(simu.traj, theta){
+SEITL_generateObs <- function(simu.traj, theta){
 
 	simu.traj$observation <- rpois(n=nrow(simu.traj),lambda=theta[["rho"]]*simu.traj[["Inc"]])
 
@@ -158,7 +158,7 @@ SEITL_logPrior <- function(theta) {
 #' @param state.point named vector containing the state of the model at the observation time point.
 #' @inheritParams SEITL_simulateDeterministic
 #' @export
-#' @seealso SEITL_generateObservation
+#' @seealso SEITL_generateObs
 #' @return the log-likelihood value.
 SEITL_logLikePoint <- function(data.point, state.point, theta){
 
@@ -183,9 +183,9 @@ SEITL_createFitmodel <- function(simulate=c("deterministic","stochastic")) {
 
 	# simulator
 	if(simulate=="deterministic"){
-		simulateTraj <- SEITL_simulateDeterministic
+		simulate <- SEITL_simulateDeterministic
 	} else {
-		simulateTraj <- SEITL_simulateStochastic
+		simulate <- SEITL_simulateStochastic
 	}
 
 	SEITL_name <- "SEITL model with daily incidence and constant population size"
@@ -197,8 +197,8 @@ SEITL_createFitmodel <- function(simulate=c("deterministic","stochastic")) {
 		name=SEITL_name,
 		state.names=SEITL_state.names,
 		theta.names=SEITL_theta.names,
-		simulateTraj=simulateTraj,
-		generateObservation=SEITL_generateObservation,
+		simulate=simulate,
+		generateObs=SEITL_generateObs,
 		logPrior=SEITL_logPrior,
 		logLikePoint=SEITL_logLikePoint) 
 

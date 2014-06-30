@@ -19,6 +19,6 @@ the log-likelihood value.
 Computes the log-likelihood of a subset of the data for a fixed trajectory and under a poisson observation process.
 }
 \seealso{
-SEITL_generateObservation
+SEITL_generateObs
 }
 

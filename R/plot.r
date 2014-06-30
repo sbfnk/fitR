@@ -1,7 +1,7 @@
 #'Plot one or more model simulations
 #'
 #'This function use faceting to plot one or more trajectories of all state variables. Convenient to see results of several simulations. Also, if \code{data} is present, then an additional plot
-#' @param traj data.frame, output of \code{fitmodel$simulateTraj} or \code{simulateModelReplicates}.
+#' @param traj data.frame, output of \code{fitmodel$simulate} or \code{simulateModelReplicates}.
 #' @param state.names character vector. Names of the state variables to plot. Names must match \code{fitmodel$state.names}. If \code{NULL} (default) all state variables are plotted.
 #' @param data data frame. Observation times and observed data. The time column must be named \code{time}, whereas the name of the data column should match one of \code{fitmodel$state.names}. 
 #' @param summary logical. If \code{TRUE}, the mean, median as well as the 50th and 95th percentile of the trajectories are plotted (default). If \code{FALSE}, all individual trajectories are plotted (transparency can be set with \code{alpha}).
@@ -142,7 +142,7 @@ plotSMC <- function(smc, fitmodel, theta, data=NULL, summary=TRUE, alpha=1, only
     names(traj) <- 1:length(traj)
 
     traj <- ldply(traj,function(df) {
-        return(fitmodel$generate.observation(df,theta))
+        return(fitmodel$generateObs(df,theta))
     },.id="replicate")
 
     if(only.fit){
@@ -270,10 +270,10 @@ plotPosteriorFit <- function(trace, fitmodel, theta, state.init, posterior.summa
             theta <- trace[ind,names.theta]
 
             # simulate model at successive observation times of data
-            traj <- fitmodel$simulate.model(theta,fitmodel$initialise.state(theta),times)
+            traj <- fitmodel$simulate(theta,fitmodel$initialise.state(theta),times)
 
             # generate observation
-            traj <- fitmodel$generate.observation(traj,theta)
+            traj <- fitmodel$generateObs(traj,theta)
 
             return(traj)
         },.progress="text",.id="replicate")

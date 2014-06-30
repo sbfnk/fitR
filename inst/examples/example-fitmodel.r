@@ -25,7 +25,7 @@ SIR_simulateDeterministic <- function(theta,state.init,times) {
                 return(list(c(dS, dI, dR)))
         }
 
-	trajectory <- data.frame(ode(y=state.init,times=times,func=SIR_ode,parms=theta))
+	trajectory <- data.frame(ode(y=state.init,times=times,func=SIR_ode,parms=theta, method = "ode45"))
 
 	return(trajectory)
 }
@@ -76,11 +76,11 @@ SIR_logPrior <- function(theta) {
 SIR_logLikePoint <- function(data.point, state.point, theta){
 
         ## the prevalence is observed through a Poisson process with a reporting rate
-	return(dpois(x=data.point["I"], lambda=theta["reporting.rate"]*state.point["I"], log=TRUE))
+	return(dpois(x=data.point[["I"]], lambda=theta[["reporting.rate"]]*state.point[["I"]], log=TRUE))
 }
 
 ## function to generate observation from a model simulation
-SIR_generateObservation <- function(simu.traj, theta){
+SIR_generateObs <- function(simu.traj, theta){
 
         ## the prevalence is observed through a Poisson process with a reporting rate 
         simu.traj$observation <- rpois(n=nrow(simu.traj), lambda=theta["reporting.rate"]*simu.traj$I)
@@ -93,8 +93,8 @@ SIR_deter <- fitmodel(
 	name=SIR_name,
         state.names=SIR_state.names,
 	theta.names=SIR_theta.names,
-        simulateTraj=SIR_simulateDeterministic,
-	generateObservation=SIR_generateObservation,
+        simulate=SIR_simulateDeterministic,
+	generateObs=SIR_generateObs,
 	logPrior=SIR_logPrior,
 	logLikePoint=SIR_logLikePoint)
 
@@ -103,8 +103,8 @@ SIR_sto <- fitmodel(
         name=SIR_name,
         state.names=SIR_state.names,
         theta.names=SIR_theta.names,
-        simulateTraj=SIR_simulateStochastic,
-        generateObservation=SIR_generateObservation,
+        simulate=SIR_simulateStochastic,
+        generateObs=SIR_generateObs,
         logPrior=SIR_logPrior,
         logLikePoint=SIR_logLikePoint)
 

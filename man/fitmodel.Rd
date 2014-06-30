@@ -4,7 +4,7 @@
 \title{Constructor of fitmodel object}
 \usage{
 fitmodel(name = NULL, state.names = NULL, theta.names = NULL,
-  simulateTraj = NULL, generateObservation = NULL, logPrior = NULL,
+  simulate = NULL, generateObs = NULL, logPrior = NULL,
   logLikePoint = NULL)
 }
 \arguments{
@@ -14,7 +14,7 @@ fitmodel(name = NULL, state.names = NULL, theta.names = NULL,
 
 \item{theta.names}{character vector. Names of the parameters i.e. \code{c("R0","infectious.period")} (required).}
 
-\item{simulateTraj}{\R-function to simulate forward the model (required). This function takes 3 arguments:
+\item{simulate}{\R-function to simulate forward the model (required). This function takes 3 arguments:
 \itemize{
 \item \code{theta} named numeric vector. Values of the parameters. Names should match \code{theta.names}.
 \item \code{state.init} named numeric vector. Initial values of the state variables. Names should match \code{state.names}.
@@ -22,9 +22,9 @@ fitmodel(name = NULL, state.names = NULL, theta.names = NULL,
 }
 and returns a \code{data.fame} containing the simulated trajectories that is the values of the state variables (1 per column) at each observation time (1 per row). The first column is \code{time}.}
 
-\item{generateObservation}{\R-function that generates simulated data from a simulated trajectory using an observation model (optional). This function takes 2 arguments:
+\item{generateObs}{\R-function that generates simulated data from a simulated trajectory using an observation model (optional). This function takes 2 arguments:
 \itemize{
-\item \code{simu.traj} data.frame of simulated trajectories, as returned by \code{simulateTraj}.
+\item \code{simu.traj} data.frame of simulated trajectories, as returned by \code{simulate}.
 \item \code{theta} named numeric vector. Values of the parameters. Names should match \code{theta.names}.
 }
 and returns the \code{simu.traj} data.frame with an additional \code{observation} column.}
@@ -49,8 +49,8 @@ a \code{fitmodel} object that is a \code{list} of 7 elements:
 	\item \code{name} character, name of the model
 	\item \code{state.names} vector, names of the state variables.
 	\item \code{theta.names} vector, names of the parameters.
-	\item \code{simulateTraj} \R-function to simulateTraj forward the model; usage: \code{simulateTraj(theta,state.init,times)}.
-	\item \code{generateObservation} \R-function to generate simulated observations; usage: \code{generateObservation(simu.traj, theta)}.
+	\item \code{simulate} \R-function to simulate forward the model; usage: \code{simulate(theta,state.init,times)}.
+	\item \code{generateObs} \R-function to generate simulated observations; usage: \code{generateObs(simu.traj, theta)}.
 	\item \code{logPrior} \R-function to evaluate the log-prior of the parameter values; usage: \code{logPrior(theta)}.
 	\item \code{logLikePoint} \R-function to evaluate the log-likelihood of one data point; usage: \code{logLikePoint(data.point, state.point, theta)}.
 }
@@ -86,7 +86,7 @@ SIR_simulateDeterministic <- function(theta,state.init,times) {
                 return(list(c(dS, dI, dR)))
         }
 
-	trajectory <- data.frame(ode(y=state.init,times=times,func=SIR_ode,parms=theta))
+	trajectory <- data.frame(ode(y=state.init,times=times,func=SIR_ode,parms=theta, method = "ode45"))
 
 	return(trajectory)
 }
@@ -137,11 +137,11 @@ SIR_logPrior <- function(theta) {
 SIR_logLikePoint <- function(data.point, state.point, theta){
 
         ## the prevalence is observed through a Poisson process with a reporting rate
-	return(dpois(x=data.point["I"], lambda=theta["reporting.rate"]*state.point["I"], log=TRUE))
+	return(dpois(x=data.point[["I"]], lambda=theta[["reporting.rate"]]*state.point[["I"]], log=TRUE))
 }
 
 ## function to generate observation from a model simulation
-SIR_generateObservation <- function(simu.traj, theta){
+SIR_generateObs <- function(simu.traj, theta){
 
         ## the prevalence is observed through a Poisson process with a reporting rate 
         simu.traj$observation <- rpois(n=nrow(simu.traj), lambda=theta["reporting.rate"]*simu.traj$I)
@@ -154,8 +154,8 @@ SIR_deter <- fitmodel(
 	name=SIR_name,
         state.names=SIR_state.names,
 	theta.names=SIR_theta.names,
-        simulateTraj=SIR_simulateDeterministic,
-	generateObservation=SIR_generateObservation,
+        simulate=SIR_simulateDeterministic,
+	generateObs=SIR_generateObs,
 	logPrior=SIR_logPrior,
 	logLikePoint=SIR_logLikePoint)
 
@@ -164,8 +164,8 @@ SIR_sto <- fitmodel(
         name=SIR_name,
         state.names=SIR_state.names,
         theta.names=SIR_theta.names,
-        simulateTraj=SIR_simulateStochastic,
-        generateObservation=SIR_generateObservation,
+        simulate=SIR_simulateStochastic,
+        generateObs=SIR_generateObs,
         logPrior=SIR_logPrior,
         logLikePoint=SIR_logLikePoint)
 

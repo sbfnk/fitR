@@ -7,7 +7,7 @@ plotTraj(traj, state.names = NULL, data = NULL, summary = TRUE,
   alpha = 1, plot = TRUE)
 }
 \arguments{
-\item{traj}{data.frame, output of \code{fitmodel$simulateTraj} or \code{simulateModelReplicates}.}
+\item{traj}{data.frame, output of \code{fitmodel$simulate} or \code{simulateModelReplicates}.}
 
 \item{state.names}{character vector. Names of the state variables to plot. Names must match \code{fitmodel$state.names}. If \code{NULL} (default) all state variables are plotted.}
 

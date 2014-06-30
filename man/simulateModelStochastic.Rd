@@ -47,6 +47,6 @@ simulateModelStochastic(theta, state.init, times, transitions, rateFunc)
 a data.frame of dimension \code{length(times)x(length(state.init)+1)} with column names equal to \code{c("time",names(state.init))}.
 }
 \description{
-This function uses the function \code{\link[adaptivetau]{ssa.adaptivetau}} to simulateTraj the model and returns the trajectories in a valid format for the class \code{\link{fitmodel}}.
+This function uses the function \code{\link[adaptivetau]{ssa.adaptivetau}} to simulate the model and returns the trajectories in a valid format for the class \code{\link{fitmodel}}.
 }
 
