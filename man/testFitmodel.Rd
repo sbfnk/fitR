@@ -108,11 +108,11 @@ SIR_genObsPoint <- function(model.point, theta){
         ## the prevalence is observed through a Poisson process with a reporting rate
         obs.point <- rpois(n=1, lambda=model.point[["I"]])
 
-        return(c(obs = obs.point))
+        return(obs.point)
 }
 
 ## create deterministic SIR fitmodel
-SIR_deter <- fitmodel(
+SIR <- fitmodel(
 	name=SIR_name,
         state.names=SIR_state.names,
 	theta.names=SIR_theta.names,

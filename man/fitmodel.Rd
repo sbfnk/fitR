@@ -24,8 +24,8 @@ and returns a \code{data.fame} containing the simulated trajectories that is the
 
 \item{genObsPoint}{\R-function that generates a (randomly sampled) observation point from a model point, using an observation model (optional). It thus acts as an inverse of \code{pointLogLike} (see below). This function takes 2 arguments
 \itemize{
-\item \code{model.point} a data point of the model.
 \item \code{theta} named numeric vector. Values of the parameters. Names should match \code{theta.names}.
+\item \code{model.point} a data point of the model.
 }
 and returns an observation point}
 
@@ -146,11 +146,11 @@ SIR_genObsPoint <- function(model.point, theta){
         ## the prevalence is observed through a Poisson process with a reporting rate
         obs.point <- rpois(n=1, lambda=model.point[["I"]])
 
-        return(c(obs = obs.point))
+        return(obs.point)
 }
 
 ## create deterministic SIR fitmodel
-SIR_deter <- fitmodel(
+SIR <- fitmodel(
 	name=SIR_name,
         state.names=SIR_state.names,
 	theta.names=SIR_theta.names,

@@ -127,7 +127,7 @@ SEITL_genObsPoint <- function(model.point, theta){
 
 	obs.point <- rpois(n=1, lambda=theta[["rho"]]*model.point[["Inc"]])
 
-	return(simu.traj)
+	return(obs.point)
 }
 
 #' Log-prior for SEITL model
