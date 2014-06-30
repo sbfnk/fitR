@@ -62,7 +62,7 @@ A \code{fitmodel} object is a \code{list} that stores some variables and functio
 # create a simple stochastic SIR model with constant population size
 SIR_name <- "SIR with constant population size"
 SIR_state.names <- c("S","I","R")
-SIR_theta.names <- c("R0","D","reporting.rate")
+SIR_theta.names <- c("R0","D")
 
 SIR_simulateDeterministic <- function(theta,state.init,times) {
 
