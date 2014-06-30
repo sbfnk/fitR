@@ -4,7 +4,7 @@
 \title{Constructor of fitmodel object}
 \usage{
 fitmodel(name = NULL, state.names = NULL, theta.names = NULL,
-  simulate = NULL, generateObs = NULL, logPrior = NULL,
+  simulate = NULL, genObsPoint = NULL, logPrior = NULL,
   pointLogLike = NULL)
 }
 \arguments{
@@ -22,12 +22,12 @@ fitmodel(name = NULL, state.names = NULL, theta.names = NULL,
 }
 and returns a \code{data.fame} containing the simulated trajectories that is the values of the state variables (1 per column) at each observation time (1 per row). The first column is \code{time}.}
 
-\item{generateObs}{\R-function that generates simulated data from a simulated trajectory using an observation model (optional). This function takes 2 arguments:
+\item{genObsPoint}{\R-function that generates a (randomly sampled) observation point from a model point, using an observation model (optional). It thus acts as an inverse of \code{pointLogLike} (see below). This function takes 2 arguments
 \itemize{
-\item \code{simu.traj} data.frame of simulated trajectories, as returned by \code{simulate}.
+\item \code{model.point} a data point of the model.
 \item \code{theta} named numeric vector. Values of the parameters. Names should match \code{theta.names}.
 }
-and returns the \code{simu.traj} data.frame with an additional \code{observation} column.}
+and returns an observation point}
 
 \item{logPrior}{\R-function that evaluates the log-prior density of the parameters at a given \code{theta} (optional). The function should take 1 argument:
 \itemize{
@@ -50,7 +50,7 @@ a \code{fitmodel} object that is a \code{list} of 7 elements:
 	\item \code{state.names} vector, names of the state variables.
 	\item \code{theta.names} vector, names of the parameters.
 	\item \code{simulate} \R-function to simulate forward the model; usage: \code{simulate(theta,state.init,times)}.
-	\item \code{generateObs} \R-function to generate simulated observations; usage: \code{generateObs(simu.traj, theta)}.
+	\item \code{genObsPoint} \R-function to generate simulated observations; usage: \code{genObsPoint(simu.traj, theta)}.
 	\item \code{logPrior} \R-function to evaluate the log-prior of the parameter values; usage: \code{logPrior(theta)}.
 	\item \code{pointLogLike} \R-function to evaluate the log-likelihood of one data point; usage: \code{pointLogLike(data.point, state.point, theta)}.
 }
@@ -141,12 +141,12 @@ SIR_pointLogLike <- function(data.point, model.point, theta){
 }
 
 ## function to generate observation from a model simulation
-SIR_generateObs <- function(simu.traj, theta){
+SIR_genObsPoint <- function(model.point, theta){
 
-        ## the prevalence is observed through a Poisson process with a reporting rate 
-        simu.traj$observation <- rpois(n=nrow(simu.traj), lambda=theta["reporting.rate"]*simu.traj$I)
+        ## the prevalence is observed through a Poisson process with a reporting rate
+        obs.point <- rpois(n=1, lambda=model.point[["I"]])
 
-        return(simu.traj)
+        return(c(obs = obs.point))
 }
 
 ## create deterministic SIR fitmodel
@@ -155,7 +155,7 @@ SIR_deter <- fitmodel(
         state.names=SIR_state.names,
 	theta.names=SIR_theta.names,
         simulate=SIR_simulateDeterministic,
-	generateObs=SIR_generateObs,
+	genObsPoint=SIR_genObsPoint,
 	logPrior=SIR_logPrior,
 	pointLogLike=SIR_pointLogLike)
 
@@ -165,7 +165,7 @@ SIR_sto <- fitmodel(
         state.names=SIR_state.names,
         theta.names=SIR_theta.names,
         simulate=SIR_simulateStochastic,
-        generateObs=SIR_generateObs,
+        genObsPoint=SIR_genObsPoint,
         logPrior=SIR_logPrior,
         pointLogLike=SIR_pointLogLike)
 

@@ -6,7 +6,7 @@
 SEITL_distanceOscillation(simu.traj.obs, data)
 }
 \arguments{
-\item{simu.traj.obs}{\code{data.frame} of simulated trajectory with observation, as returned by \code{\link{SEITL_generateObs}}.}
+\item{simu.traj.obs}{\code{data.frame} of simulated trajectory with observation, as returned by \code{\link{genObsTraj}}.}
 
 \item{data}{\code{data.frame} of times and observations. Must have two columns: \code{time} and \code{Inc}.}
 }

@@ -150,7 +150,7 @@ SEIT2L_createFitmodel <- function(simulate=c("deterministic","stochastic")) {
 		state.names=SEIT2L_state.names,
 		theta.names=SEIT2L_theta.names,
 		simulate=simulate,
-		generateObs=SEITL_generateObs,
+		genObsPoint=SEITL_genObsPoint,
 		logPrior=SEITL_logPrior,
 		pointLogLike=SEITL_pointLogLike)
 

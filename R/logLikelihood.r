@@ -3,6 +3,7 @@
 #'Compute the marginal log-likelihood of \code{theta} for a deterministic model defined in a \code{\link{fitmodel}} object.
 #' @inheritParams testFitmodel
 #' @export
+#' @seealso \code{\link{genObsTraj}}
 #' @return numeric value of the log-likelihood
 margLogLikeDeter <- function(fitmodel, theta, state.init, data) {
 
@@ -76,5 +77,25 @@ posteriorDensity <- function(fitmodel, theta, state.init, data, margLogLike, ...
 
 }
 
+#' Generate an observation trajectory for a fitmodel
+#'
+#' This function simulates a model defined in a \code{\link{fitmodel}}
+#' object and generates observations at each time point. It returns
+#' the trajectory with an additions \code{obs} column.
+#' @inheritParams testFitmodel
+#' @param times the times at which to generate observations
+#' @export
+#' @seealso \code{\link{trajLogLike}}
+#' @return numeric value of the log-likelihood
+genObsTraj <- function(fitmodel, theta, state.init, times) {
 
+        ## simulate model at successive observation times of data
+        traj <- fitmodel$simulate(theta, state.init, times)
 
+        ## generate observations by applying fitmodel$genObsPoint to
+        ## each row of traj. The parameter value theta as passed as
+        ## extra argument to fitmodel$genObsPoint
+        traj$obs <- apply(X = traj, MARGIN = 1, FUN = fitmodel$genObsPoint,
+                          theta = theta)
+        return(traj)
+}

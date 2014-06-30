@@ -123,9 +123,9 @@ SEITL_simulateStochastic <- function(theta,state.init,times) {
 #' @export
 #' @seealso \code{\link{SEITL_simulateDeterministic}}, \code{\link{SEITL_simulateStochastic}}
 #' @return the \code{simu.traj} data.frame with an additional variable: "observation".
-SEITL_generateObs <- function(simu.traj, theta){
+SEITL_genObsPoint <- function(model.point, theta){
 
-	simu.traj$observation <- rpois(n=nrow(simu.traj),lambda=theta[["rho"]]*simu.traj[["Inc"]])
+	obs.point <- rpois(n=1, lambda=theta[["rho"]]*model.point[["Inc"]])
 
 	return(simu.traj)
 }
@@ -158,7 +158,7 @@ SEITL_logPrior <- function(theta) {
 #' @param state.point named vector containing the state of the model at the observation time point.
 #' @inheritParams SEITL_simulateDeterministic
 #' @export
-#' @seealso SEITL_generateObs
+#' @seealso SEITL_genObsPoint
 #' @return the log-likelihood value.
 SEITL_pointLogLike <- function(data.point, state.point, theta){
 
@@ -198,7 +198,7 @@ SEITL_createFitmodel <- function(simulate=c("deterministic","stochastic")) {
 		state.names=SEITL_state.names,
 		theta.names=SEITL_theta.names,
 		simulate=simulate,
-		generateObs=SEITL_generateObs,
+		genObsPoint=SEITL_genObsPoint,
 		logPrior=SEITL_logPrior,
 		pointLogLike=SEITL_pointLogLike)
 

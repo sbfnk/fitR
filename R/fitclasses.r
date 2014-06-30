@@ -11,12 +11,12 @@
 #' \item \code{times} numeric vector. Time sequence for which the state of the model is wanted; the first value of times must be the initial time, i.e. the time of \code{state.init}.
 #' }
 #' and returns a \code{data.fame} containing the simulated trajectories that is the values of the state variables (1 per column) at each observation time (1 per row). The first column is \code{time}.
-#' @param generateObs \R-function that generates simulated data from a simulated trajectory using an observation model (optional). This function takes 2 arguments:
+#' @param genObsPoint \R-function that generates a (randomly sampled) observation point from a model point, using an observation model (optional). It thus acts as an inverse of \code{pointLogLike} (see below). This function takes 2 arguments
 #' \itemize{
-#' \item \code{simu.traj} data.frame of simulated trajectories, as returned by \code{simulate}.
 #' \item \code{theta} named numeric vector. Values of the parameters. Names should match \code{theta.names}. 
+#' \item \code{model.point} a data point of the model.
 #' }
-#' and returns the \code{simu.traj} data.frame with an additional \code{observation} column. 
+#' and returns an observation point
 #' @param logPrior \R-function that evaluates the log-prior density of the parameters at a given \code{theta} (optional). The function should take 1 argument:
 #'\itemize{
 #' 	\item \code{theta} named numeric vector. Values of the parameters. Names should match \code{theta.names}. 
@@ -36,7 +36,7 @@
 #' 	\item \code{state.names} vector, names of the state variables.
 #' 	\item \code{theta.names} vector, names of the parameters.
 #' 	\item \code{simulate} \R-function to simulate forward the model; usage: \code{simulate(theta,state.init,times)}.
-#' 	\item \code{generateObs} \R-function to generate simulated observations; usage: \code{generateObs(simu.traj, theta)}.
+#' 	\item \code{genObsPoint} \R-function to generate simulated observations; usage: \code{genObsPoint(simu.traj, theta)}.
 #' 	\item \code{logPrior} \R-function to evaluate the log-prior of the parameter values; usage: \code{logPrior(theta)}.
 #' 	\item \code{pointLogLike} \R-function to evaluate the log-likelihood of one data point; usage: \code{pointLogLike(data.point, state.point, theta)}.
 #' }
@@ -59,8 +59,8 @@ fitmodel <- function(name=NULL, state.names=NULL, theta.names=NULL, simulate=NUL
 	}
 	
 	# optional
-	if(!is.null(generateObs) && !is.function(generateObs)){
-		stop(sQuote("generateObs")," argument is not an R function")
+	if(!is.null(genObsPoint) && !is.function(genObsPoint)){
+		stop(sQuote("genObsPoint")," argument is not an R function")
 	}
 	if(!is.null(logPrior) && !is.function(logPrior)){
 		stop(sQuote("logPrior")," argument is not an R function")
@@ -75,7 +75,7 @@ fitmodel <- function(name=NULL, state.names=NULL, theta.names=NULL, simulate=NUL
 		state.names=state.names,
 		theta.names=theta.names,
 		simulate=simulate,
-		generateObs=generateObs,
+		genObsPoint=genObsPoint,
 		logPrior=logPrior,
 		pointLogLike=pointLogLike), class="fitmodel"))
 
@@ -86,9 +86,9 @@ fitmodel <- function(name=NULL, state.names=NULL, theta.names=NULL, simulate=NUL
 #'This function performs a serie of checks on the \code{\link{fitmodel}} provided by the user in order to make sure that it will be compatible both with the functions coded during the course and the functions
 #'available in the \code{fitR} package. The latters can be used as a correction.
 #' @param fitmodel a \code{\link{fitmodel}} object
-#' @param theta named numeric vector. Values of the parameters. Names should match \code{fitmodel$theta.names}. 
-#' @param state.init named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}. 
-#' @param data data frame. Observation times and observed data. The time column must be named \code{time}, whereas the name of the data column should match the one used in the function \code{fitmodel$logLikePoint}. 
+#' @param theta named numeric vector. Values of the parameters. Names should match \code{fitmodel$theta.names}.
+#' @param state.init named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.
+#' @param data data frame. Observation times and observed data. The time column must be named \code{time}, whereas the name of the data column should match the one used in the function \code{fitmodel$pointLogLike}.
 #' @param verbose if \code{TRUE}, print details of the test performed to check validity of the arguments
 #' @export
 #' @seealso \code{\link{fitmodel}}
