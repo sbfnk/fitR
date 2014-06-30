@@ -3,7 +3,7 @@
 #'This function use faceting to plot all trajectories in a data frame. Convenient to see results of several simulations, or data. Also, if \code{data} is present, then an additional plot is displayed with data and potentially observation generated.
 #' @param traj data.frame, output of \code{fitmodel$simulate} or \code{simulateModelReplicates}.
 #' @param state.names character vector. Names of the state variables to plot. Names must match \code{fitmodel$state.names}. If \code{NULL} (default) all state variables are plotted.
-#' @param data data frame. Observation times and observed data. The time column must be named \code{time}, whereas the name of the data column should match one of \code{fitmodel$state.names}. 
+#' @param data data frame. Observation times and observed data. The time column must be named \code{time}, whereas the name of the data column should match one of \code{fitmodel$state.names}.
 #' @param summary logical. If \code{TRUE}, the mean, median as well as the 50th and 95th percentile of the trajectories are plotted (default). If \code{FALSE}, all individual trajectories are plotted (transparency can be set with \code{alpha}).
 #' @param alpha transparency of the trajectories (between 0 and 1).
 #' @param plot if \code{TRUE} the plot is displayed, and returned otherwise.
@@ -16,7 +16,8 @@ plotTraj <- function(traj, state.names=NULL, data=NULL, summary=TRUE, alpha=1, p
         traj$replicate <- 1
 
         if(summary){
-            message("Only 1 replicate to summarise: mean, median and CI of the trajectories won't be plotted.")
+            # Only 1 replicate to summarise: mean, median and CI of
+            # the trajectories won't be plotted.
             summary <- FALSE
         }
     }
@@ -97,7 +98,7 @@ plotTraj <- function(traj, state.names=NULL, data=NULL, summary=TRUE, alpha=1, p
 #' @inheritParams testFitmodel
 #' @inheritParams plotTraj
 #' @export
-#' @import plyr ggplot2 
+#' @import plyr ggplot2
 #' @return if \code{plot==FALSE}, a list of 2 elements is returned:
 #' \itemize{
 #'     \item \code{simulations} \code{data.frame} of \code{n.replicates} simulated observations.
@@ -119,9 +120,9 @@ plotFit <- function(fitmodel, theta, state.init, data, n.replicates=1, summary=T
     p <- plotTraj(traj=traj, state.names=state.names, data=data, summary=summary, alpha=alpha, plot=FALSE)
 
     if(plot){
-        print(p)        
+        print(p)
     } else {
-        return(list(traj=traj,plot=p))        
+        return(list(traj=traj,plot=p))
     }
 
 }
@@ -290,9 +291,9 @@ plotPosteriorFit <- function(trace, fitmodel, theta, state.init, posterior.summa
 
 
     if(plot){
-        print(p)        
+        print(p)
     } else {
-        return(list(posterior.traj=fit,plot=p))        
+        return(list(posterior.traj=fit,plot=p))
     }
 
 
