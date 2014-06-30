@@ -288,3 +288,38 @@ testFitmodel <- function(fitmodel, theta, state.init, data = NULL, verbose=TRUE)
 	}
 
 }
+
+#'The SIR model
+#'
+#' To get the SIR model, type \code{example(SIR)}. This executes the
+#' code listed below under "Examples".
+#' @usage example(SIR)
+#' @seealso \code{\link{fitmodel}}
+#' @example inst/examples/example-fitmodel.r
+SIR <- function() {
+        cat ("To load the SIR model, type example(SIR)\n")
+}
+
+#'The stochastic SIR model
+#'
+#' To get the stochastic SIR model, type
+#' \code{example(SIR_stochastic)}. This executes the code listed below
+#' under "Examples".
+#' @usage example(SIR_stochastic)
+#' @seealso \code{\link{fitmodel}}
+#' @example inst/examples/example-fitmodel-stochastic.r
+SIR_stochastic <- function() {
+        cat ("To load the stochastic SIR model, type example(SIR_stochastic)\n")
+}
+
+#'The SIR model with incomplete rerporting
+#'
+#' To get the SIR model with incomplete reporting, type
+#' \code{example(SIR_reporting)}. This executes the code listed below
+#' under "Examples".
+#' @usage example(SIR_reporting)
+#' @seealso \code{\link{fitmodel}}
+#' @example inst/examples/example-fitmodel-reporting.r
+SIR_reporting <- function() {
+        cat ("To load the SIR model with incomplete reporting, type example(SIR_reporting)\n")
+}
