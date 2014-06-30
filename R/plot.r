@@ -63,19 +63,10 @@ plotTraj <- function(traj, state.names=NULL, data=NULL, summary=TRUE, alpha=1, p
     }
 
     if(!is.null(data)){
-
-        # data are present, find which variable to plot by matching names of fitmodel states
-        data.obs.name <- intersect(names(data), state.names)
-        if(!length(data.obs.name)){
-            warnings("Names of ",sQuote("data")," don't match any state variable names of ",sQuote("traj"),": data won't be plotted.")
-        } else {
-            obs.name <- "observation"
-            names(obs.name) <- data.obs.name
-            data <- rename(data, obs.name)
-            data <- melt(data, measure.vars=obs.name,variable.name="state")
-
-            p <- p + geom_point(data=data,aes(x=time,y=value),colour="black")
-        }
+     
+        data <- melt(data, measure.vars="obs",variable.name="state")
+        p <- p + geom_point(data=data,aes(x=time,y=value),colour="black")
+        
     }
 
     p <- p + theme_bw()
@@ -112,7 +103,7 @@ plotFit <- function(fitmodel, theta, state.init, data, n.replicates=1, summary=T
     traj <- simulateModelReplicates(fitmodel=fitmodel,theta=theta, state.init=state.init, times=times, n=n.replicates, observation=TRUE)
 
     if(only.fit){
-        state.names <- c("observation")
+        state.names <- c("obs")
     } else {
         state.names <- NULL
     }
@@ -150,7 +141,7 @@ plotSMC <- function(smc, fitmodel, theta, data=NULL, summary=TRUE, alpha=1, only
     },.id="replicate")
 
     if(only.fit){
-        state.names <- c("observation")
+        state.names <- c("obs")
     } else {
         state.names <- NULL
     }
@@ -282,7 +273,7 @@ plotPosteriorFit <- function(trace, fitmodel, state.init, posterior.summary=c("s
 
 
     if(only.fit){
-        state.names <- c("observation")
+        state.names <- c("obs")
     } else {
         state.names <- NULL
     }

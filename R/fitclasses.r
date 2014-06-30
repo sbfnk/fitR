@@ -88,7 +88,7 @@ fitmodel <- function(name=NULL, state.names=NULL, theta.names=NULL, simulate=NUL
 #' @param fitmodel a \code{\link{fitmodel}} object
 #' @param theta named numeric vector. Values of the parameters. Names should match \code{fitmodel$theta.names}.
 #' @param state.init named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.
-#' @param data data frame. Observation times and observed data. The time column must be named \code{time}, whereas the name of the data column should match the one used in the function \code{fitmodel$pointLogLike}.
+#' @param data data frame. Observation times and observed data. The time column must be named \code{"time"} and the observation column must be named \code{"obs"}.
 #' @param verbose if \code{TRUE}, print details of the test performed to check validity of the arguments
 #' @export
 #' @seealso \code{\link{fitmodel}}
@@ -240,8 +240,8 @@ testFitmodel <- function(fitmodel, theta, state.init, data = NULL, verbose=TRUE)
 
 	# data must have a column named time, should not start at 0
 	if (!is.null(data)) {
-		if(!"time"%in%names(data)){
-			stop(sQuote("data")," argument must have a column named ",sQuote("time"))
+		if(!all(c("time","obs")%in%names(data))){
+			stop(sQuote("data")," argument must have columns named ",sQuote("time")," and ", sQuote("obs")
 		}else if(data$time[1]==0){
 			stop("the first observation time in data argument should not be 0")
 		}

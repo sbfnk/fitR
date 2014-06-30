@@ -162,7 +162,7 @@ SEITL_logPrior <- function(theta) {
 #' @return the log-likelihood value.
 SEITL_pointLogLike <- function(data.point, model.point, theta){
 
-	return(dpois(x=data.point[["Inc"]],lambda=theta[["rho"]]*model.point[["Inc"]],log=TRUE))
+	return(dpois(x=data.point[["obs"]],lambda=theta[["rho"]]*model.point[["Inc"]],log=TRUE))
 
 }
 
