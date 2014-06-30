@@ -143,7 +143,10 @@ plotSMC <- function(smc, fitmodel, theta, data=NULL, summary=TRUE, alpha=1, only
     names(traj) <- 1:length(traj)
 
     traj <- ldply(traj,function(df) {
-        return(fitmodel$generateObs(df,theta))
+
+        df$obs <- apply(X = traj, MARGIN = 1, FUN = fitmodel$genObsPoint, theta = theta)
+        return(df)
+        
     },.id="replicate")
 
     if(only.fit){
@@ -230,13 +233,13 @@ plotPosteriorTheta <- function(trace, estimated.only = FALSE){
 #'    \item \code{posterior.traj} a \code{data.frame} with the trajectories (and observations) sampled from the posterior distribution.
 #'    \item \code{plot} the plot of the fit displayed.
 #'}
-plotPosteriorFit <- function(trace, fitmodel, theta, state.init, posterior.summary=c("sample","median","mean","max"), summary=TRUE, sample.size = 100, alpha=min(1,10/sample.size), plot=TRUE) {
+plotPosteriorFit <- function(trace, fitmodel, state.init, posterior.summary=c("sample","median","mean","max"), summary=TRUE, sample.size = 100, alpha=min(1,10/sample.size), plot=TRUE) {
 
     posterior.summary <- match.arg(posterior.summary)
 
 
     # names of estimated theta
-    names.theta <- names(theta)
+    theta.names <- fitmodel$theta.names
 
     # time sequence (must include initial time)
     times <- c(0,data$time)
@@ -245,17 +248,17 @@ plotPosteriorFit <- function(trace, fitmodel, theta, state.init, posterior.summa
 
     if(posterior.summary=="median"){
 
-        theta.median <- apply(trace[names.theta],2,median)
+        theta.median <- apply(trace[theta.names],2,median)
         traj <- simulateModelReplicates(fitmodel=fitmodel,theta=theta.median,times=times,n=sample.size,observation=TRUE)
 
     } else if(posterior.summary=="mean"){
 
-        theta.mean <- apply(trace[names.theta],2,mean)
+        theta.mean <- apply(trace[theta.names],2,mean)
         traj <- simulateModelReplicates(fitmodel=fitmodel,theta=theta.mean,times=times,n=sample.size,observation=TRUE)
 
     } else if(posterior.summary=="max"){
         ind <- which.max(trace$log.posterior)
-        theta.max <- trace[ind,names.theta]
+        theta.max <- trace[ind,theta.names]
         traj <- simulateModelReplicates(fitmodel=fitmodel,theta=theta.mean,times=times,n=sample.size,observation=TRUE)
 
     } else {
@@ -268,13 +271,10 @@ plotPosteriorFit <- function(trace, fitmodel, theta, state.init, posterior.summa
         traj <- ldply(index,function(ind) {
 
             # extract posterior parameter set
-            theta <- trace[ind,names.theta]
+            theta <- trace[ind,theta.names]
 
             # simulate model at successive observation times of data
-            traj <- fitmodel$simulate(theta,fitmodel$initialise.state(theta),times)
-
-            # generate observation
-            traj <- fitmodel$generateObs(traj,theta)
+            traj <- genObsTraj(fitmodel, theta, state.init, times)
 
             return(traj)
         },.progress="text",.id="replicate")

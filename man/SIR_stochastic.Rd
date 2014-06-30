@@ -16,6 +16,8 @@ under "Examples".
 # This is based on the determinsitc SIR model, which can be created
 # using example(SIR)
 
+example(SIR)
+
 SIR_stochastic_name <- "stochastic SIR with constant population size"
 
 SIR_simulateStochastic <- function(theta,state.init,times) {

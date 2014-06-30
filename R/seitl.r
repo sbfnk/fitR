@@ -115,11 +115,11 @@ SEITL_simulateStochastic <- function(theta,state.init,times) {
 
 }
 
-#'Generate an observed incidence time series
+#'Generate an observed incidence
 #'
-#'Generate a daily incidence time serie under a Poisson observation process.  
-#' @param simu.traj data frame returned by \code{\link{SEITL_simulateDeterministic}} or \code{\link{SEITL_simulateStochastic}}
-#' @inheritParams SEITL_simulateDeterministic
+#'Generate an observed incidence under a Poisson observation process.  
+#' @param model.point named numeric vector. State of the model at a given point in time.
+#' @param theta named numeric vector. Values of the parameters.
 #' @export
 #' @seealso \code{\link{SEITL_simulateDeterministic}}, \code{\link{SEITL_simulateStochastic}}
 #' @return the \code{simu.traj} data.frame with an additional variable: "observation".
@@ -153,7 +153,7 @@ SEITL_logPrior <- function(theta) {
 
 #'Likelihood of the data for SEITL model
 #'
-#'Computes the log-likelihood of a subset of the data for a fixed trajectory and under a poisson observation process.
+#'Computes the log-likelihood of a data point given the state of the model and under a poisson observation process.
 #' @param data.point named vector containing the observation time and the value of the data point. Data correspond to the \code{\link{FluTdC1971}} dataset.
 #' @param model.point named vector containing the state of the model at the observation time point.
 #' @inheritParams SEITL_simulateDeterministic

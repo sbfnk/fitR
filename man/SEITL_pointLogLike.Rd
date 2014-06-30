@@ -16,7 +16,7 @@ SEITL_pointLogLike(data.point, model.point, theta)
 the log-likelihood value.
 }
 \description{
-Computes the log-likelihood of a subset of the data for a fixed trajectory and under a poisson observation process.
+Computes the log-likelihood of a data point given the state of the model and under a poisson observation process.
 }
 \seealso{
 SEITL_genObsPoint

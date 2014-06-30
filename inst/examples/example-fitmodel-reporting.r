@@ -4,6 +4,8 @@
 # using example(SIR)
 #
 
+example(SIR)
+
 SIR_reporting_name <- "SIR with constant population size and incomplete reporting"
 SIR_reporting_theta.names <- SIR_theta.names <- c("R0","D", "RR")
 
@@ -17,18 +19,18 @@ SIR_reporting_pointLogLike <- function(data.point, model.point, theta){
 ## function to generate observation from a model simulation
 SIR_reporting_genObsPoint <- function(model.point, theta){
 
-        ## the prevalence is observed through a Poisson process
-        obs.point <- rpois(n=1, lambda=model.point[["I"]]*theta[["RR"]])
+       ## the prevalence is observed through a Poisson process
+	obs.point <- rpois(n=1, lambda=model.point[["I"]]*theta[["RR"]])
 
-        return(obs.point)
+	return(obs.point)
 }
 
 ## create deterministic SIR fitmodel
 SIR_reporting <- fitmodel(
 	name=SIR_reporting_name,
-        state.names=SIR_state.names,
+	state.names=SIR_state.names,
 	theta.names=SIR_theta.names,
-        simulate=SIR_simulateDeterministic,
+	simulate=SIR_simulateDeterministic,
 	genObsPoint=SIR_reporting_genObsPoint,
 	logPrior=SIR_logPrior,
 	pointLogLike=SIR_reporting_pointLogLike)
