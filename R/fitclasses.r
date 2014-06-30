@@ -95,11 +95,13 @@ fitmodel <- function(name=NULL, state.names=NULL, theta.names=NULL, simulate=NUL
 #' @example inst/examples/example-fitmodel.r
 testFitmodel <- function(fitmodel, theta, state.init, data = NULL, verbose=TRUE) {
 
+        if (missing(fitmodel)) { stop(sQuote("fitmodel"), " argument missing\n") }
 	if(!inherits(fitmodel,"fitmodel")){
 		stop(sQuote("fitmodel")," argument is not from the class fitmodel")
 	}
 
     ## test of theta
+        if (missing(theta)) { stop(sQuote("theta"), " argument missing\n") }
 	if(verbose){
 		cat("--- checking ", sQuote("theta"), "argument\n")
 		cat("Should contain the parameters:",sQuote(fitmodel$theta.names),"\nTest:\n")
@@ -116,6 +118,7 @@ testFitmodel <- function(fitmodel, theta, state.init, data = NULL, verbose=TRUE)
 	}
 
 	## test of state.init
+        if (missing(state.init)) { stop(sQuote("state.init"), " argument missing\n") }
 	if(verbose){
 		cat("--- checking ", sQuote("state.init"), "argument\n")
 		cat("Should contain the states:",sQuote(fitmodel$state.names),"\nTest:\n")
