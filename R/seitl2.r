@@ -135,7 +135,7 @@ SEIT2L_createFitmodel <- function(simulate=c("deterministic","stochastic")) {
 
 	# simulator
 	if(simulate=="deterministic"){
-		simulateTraj <- SEIT2L_simulateDeterministic
+		simulate <- SEIT2L_simulateDeterministic
 	} else {
 		simulate <- SEIT2L_simulateStochastic
 	}
