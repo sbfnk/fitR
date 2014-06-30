@@ -1,7 +1,8 @@
-#'Plot one or more model trajectories
+#' Plot one or more model trajectories
 #'
-#'This function use faceting to plot all state.variables trajectories. Convenient to see results of several simulations.
-#' @param fitmodel a \code{\link{fitmodel}} object.
+#' This function uses faceting to plot all trajectories in a data
+#' frame. Convenient to visualise results of several simulations, or
+#' data.
 #' @param traj data.frame, output of \code{fitmodel$simulate.model} or \code{simulateModelReplicates}.
 #' @param state.variables subset of state.variables to plot. If \code{NULL} (default) all state variables are plotted.
 #' @param alpha transparency of the trajectories (between 0 and 1).
