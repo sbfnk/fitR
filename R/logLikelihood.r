@@ -1,11 +1,13 @@
-#'Marginal log-likelihood for a deterministic model
+#' Log-likelihood of a trjaectory for a deterministic model
 #'
-#'Compute the marginal log-likelihood of \code{theta} for a deterministic model defined in a \code{\link{fitmodel}} object.
+#' Compute the trajectory log-likelihood of \code{theta} for a
+#' deterministic model defined in a \code{\link{fitmodel}} object by
+#' summing the point log-likelihoods.
 #' @inheritParams testFitmodel
 #' @export
 #' @seealso \code{\link{genObsTraj}}
 #' @return numeric value of the log-likelihood
-margLogLikeDeter <- function(fitmodel, theta, state.init, data) {
+trajLogLike <- function(fitmodel, theta, state.init, data) {
 
 	# time sequence (must include initial time)
 	times <- c(0,data$time)
@@ -54,7 +56,7 @@ margLogLikeSto <- function(fitmodel, theta, state.init, data, n.particles, n.cor
 #' @param ... further arguments to be passed to \code{margLogLike}
 #' @inheritParams testFitmodel
 #' @export
-#' @seealso \code{\link{margLogLikeDeter}}, \code{\link{margLogLikeSto}}
+#' @seealso \code{\link{trajLogLike}}, \code{\link{margLogLikeSto}}
 #' @return a list of two elements
 #' \itemize{
 #' 	\item \code{log.density} numeric, logged value of the posterior density evaluated at \code{theta}

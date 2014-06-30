@@ -39,8 +39,8 @@ plotModelTraj <- function(fitmodel,traj,state.variables=NULL,alpha=1, plot=TRUE)
 #'
 #'Simulate the model under \code{theta}, generate observation and plot against data. Since simulation and observation processes can be stochastic, \code{n.replicates} can be plotted.
 #' @param n.replicates numeric, number of replicated simulations.
-#' @inheritParams margLogLikeDeter
 #' @inheritParams plotModelTraj
+#' @inheritParams trajLogLike
 #' @export
 #' @import plyr ggplot2 
 #' @return if \code{plot==FALSE}, a list of 2 elements is returned:
