@@ -74,7 +74,7 @@ mcmcMH <- function(target, theta.init, covmat = NULL, n.iterations, limits=list(
 	theta.estimated.names <- names(which(diag(covmat.proposal)>0))
 
 	# evaluate target at theta init
-	target.theta.current <- target(theta=theta.current)
+	target.theta.current <- target(theta.current)
 
 	# initialise trace data.frame
 	trace <- data.frame(t(target.theta.current$trace), weight=1)
@@ -138,7 +138,7 @@ mcmcMH <- function(target, theta.init, covmat = NULL, n.iterations, limits=list(
 		theta.propose[theta.estimated.names] <- as.vector(rtmvnorm(1,mean=theta.current[theta.estimated.names],sigma=covmat.proposal[theta.estimated.names,theta.estimated.names],lower=lower.proposal[theta.estimated.names],upper=upper.proposal[theta.estimated.names]))
 
 		# evaluate posterior of proposed parameter
-		target.theta.propose <- target(theta=theta.propose)
+		target.theta.propose <- target(theta.propose)
 
 		if(!is.finite(target.theta.propose$log.density)){
 			# if posterior is 0 then do not compute anything else and don't accept
