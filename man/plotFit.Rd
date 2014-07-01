@@ -4,12 +4,8 @@
 \title{Plot fit of model to data}
 \usage{
 plotFit(fitmodel, theta, state.init, data, n.replicates = 1, summary = TRUE,
-<<<<<<< HEAD
   alpha = min(1, 10/n.replicates), all.vars = FALSE, p.extinction = FALSE,
   plot = TRUE)
-=======
-  alpha = min(1, 10/n.replicates), all.vars = FALSE, plot = TRUE)
->>>>>>> FETCH_HEAD
 }
 \arguments{
 \item{n.replicates}{numeric, number of replicated simulations.}
@@ -27,6 +23,8 @@ plotFit(fitmodel, theta, state.init, data, n.replicates = 1, summary = TRUE,
 \item{summary}{logical. If \code{TRUE}, the mean, median as well as the 50th and 95th percentile of the trajectories are plotted (default). If \code{FALSE}, all individual trajectories are plotted (transparency can be set with \code{alpha}).}
 
 \item{alpha}{transparency of the trajectories (between 0 and 1).}
+
+\item{p.extinction}{logical. If \code{TRUE}, the time-series of the proportion of faded-out epidemics is plotted (default to \code{FALSE}). This is only relevant for stochastic models.}
 
 \item{plot}{if \code{TRUE} the plot is displayed, and returned otherwise.}
 }

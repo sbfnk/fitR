@@ -3,13 +3,8 @@
 \alias{plotTraj}
 \title{Plot model trajectories}
 \usage{
-<<<<<<< HEAD
-plotTraj(traj, state.names = NULL, data = NULL, summary = TRUE,
-  p.extinction = FALSE, alpha = 1, plot = TRUE)
-=======
 plotTraj(traj = NULL, state.names = NULL, data = NULL, summary = TRUE,
-  alpha = 1, plot = TRUE)
->>>>>>> FETCH_HEAD
+  p.extinction = FALSE, alpha = 1, plot = TRUE)
 }
 \arguments{
 \item{traj}{data.frame, output of \code{fitmodel$simulate} or \code{simulateModelReplicates}.}
@@ -19,6 +14,8 @@ plotTraj(traj = NULL, state.names = NULL, data = NULL, summary = TRUE,
 \item{data}{data frame. Observation times and observed data. The time column must be named \code{time}, whereas the name of the data column should match one of \code{fitmodel$state.names}.}
 
 \item{summary}{logical. If \code{TRUE}, the mean, median as well as the 50th and 95th percentile of the trajectories are plotted (default). If \code{FALSE}, all individual trajectories are plotted (transparency can be set with \code{alpha}).}
+
+\item{p.extinction}{logical. If \code{TRUE}, the time-series of the proportion of faded-out epidemics is plotted (default to \code{FALSE}). This is only relevant for stochastic models.}
 
 \item{alpha}{transparency of the trajectories (between 0 and 1).}
 
