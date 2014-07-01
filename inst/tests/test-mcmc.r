@@ -5,7 +5,7 @@ test_that("mcmcMH for deterministic SEITL model",{
 
 	fitmodel <- SEITL_createFitmodel("deterministic")
 
-	theta <- c("R0"=10, "LP"=2 , "IP"=3, "alpha"=0.5, "TIP"=15, "rho"=0.7)
+	theta <- c("R0"=10, "D.lat"=2 , "D.inf"=3, "alpha"=0.5, "D.imm"=15, "rho"=0.7)
 	state.init <- c("S"=280,"E"=0,"I"=2,"T"=0,"L"=4,"Inc"=0)
 	data("FluTdC1971",envir = environment())
 	data <- FluTdC1971[1:5,]
@@ -28,7 +28,7 @@ test_that("mcmcMH for deterministic SEIT2L model",{
 
 	fitmodel <- SEIT2L_createFitmodel("deterministic")
 
-	theta <- c("R0"=10, "LP"=2 , "IP"=3, "alpha"=0.5, "TIP"=15, "rho"=0.7)
+	theta <- c("R0"=10, "D.lat"=2 , "D.inf"=3, "alpha"=0.5, "D.imm"=15, "rho"=0.7)
 	state.init <- c("S"=280,"E"=0,"I"=2,"T1"=0,"T2"=0,"L"=4,"Inc"=0)
 	data("FluTdC1971",envir = environment())
 	data <- FluTdC1971[1:5,]
@@ -51,7 +51,7 @@ test_that("mcmcMH for stochastic SEITL model",{
 
 	fitmodel <- SEITL_createFitmodel("stochastic")
 
-	theta <- c("R0"=10, "LP"=2 , "IP"=3, "alpha"=0.5, "TIP"=15, "rho"=0.7)
+	theta <- c("R0"=10, "D.lat"=2 , "D.inf"=3, "alpha"=0.5, "D.imm"=15, "rho"=0.7)
 	state.init <- c("S"=280,"E"=0,"I"=2,"T"=0,"L"=4,"Inc"=0)
 	data("FluTdC1971",envir = environment())
 	data <- FluTdC1971[1:5,]
@@ -75,7 +75,7 @@ test_that("mcmcMH for stochastic SEIT2L model",{
 
 	fitmodel <- SEIT2L_createFitmodel("stochastic")
 
-	theta <- c("R0"=10, "LP"=2 , "IP"=3, "alpha"=0.5, "TIP"=15, "rho"=0.7)
+	theta <- c("R0"=10, "D.lat"=2 , "D.inf"=3, "alpha"=0.5, "D.imm"=15, "rho"=0.7)
 	state.init <- c("S"=280,"E"=0,"I"=2,"T1"=0,"T2"=0,"L"=4,"Inc"=0)
 	data("FluTdC1971",envir = environment())
 	data <- FluTdC1971[1:5,]

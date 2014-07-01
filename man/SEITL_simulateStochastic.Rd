@@ -6,7 +6,7 @@
 SEITL_simulateStochastic(theta, state.init, times)
 }
 \arguments{
-\item{theta}{named numeric vector. Parameter values. Must include the following parameters: "R0", "LP", "IP", "alpha", "TIP" and "rho"}
+\item{theta}{named numeric vector. Parameter values. Must include the following parameters: "R0", "D.lat", "D.inf", "alpha", "D.imm" and "rho"}
 
 \item{state.init}{named numeric vector. Initial state of the SEITL model. Must include the following states: "S", "E", "I", "T", "L" and "Inc".}
 

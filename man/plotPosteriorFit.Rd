@@ -3,9 +3,9 @@
 \alias{plotPosteriorFit}
 \title{Plot MCMC posterior fit}
 \usage{
-plotPosteriorFit(trace, fitmodel, theta, state.init,
-  posterior.summary = c("sample", "median", "mean", "max"), summary = TRUE,
-  sample.size = 100, alpha = min(1, 10/sample.size), plot = TRUE)
+plotPosteriorFit(trace, fitmodel, state.init, posterior.summary = c("sample",
+  "median", "mean", "max"), summary = TRUE, sample.size = 100,
+  alpha = min(1, 10/sample.size), plot = TRUE)
 }
 \arguments{
 \item{posterior.summary}{character. Set to \code{"sample"} to plot trajectories from a sample of the posterior (default). Set to \code{"median"}, \code{"mean"} or \code{"max"} to plot trajectories corresponding to the median, mean and maximum of the posterior density.}
@@ -15,8 +15,6 @@ plotPosteriorFit(trace, fitmodel, theta, state.init,
 \item{sample.size}{number of theta sampled from posterior distribution (if \code{posterior.summary=="sample"}). Otherwise, number of replicated simulations.}
 
 \item{fitmodel}{a \code{\link{fitmodel}} object}
-
-\item{theta}{named numeric vector. Values of the parameters. Names should match \code{fitmodel$theta.names}.}
 
 \item{state.init}{named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.}
 

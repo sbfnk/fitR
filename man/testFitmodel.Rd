@@ -12,7 +12,7 @@ testFitmodel(fitmodel, theta, state.init, data = NULL, verbose = TRUE)
 
 \item{state.init}{named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.}
 
-\item{data}{data frame. Observation times and observed data. The time column must be named \code{time}, whereas the name of the data column should match the one used in the function \code{fitmodel$pointLogLike}.}
+\item{data}{data frame. Observation times and observed data. The time column must be named \code{"time"} and the observation column must be named \code{"obs"}.}
 
 \item{verbose}{if \code{TRUE}, print details of the test performed to check validity of the arguments}
 }
@@ -21,19 +21,19 @@ This function performs a serie of checks on the \code{\link{fitmodel}} provided 
 available in the \code{fitR} package. The latters can be used as a correction.
 }
 \examples{
-# create a simple stochastic SIR model with constant population size
+# create a simple deterministic SIR model with constant population size
 
 SIR_name <- "SIR with constant population size"
 SIR_state.names <- c("S","I","R")
-SIR_theta.names <- c("R0","D")
+SIR_theta.names <- c("R0","D.inf")
 
 SIR_simulateDeterministic <- function(theta,state.init,times) {
 
         SIR_ode <- function(time, state, parameters) {
 
                 ## parameters
-                beta <- parameters[["R0"]] / parameters[["D"]]
-                nu <- 1 / parameters[["D"]]
+                beta <- parameters[["R0"]] / parameters[["D.inf"]]
+                nu <- 1 / parameters[["D.inf"]]
 
                 ## states
                 S <- state[["S"]]
@@ -60,7 +60,7 @@ SIR_logPrior <- function(theta) {
         ## uniform prior on R0: U[1,100]
         log.prior.R0 <- dunif(theta[["R0"]], min = 1, max = 100, log = TRUE)
         ## uniform prior on infectious period: U[0,30]
-        log.prior.D <- dunif(theta[["D"]], min = 0, max = 30, log = TRUE)
+        log.prior.D <- dunif(theta[["D.inf"]], min = 0, max = 30, log = TRUE)
 
 	return(log.prior.R0 + log.prior.D)
 }
@@ -91,7 +91,7 @@ SIR <- fitmodel(
 	logPrior=SIR_logPrior,
 	pointLogLike=SIR_pointLogLike)
 
-## test them
+## test it
 theta <- c(R0=3, D=4)
 state.init <- c(S=99,I=1,R=0)
 data(epi)

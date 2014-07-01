@@ -1,7 +1,7 @@
 #'Deterministic simulation of SEITL model
 #'
 #'Solves the system of ordinary differential equations for the SEITL model using the \code{\link[deSolve]{ode}} function.
-#' @param theta named numeric vector. Parameter values. Must include the following parameters: "R0", "LP", "IP", "alpha", "TIP" and "rho"
+#' @param theta named numeric vector. Parameter values. Must include the following parameters: "R0", "D.lat", "D.inf", "alpha", "D.imm" and "rho"
 #' @param state.init named numeric vector. Initial state of the SEITL model. Must include the following states: "S", "E", "I", "T", "L" and "Inc".
 #' @param times numeric vector. Time sequence for which state of the model is wanted; the first value of times must be the initial time, i.e. the time of \code{state.init}.
 #' @export
@@ -14,11 +14,11 @@ SEITL_simulateDeterministic <- function(theta,state.init,times) {
 	SEITL_ode <- function(time, state, theta) {
 
 		# param
-		beta <- theta[["R0"]]/theta[["IP"]]
-		epsilon <- 1/theta[["LP"]]
-		nu <- 1/theta[["IP"]]
+		beta <- theta[["R0"]]/theta[["D.inf"]]
+		epsilon <- 1/theta[["D.lat"]]
+		nu <- 1/theta[["D.inf"]]
 		alpha <- theta[["alpha"]]
-		tau <- 1/theta[["TIP"]]
+		tau <- 1/theta[["D.imm"]]
 
 		# states
 		S <- state[["S"]]
@@ -77,11 +77,11 @@ SEITL_simulateStochastic <- function(theta,state.init,times) {
 	SEITL_rateFunc <- function(state,theta,t) {
 
 		# param
-		beta <- theta[["R0"]]/theta[["IP"]]
-		epsilon <- 1/theta[["LP"]]
-		nu <- 1/theta[["IP"]]
+		beta <- theta[["R0"]]/theta[["D.inf"]]
+		epsilon <- 1/theta[["D.lat"]]
+		nu <- 1/theta[["D.inf"]]
 		alpha <- theta[["alpha"]]
-		tau <- 1/theta[["TIP"]]
+		tau <- 1/theta[["D.imm"]]
 
 		# states
 		S <- state[["S"]]
@@ -140,9 +140,9 @@ SEITL_genObsPoint <- function(model.point, theta){
 SEITL_logPrior <- function(theta) {
 
 	log.prior.R0 <- dunif(theta["R0"], min = 1, max = 100, log = TRUE)
-	log.prior.latent.period <- dunif(theta["LP"], min = 0, max = 30, log = TRUE)
-	log.prior.infectious.period <- dunif(theta["IP"], min = 0, max = 30, log = TRUE)
-	log.prior.temporary.immune.period <- dunif(theta["TIP"], min = 0, max = 50, log = TRUE)
+	log.prior.latent.period <- dunif(theta["D.lat"], min = 0, max = 30, log = TRUE)
+	log.prior.infectious.period <- dunif(theta["D.inf"], min = 0, max = 30, log = TRUE)
+	log.prior.temporary.immune.period <- dunif(theta["D.imm"], min = 0, max = 50, log = TRUE)
 	log.prior.probability.long.term.immunity <- dunif(theta["alpha"], min = 0, max = 1, log = TRUE)
 	log.prior.reporting.rate <- dunif(theta["rho"], min = 0, max = 2, log = TRUE)
 	
@@ -162,7 +162,7 @@ SEITL_logPrior <- function(theta) {
 #' @return the log-likelihood value.
 SEITL_pointLogLike <- function(data.point, model.point, theta){
 
-	return(dpois(x=data.point[["Inc"]],lambda=theta[["rho"]]*model.point[["Inc"]],log=TRUE))
+	return(dpois(x=data.point[["obs"]],lambda=theta[["rho"]]*model.point[["Inc"]],log=TRUE))
 
 }
 
@@ -190,7 +190,7 @@ SEITL_createFitmodel <- function(simulate=c("deterministic","stochastic")) {
 
 	SEITL_name <- "SEITL model with daily incidence and constant population size"
 	SEITL_state.names <- c("S","E","I","T","L","Inc")
-	SEITL_theta.names <- c("R0", "LP", "IP", "alpha", "TIP", "rho")
+	SEITL_theta.names <- c("R0", "D.lat", "D.inf", "alpha", "D.imm", "rho")
 
 	# create fitmodel
 	SEITL <- fitmodel(

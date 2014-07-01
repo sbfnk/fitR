@@ -6,7 +6,7 @@
 SEITL_logPrior(theta)
 }
 \arguments{
-\item{theta}{named numeric vector. Parameter values. Must include the following parameters: "R0", "LP", "IP", "alpha", "TIP" and "rho"}
+\item{theta}{named numeric vector. Parameter values. Must include the following parameters: "R0", "D.lat", "D.inf", "alpha", "D.imm" and "rho"}
 }
 \value{
 the value of the log-prior.

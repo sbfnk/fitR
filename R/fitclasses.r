@@ -88,7 +88,7 @@ fitmodel <- function(name=NULL, state.names=NULL, theta.names=NULL, simulate=NUL
 #' @param fitmodel a \code{\link{fitmodel}} object
 #' @param theta named numeric vector. Values of the parameters. Names should match \code{fitmodel$theta.names}.
 #' @param state.init named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.
-#' @param data data frame. Observation times and observed data. The time column must be named \code{time}, whereas the name of the data column should match the one used in the function \code{fitmodel$pointLogLike}.
+#' @param data data frame. Observation times and observed data. The time column must be named \code{"time"} and the observation column must be named \code{"obs"}.
 #' @param verbose if \code{TRUE}, print details of the test performed to check validity of the arguments
 #' @export
 #' @seealso \code{\link{fitmodel}}
@@ -240,8 +240,8 @@ testFitmodel <- function(fitmodel, theta, state.init, data = NULL, verbose=TRUE)
 
 	# data must have a column named time, should not start at 0
 	if (!is.null(data)) {
-		if(!"time"%in%names(data)){
-			stop(sQuote("data")," argument must have a column named ",sQuote("time"))
+		if(!all(c("time","obs")%in%names(data))){
+			stop(sQuote("data")," argument must have columns named ",sQuote("time")," and ", sQuote("obs"))
 		}else if(data$time[1]==0){
 			stop("the first observation time in data argument should not be 0")
 		}
@@ -312,7 +312,7 @@ SIR_stochastic <- function() {
         cat ("To load the stochastic SIR model, type example(SIR_stochastic)\n")
 }
 
-#'The SIR model with incomplete rerporting
+#'The SIR model with incomplete reporting
 #'
 #' To get the SIR model with incomplete reporting, type
 #' \code{example(SIR_reporting)}. This executes the code listed below
@@ -323,3 +323,72 @@ SIR_stochastic <- function() {
 SIR_reporting <- function() {
         cat ("To load the SIR model with incomplete reporting, type example(SIR_reporting)\n")
 }
+
+
+#'The deterministic SEITL model
+#'
+#' To get the deterministic SEITL model, type
+#' \code{example(SEITL_deter)}. This executes the code listed below
+#' under "Examples".
+#' @usage example(SEITL_deter)
+#' @seealso \code{\link{fitmodel}}
+#' @example inst/examples/example-SEITL-deter.r
+SEITL_deter <- function() {
+        cat ("To load the deterministic SEITL model, type example(SEITL_deter)\n")
+}
+
+
+#'The stochastic SEITL model
+#'
+#' To get the stochastic SEITL model, type
+#' \code{example(SEITL_sto)}. This executes the code listed below
+#' under "Examples".
+#' @usage example(SEITL_sto)
+#' @seealso \code{\link{fitmodel}}
+#' @example inst/examples/example-SEITL-sto.r
+SEITL_sto <- function() {
+        cat ("To load the stochastic SEITL model, type example(SEITL_sto)\n")
+}
+
+
+#'The deterministic SEIT2L model
+#'
+#' To get the deterministic SEIT2L model, type
+#' \code{example(SEIT2L_deter)}. This executes the code listed below
+#' under "Examples".
+#' @usage example(SEIT2L_deter)
+#' @seealso \code{\link{fitmodel}}
+#' @example inst/examples/example-SEIT2L-deter.r
+SEIT2L_deter <- function() {
+        cat ("To load the deterministic SEIT2L model, type example(SEIT2L_deter)\n")
+}
+
+
+#'The stochastic SEIT2L model
+#'
+#' To get the stochastic SEIT2L model, type
+#' \code{example(SEIT2L_sto)}. This executes the code listed below
+#' under "Examples".
+#' @usage example(SEIT2L_sto)
+#' @seealso \code{\link{fitmodel}}
+#' @example inst/examples/example-SEIT2L-sto.r
+SEIT2L_sto <- function() {
+        cat ("To load the stochastic SEIT2L model, type example(SEIT2L_sto)\n")
+}
+
+
+#'Three sets of guess values for the SEITL model
+#'
+#' To get 3 example of parameters and initial state values, type
+#' \code{example(SEITL_guess_values)}. This executes the code listed below
+#' under "Examples".
+#' @usage example(SEITL_guess_values)
+#' @example inst/examples/example-SEITL-guess-values.r
+SEITL_guess_values <- function() {
+        cat ("To load the guess values for the SEITL model, type example(SEITL_guess_values)\n")
+}
+
+
+
+
+
