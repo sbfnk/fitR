@@ -12,7 +12,7 @@
 #' @seealso \code{\link{simulateModelReplicates}}
 plotTraj <- function(traj, state.names=NULL, data=NULL, summary=TRUE, alpha=1, plot=TRUE) {
 
-    if(!"replicate"%in%names(traj) && !any(duplicated(traj$time))){
+    if(!any(duplicated(traj$time))){
         traj$replicate <- 1
 
         if(summary){
