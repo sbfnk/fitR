@@ -104,7 +104,9 @@ plotFit <- function(fitmodel, theta, state.init, data, n.replicates=1, summary=T
 
     times <- c(0, data$time)
 
-    cat("Simulate ",n.replicates," replicate(s)\n")
+    if (n.replicates > 1) {
+            cat("Simulate ",n.replicates," replicate(s)\n")
+    }
     traj <- simulateModelReplicates(fitmodel=fitmodel,theta=theta, state.init=state.init, times=times, n=n.replicates, observation=TRUE)
 
     if(all.vars){

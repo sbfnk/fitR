@@ -12,7 +12,7 @@ simulateModelStochastic <- function(theta,state.init,times,transitions,rateFunc)
 
 
     stoch <- as.data.frame(ssa.adaptivetau(state.init,transitions,rateFunc,theta,tf=diff(range(times))))
-    
+
     # rescale time as absolute value
     stoch$time <- stoch$time + min(times)
 
@@ -46,6 +46,12 @@ simulateModelReplicates <- function(fitmodel,theta, state.init, times, n, observ
     rep <- as.list(1:n)
     names(rep) <- rep
 
+    if (n > 1) {
+        progress = "text"
+    } else {
+        progress = "none"
+    }
+
     traj.rep <- ldply(rep,function(x) {
 
         if(observation){
@@ -56,7 +62,7 @@ simulateModelReplicates <- function(fitmodel,theta, state.init, times, n, observ
 
         return(traj)
 
-    },.progress="text",.id="replicate")
+    },.progress=progress,.id="replicate")
 
     return(traj.rep)
 }
@@ -159,7 +165,7 @@ distanceOscillation <- function(x, y) {
 export2Tracer <- function(trace, file) {
 
     trace <- trace[c("iteration",setdiff(names(trace),c("iteration","weight")))]
-    write.table(trace,file=file,quote=FALSE,row.names=FALSE,sep="\t")        
+    write.table(trace,file=file,quote=FALSE,row.names=FALSE,sep="\t")
 
 }
 
