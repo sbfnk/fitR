@@ -10,9 +10,9 @@
 #' @export
 #' @import reshape2 ggplot2
 #' @seealso \code{\link{simulateModelReplicates}}
-plotTraj <- function(traj, state.names=NULL, data=NULL, summary=TRUE, alpha=1, plot=TRUE) {
+plotTraj <- function(traj=NULL, state.names=NULL, data=NULL, summary=TRUE, alpha=1, plot=TRUE) {
 
-    if(!any(duplicated(traj$time))){
+    if(!is.null(traj) & !any(duplicated(traj$time))){
         traj$replicate <- 1
 
         if(summary){
@@ -26,47 +26,52 @@ plotTraj <- function(traj, state.names=NULL, data=NULL, summary=TRUE, alpha=1, p
         state.names <- setdiff(names(traj),c("time","replicate"))
     }
 
-    df.traj <- melt(traj,measure.vars=state.names,variable.name="state")
+    if (!is.null(traj)) {
+        df.traj <- melt(traj,measure.vars=state.names,variable.name="state")
+    }
 
-    if(summary){
+    if(!is.null(traj)) {
+            if (summary){
 
-        message("Compute confidence intervals")
+                    message("Compute confidence intervals")
 
-        traj.CI <- ddply(df.traj,c("time","state"),function(df) {
+                    traj.CI <- ddply(df.traj,c("time","state"),function(df) {
 
-            tmp <- as.data.frame(t(quantile(df$value,prob=c(0.025,0.25,0.5,0.75,0.975))))
-            names(tmp) <- c("low_95","low_50","median","up_50","up_95")
-            tmp$mean <- mean(df$value)
-            return(tmp)
+                            tmp <- as.data.frame(t(quantile(df$value,prob=c(0.025,0.25,0.5,0.75,0.975))))
+                            names(tmp) <- c("low_95","low_50","median","up_50","up_95")
+                            tmp$mean <- mean(df$value)
+                            return(tmp)
 
-        },.progress="text")
+                    },.progress="text")
 
-        traj.CI.line <- melt(traj.CI[c("time","state","mean","median")],id.vars=c("time","state"))
-        traj.CI.area <- melt(traj.CI[c("time","state","low_95","low_50","up_50","up_95")],id.vars=c("time","state"))
-        traj.CI.area$type <- sapply(traj.CI.area$variable,function(x) {str_split(x,"_")[[1]][1]})
-        traj.CI.area$CI <- sapply(traj.CI.area$variable,function(x) {str_split(x,"_")[[1]][2]})
-        traj.CI.area$variable <- NULL
-        traj.CI.area <- dcast(traj.CI.area,"time+state+CI~type")
+                    traj.CI.line <- melt(traj.CI[c("time","state","mean","median")],id.vars=c("time","state"))
+                    traj.CI.area <- melt(traj.CI[c("time","state","low_95","low_50","up_50","up_95")],id.vars=c("time","state"))
+                    traj.CI.area$type <- sapply(traj.CI.area$variable,function(x) {str_split(x,"_")[[1]][1]})
+                    traj.CI.area$CI <- sapply(traj.CI.area$variable,function(x) {str_split(x,"_")[[1]][2]})
+                    traj.CI.area$variable <- NULL
+                    traj.CI.area <- dcast(traj.CI.area,"time+state+CI~type")
 
-        p <- ggplot(traj.CI.area)+facet_wrap(~state, scales="free_y")
-        p <- p + geom_ribbon(data=traj.CI.area,aes(x=time,ymin=low,ymax=up,alpha=CI),fill="red")
-        p <- p + geom_line(data=traj.CI.line,aes(x=time,y=value,linetype=variable),colour="red")
-        p <- p + scale_alpha_manual("Percentile",values=c("95"=0.25,"50"=0.45),labels=c("95"="95th","50"="50th"))
-        p <- p + scale_linetype("Stats")
-        p <- p + guides(linetype = guide_legend(order = 1))
+                    p <- ggplot(traj.CI.area)+facet_wrap(~state, scales="free_y")
+                    p <- p + geom_ribbon(data=traj.CI.area,aes(x=time,ymin=low,ymax=up,alpha=CI),fill="red")
+                    p <- p + geom_line(data=traj.CI.line,aes(x=time,y=value,linetype=variable),colour="red")
+                    p <- p + scale_alpha_manual("Percentile",values=c("95"=0.25,"50"=0.45),labels=c("95"="95th","50"="50th"))
+                    p <- p + scale_linetype("Stats")
+                    p <- p + guides(linetype = guide_legend(order = 1))
+            } else {
 
+                    p <- ggplot(df.traj)+facet_wrap(~state, scales="free_y")
+                    p <- p + geom_line(data=df.traj,aes(x=time,y=value,group=replicate),alpha=alpha,colour="red")
+
+            }
     } else {
-
-        p <- ggplot(df.traj)+facet_wrap(~state, scales="free_y")
-        p <- p + geom_line(data=df.traj,aes(x=time,y=value,group=replicate),alpha=alpha,colour="red")
-
+            p <- ggplot()
     }
 
     if(!is.null(data)){
-     
+
         data <- melt(data, measure.vars="obs",variable.name="state")
         p <- p + geom_point(data=data,aes(x=time,y=value),colour="black")
-        
+
     }
 
     p <- p + theme_bw()
