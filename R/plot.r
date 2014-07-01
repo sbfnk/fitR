@@ -9,7 +9,7 @@
 #' @param alpha transparency of the trajectories (between 0 and 1).
 #' @param plot if \code{TRUE} the plot is displayed, and returned otherwise.
 #' @export
-#' @import reshape2 ggplot2
+#' @import reshape2 ggplot2 stringr
 #' @seealso \code{\link{simulateModelReplicates}}
 plotTraj <- function(traj=NULL, state.names=NULL, data=NULL, summary=TRUE, p.extinction=FALSE, alpha=1, plot=TRUE) {
 
@@ -94,7 +94,7 @@ plotTraj <- function(traj=NULL, state.names=NULL, data=NULL, summary=TRUE, p.ext
 
     }
 
-    p <- p + theme_bw()
+    p <- p + theme_bw() + theme(legend.position="top", legend.box="horizontal") 
 
     if(plot){
         print(p)
