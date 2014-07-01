@@ -139,15 +139,16 @@ mcmcMH <- function(target, theta.init, proposal.sd = NULL, n.iterations, covmat 
 
 		# print info
 		if(i.iteration%%round(print.info.every)==0){
-			end_iteration_time <- Sys.time()
+			## end_iteration_time <- Sys.time()
 			state.mcmc <- trace[nrow(trace),]
-			suppressMessages(time.estimation <- round(as.period((end_iteration_time-start_iteration_time)*10000/round(print.info.every))))
-			message("Iteration: ",i.iteration,"/",n.iterations,", ETA: ",time.estimation,", acceptance rate: ",sprintf("%.3f",acceptance.rate),appendLF=FALSE)
+			## suppressMessages(time.estimation <- round(as.period((end_iteration_time-start_iteration_time)*10000/round(print.info.every))))
+			## message("Iteration: ",i.iteration,"/",n.iterations,", ETA: ",time.estimation,", acceptance rate: ",sprintf("%.3f",acceptance.rate),appendLF=FALSE)
+			message("Iteration: ",i.iteration,"/",n.iterations,", acceptance rate: ",sprintf("%.3f",acceptance.rate),appendLF=FALSE)
                         if (adapt.size.start > 0 || adapt.shape.start > 0) {
                                 message(", scaling.sd: ",sprintf("%.3f",scaling.sd),appendLF=FALSE)
                         }
                         message(", state: ",printNamedVector(state.mcmc))
-			start_iteration_time <- end_iteration_time
+			## start_iteration_time <- end_iteration_time
 		}
 
 		# propose another parameter set
