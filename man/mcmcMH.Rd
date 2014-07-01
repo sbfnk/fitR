@@ -6,7 +6,7 @@
 mcmcMH(target, theta.init, proposal.sd = NULL, n.iterations, covmat = NULL,
   limits = list(lower = NULL, upper = NULL), adapt.size.start = 0,
   adapt.size.cooling = 0.99, adapt.shape.start = 0,
-  print.info.every = n.iterations/100)
+  print.info.every = n.iterations/100, save.weights = FALSE)
 }
 \arguments{
 \item{target}{\R-function that takes a single argument: \code{theta} (named numeric vector of parameter values) and returns a list of 2 elements:
@@ -36,11 +36,13 @@ mcmcMH(target, theta.init, proposal.sd = NULL, n.iterations, covmat = NULL,
 \item{adapt.shape.start}{number of accepted jumps before adapting the shape of the proposal covariance matrix (see note below). Set to 0 (default) if shape is not to be adapted}
 
 \item{print.info.every}{frequency of information on the chain: acceptance rate and state of the chain. Default value to \code{n.iterations/100}. Set to \code{NULL} to avoid any info.}
+
+\item{save.weights}{if is set to TRUE, a \code{weight} column is added to the returned trace, containing  the number of iteration the chain stayed in each state. This offers a compact storage for the full trace of the chain.}
 }
 \value{
 a list with 3 elements:
 \itemize{
-	\item \code{trace} a \code{data.frame}. Each row contains a state of the chain (as returned by \code{target}) and the last column \code{weight} is the number of iteration the chain stayed in that state. This offers a compact storage for the full trace of the chain.
+	\item \code{trace} a \code{data.frame}. Each row contains a state of the chain (as returned by \code{target}).
 	\item \code{acceptance.rate} acceptance rate of the MCMC chain.
 	\item \code{covmat.empirical} empirical covariance matrix of the target sample.
 }
