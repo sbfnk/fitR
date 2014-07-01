@@ -2,15 +2,15 @@
 
 SIR_name <- "SIR with constant population size"
 SIR_state.names <- c("S","I","R")
-SIR_theta.names <- c("R0","D")
+SIR_theta.names <- c("R0","D.inf")
 
 SIR_simulateDeterministic <- function(theta,state.init,times) {
 
         SIR_ode <- function(time, state, parameters) {
 
                 ## parameters
-                beta <- parameters[["R0"]] / parameters[["D"]]
-                nu <- 1 / parameters[["D"]]
+                beta <- parameters[["R0"]] / parameters[["D.inf"]]
+                nu <- 1 / parameters[["D.inf"]]
 
                 ## states
                 S <- state[["S"]]
@@ -37,7 +37,7 @@ SIR_logPrior <- function(theta) {
         ## uniform prior on R0: U[1,100]
         log.prior.R0 <- dunif(theta[["R0"]], min = 1, max = 100, log = TRUE)
         ## uniform prior on infectious period: U[0,30]
-        log.prior.D <- dunif(theta[["D"]], min = 0, max = 30, log = TRUE)
+        log.prior.D <- dunif(theta[["D.inf"]], min = 0, max = 30, log = TRUE)
 
 	return(log.prior.R0 + log.prior.D)
 }
