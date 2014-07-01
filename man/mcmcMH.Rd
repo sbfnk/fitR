@@ -3,10 +3,10 @@
 \alias{mcmcMH}
 \title{Metropolis-Hasting MCMC}
 \usage{
-mcmcMH(target, theta.init, gaussian.proposal = list(covmat = NULL, lower =
-  NULL, upper = NULL), n.iterations, adapt.size.start = n.iterations,
+mcmcMH(target, theta.init, covmat = NULL, n.iterations, limits = list(lower
+  = NULL, upper = NULL), adapt.size.start = n.iterations,
   adapt.size.cooling = 0.99, adapt.shape.start = n.iterations,
-  print.info.every = n.iterations/100)
+  print.info.every = n.iterations/100, ...)
 }
 \arguments{
 \item{target}{\R-function that takes a single argument: \code{theta} (named numeric vector of parameter values) and returns a list of 2 elements:
@@ -17,14 +17,15 @@ mcmcMH(target, theta.init, gaussian.proposal = list(covmat = NULL, lower =
 
 \item{theta.init}{named vector of initial parameter values to start the chain.}
 
-\item{gaussian.proposal}{list of parameters for the - potentially truncated - multi-variate normal proposal kernel of the MCMC. Contains 3 elements:
-\itemize{
-    \item \code{covmat} named numeric matrix. Covariance of the gaussian kernel. Must have named rows and columns with at least all estimated theta. By default it is a diagonal matrix with diagonal elements equal to \code{theta.init/10}.
-    \item \code{lower} named numeric vector. Lower truncation points in each dimension of the gaussian kernel. By default they are set to \code{-Inf}.
-    \item \code{upper} named numeric vector. Upper truncation points in each dimension of the gaussian kernel. By default they are set to \code{Inf}.
-}}
+\item{covmat}{named numeric covariance matrix of the multivariate Gaussian proposal distribution. Must have named rows and columns with at least all estimated theta. By default it is a diagonal matrix with diagonal elements equal to \code{theta.init/10}.}
 
 \item{n.iterations}{number of iterations to run the MCMC chain.}
+
+\item{limits}{limits for the - potentially truncated - multi-variate normal proposal distribution of the MCMC. Contains 2 elements:
+\itemize{
+    \item \code{lower} named numeric vector. Lower truncation points in each dimension of the Gaussian proposal distribution. By default they are set to \code{-Inf}.
+    \item \code{upper} named numeric vector. Upper truncation points in each dimension of the Gaussian proposal distribution. By default they are set to \code{Inf}.
+}}
 
 \item{adapt.size.start}{number of iterations to run before adapting the size of the proposal covariance matrix (see note below).}
 

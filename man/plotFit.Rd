@@ -4,8 +4,12 @@
 \title{Plot fit of model to data}
 \usage{
 plotFit(fitmodel, theta, state.init, data, n.replicates = 1, summary = TRUE,
+<<<<<<< HEAD
   alpha = min(1, 10/n.replicates), all.vars = FALSE, p.extinction = FALSE,
   plot = TRUE)
+=======
+  alpha = min(1, 10/n.replicates), all.vars = FALSE, plot = TRUE)
+>>>>>>> FETCH_HEAD
 }
 \arguments{
 \item{n.replicates}{numeric, number of replicated simulations.}

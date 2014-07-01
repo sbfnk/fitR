@@ -3,8 +3,13 @@
 \alias{plotTraj}
 \title{Plot model trajectories}
 \usage{
+<<<<<<< HEAD
 plotTraj(traj, state.names = NULL, data = NULL, summary = TRUE,
   p.extinction = FALSE, alpha = 1, plot = TRUE)
+=======
+plotTraj(traj = NULL, state.names = NULL, data = NULL, summary = TRUE,
+  alpha = 1, plot = TRUE)
+>>>>>>> FETCH_HEAD
 }
 \arguments{
 \item{traj}{data.frame, output of \code{fitmodel$simulate} or \code{simulateModelReplicates}.}

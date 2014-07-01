@@ -63,7 +63,7 @@ margLogLikeSto <- function(fitmodel, theta, state.init, data, n.particles, n.cor
 #' 	\item \code{log.density} numeric, logged value of the posterior density evaluated at \code{theta}
 #' 	\item \code{trace} named vector with trace information (theta, log.prior, marg.log.like, log.posterior)
 #' }
-posteriorDensity <- function(fitmodel, theta, state.init, data, margLogLike, ...) {
+logPosterior <- function(fitmodel, theta, state.init, data, margLogLike = trajLogLike, ...) {
 
 	theta.log.prior <- fitmodel$logPrior(theta=theta)
 
