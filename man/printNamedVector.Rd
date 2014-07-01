@@ -3,7 +3,7 @@
 \alias{printNamedVector}
 \title{Print named vector}
 \usage{
-printNamedVector(x, fmt = "\%.2f", sep = "|")
+printNamedVector(x, fmt = "\%.2f", sep = " | ")
 }
 \arguments{
 \item{x}{named vector}
