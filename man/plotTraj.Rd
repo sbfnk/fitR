@@ -3,7 +3,7 @@
 \alias{plotTraj}
 \title{Plot model trajectories}
 \usage{
-plotTraj(traj, state.names = NULL, data = NULL, summary = TRUE,
+plotTraj(traj = NULL, state.names = NULL, data = NULL, summary = TRUE,
   alpha = 1, plot = TRUE)
 }
 \arguments{
