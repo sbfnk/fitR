@@ -11,7 +11,7 @@ test_that("mcmcMH for deterministic SEITL model",{
 	data <- FluTdC1971[1:5,]
 
 	target <- function(theta) {
-		return(posteriorDensity(fitmodel=fitmodel, theta=theta, state.init=state.init, data=data, margLogLike=trajLogLike))
+		return(logPosterior(fitmodel=fitmodel, theta=theta, state.init=state.init, data=data, margLogLike=trajLogLike))
 	}
 
 	# default covariance matrix
@@ -34,7 +34,7 @@ test_that("mcmcMH for deterministic SEIT2L model",{
 	data <- FluTdC1971[1:5,]
 
 	target <- function(theta) {
-		return(posteriorDensity(fitmodel=fitmodel, theta=theta, state.init=state.init, data=data, margLogLike=trajLogLike))
+		return(logPosterior(fitmodel=fitmodel, theta=theta, state.init=state.init, data=data, margLogLike=trajLogLike))
 	}
 
 	# default covariance matrix
@@ -57,7 +57,7 @@ test_that("mcmcMH for stochastic SEITL model",{
 	data <- FluTdC1971[1:5,]
 
 	target <- function(theta) {
-		return(posteriorDensity(fitmodel=fitmodel, theta=theta, state.init=state.init, data=data, margLogLike=margLogLikeSto, n.particles=10))
+		return(logPosterior(fitmodel=fitmodel, theta=theta, state.init=state.init, data=data, margLogLike=margLogLikeSto, n.particles=10))
 	}
 
 	# default covariance matrix
@@ -81,7 +81,7 @@ test_that("mcmcMH for stochastic SEIT2L model",{
 	data <- FluTdC1971[1:5,]
 
 	target <- function(theta) {
-		return(posteriorDensity(fitmodel=fitmodel, theta=theta, state.init=state.init, data=data, margLogLike=margLogLikeSto, n.particles=10))
+		return(logPosterior(fitmodel=fitmodel, theta=theta, state.init=state.init, data=data, margLogLike=margLogLikeSto, n.particles=10))
 	}
 
 	# default covariance matrix

@@ -69,7 +69,7 @@ test_that("posterior deter of SEITL",{
 	data("FluTdC1971",envir = environment())
 	data <- FluTdC1971[1:5,]
 
-	x <- posteriorDensity(fitmodel=SEITL, theta=theta, state.init=state.init, data=data, margLogLike=trajLogLike)
+	x <- logPosterior(fitmodel=SEITL, theta=theta, state.init=state.init, data=data, margLogLike=trajLogLike)
 	expect_true(all(names(x)==c("log.density","trace")))
 	expect_true(is.numeric(x$log.density))
 
@@ -85,7 +85,7 @@ test_that("posterior deter of SEIT2L",{
 	data("FluTdC1971",envir = environment())
 	data <- FluTdC1971[1:5,]
 
-	x <- posteriorDensity(fitmodel=SEIT2L, theta=theta, state.init=state.init, data=data, margLogLike=trajLogLike)
+	x <- logPosterior(fitmodel=SEIT2L, theta=theta, state.init=state.init, data=data, margLogLike=trajLogLike)
 	expect_true(all(names(x)==c("log.density","trace")))
 	expect_true(is.numeric(x$log.density))
 
@@ -101,7 +101,7 @@ test_that("posterior sto of SEITL",{
 	data("FluTdC1971",envir = environment())
 	data <- FluTdC1971[1:5,]
 
-	x <- posteriorDensity(fitmodel=SEITL, theta=theta, state.init=state.init, data=data, margLogLike=margLogLikeSto, n.particles=10)
+	x <- logPosterior(fitmodel=SEITL, theta=theta, state.init=state.init, data=data, margLogLike=margLogLikeSto, n.particles=10)
 	expect_true(all(names(x)==c("log.density","trace")))
 	expect_true(is.numeric(x$log.density))
 
@@ -117,7 +117,7 @@ test_that("posterior sto of SEIT2L",{
 	data("FluTdC1971",envir = environment())
 	data <- FluTdC1971[1:5,]
 
-	x <- posteriorDensity(fitmodel=SEIT2L, theta=theta, state.init=state.init, data=data, margLogLike=margLogLikeSto, n.particles=10)
+	x <- logPosterior(fitmodel=SEIT2L, theta=theta, state.init=state.init, data=data, margLogLike=margLogLikeSto, n.particles=10)
 	expect_true(all(names(x)==c("log.density","trace")))
 	expect_true(is.numeric(x$log.density))
 
