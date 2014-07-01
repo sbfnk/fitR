@@ -85,7 +85,7 @@ plotTraj <- function(traj, state.names=NULL, data=NULL, summary=TRUE, alpha=1, p
 #'
 #'This function simulates the model under \code{theta}, generates observation and plot them against the data. Since simulation and observation processes can be stochastic, \code{n.replicates} can be plotted.
 #' @param n.replicates numeric, number of replicated simulations.
-#' @param only.fit logical, if \code{TRUE} only the observations are plotted. Otherwise, all states are plotted.
+#' @param all.vars logical, if \code{FALSE} only the observations are plotted. Otherwise, all state variables are plotted.
 #' @inheritParams testFitmodel
 #' @inheritParams plotTraj
 #' @export
@@ -95,17 +95,17 @@ plotTraj <- function(traj, state.names=NULL, data=NULL, summary=TRUE, alpha=1, p
 #'     \item \code{simulations} \code{data.frame} of \code{n.replicates} simulated observations.
 #'     \item \code{plot} the plot of the fit.
 #' }
-plotFit <- function(fitmodel, theta, state.init, data, n.replicates=1, summary=TRUE, alpha=min(1,10/n.replicates), only.fit=TRUE, plot=TRUE) {
+plotFit <- function(fitmodel, theta, state.init, data, n.replicates=1, summary=TRUE, alpha=min(1,10/n.replicates), all.vars=FALS, plot=TRUE) {
 
     times <- c(0, data$time)
 
     cat("Simulate ",n.replicates," replicate(s)\n")
     traj <- simulateModelReplicates(fitmodel=fitmodel,theta=theta, state.init=state.init, times=times, n=n.replicates, observation=TRUE)
 
-    if(only.fit){
-        state.names <- c("obs")
-    } else {
+    if(all.vars){
         state.names <- NULL
+    } else {
+        state.names <- c("obs")
     }
 
     p <- plotTraj(traj=traj, state.names=state.names, data=data, summary=summary, alpha=alpha, plot=FALSE)
@@ -128,7 +128,7 @@ plotFit <- function(fitmodel, theta, state.init, data, n.replicates=1, summary=T
 #' @export
 #' @import ggplot2 plyr
 #' @seealso particleFilter
-plotSMC <- function(smc, fitmodel, theta, data=NULL, summary=TRUE, alpha=1, only.fit=TRUE, plot=TRUE) {
+plotSMC <- function(smc, fitmodel, theta, data=NULL, summary=TRUE, alpha=1, all.vars=FALSE, plot=TRUE) {
 
     traj <- smc$traj
     names(traj) <- 1:length(traj)
@@ -137,13 +137,13 @@ plotSMC <- function(smc, fitmodel, theta, data=NULL, summary=TRUE, alpha=1, only
 
         df$obs <- apply(X = traj, MARGIN = 1, FUN = fitmodel$genObsPoint, theta = theta)
         return(df)
-        
+
     },.id="replicate")
 
-    if(only.fit){
-        state.names <- c("obs")
-    } else {
+    if(all.vars){
         state.names <- NULL
+    } else {
+        state.names <- c("obs")
     }
 
     p <- plotTraj(traj=traj, state.names=state.names, data=data, summary=summary, alpha=alpha, plot=FALSE)

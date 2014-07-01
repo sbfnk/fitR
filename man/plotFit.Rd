@@ -4,12 +4,12 @@
 \title{Plot fit of model to data}
 \usage{
 plotFit(fitmodel, theta, state.init, data, n.replicates = 1, summary = TRUE,
-  alpha = min(1, 10/n.replicates), only.fit = TRUE, plot = TRUE)
+  alpha = min(1, 10/n.replicates), all.vars = FALS, plot = TRUE)
 }
 \arguments{
 \item{n.replicates}{numeric, number of replicated simulations.}
 
-\item{only.fit}{logical, if \code{TRUE} only the observations are plotted. Otherwise, all states are plotted.}
+\item{all.vars}{logical, if \code{FALSE} only the observations are plotted. Otherwise, all state variables are plotted.}
 
 \item{fitmodel}{a \code{\link{fitmodel}} object}
 
