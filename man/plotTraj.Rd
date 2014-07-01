@@ -4,7 +4,7 @@
 \title{Plot model trajectories}
 \usage{
 plotTraj(traj, state.names = NULL, data = NULL, summary = TRUE,
-  alpha = 1, plot = TRUE)
+  p.extinction = FALSE, alpha = 1, plot = TRUE)
 }
 \arguments{
 \item{traj}{data.frame, output of \code{fitmodel$simulate} or \code{simulateModelReplicates}.}

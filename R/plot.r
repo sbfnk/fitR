@@ -10,7 +10,7 @@
 #' @export
 #' @import reshape2 ggplot2
 #' @seealso \code{\link{simulateModelReplicates}}
-plotTraj <- function(traj, state.names=NULL, data=NULL, summary=TRUE, alpha=1, plot=TRUE) {
+plotTraj <- function(traj, state.names=NULL, data=NULL, summary=TRUE, p.extinction=FALSE ,alpha=1, plot=TRUE) {
 
     if(!any(duplicated(traj$time))){
         traj$replicate <- 1
@@ -27,6 +27,17 @@ plotTraj <- function(traj, state.names=NULL, data=NULL, summary=TRUE, alpha=1, p
     }
 
     df.traj <- melt(traj,measure.vars=state.names,variable.name="state")
+
+    if(p.extinction){
+        infected.names <- unlist(sapply(c("E","I"),grep,x=names(traj),value=TRUE))
+        df.infected <- mutate(traj,infected=eval(parse(text=paste(infected.names,collapse="+"))))
+        df.infected <- melt(df.infected,measure.vars="infected",variable.name="state")
+        df.p.ext <- ddply(df.infected,"time",function(df){
+            return(data.frame(value=sum(df$value==0)/nrow(df)))
+        })
+        df.p.ext$state <- "p. extinction"
+        df.p.ext$replicate <- 0  
+    }
 
     if(summary){
 
@@ -63,10 +74,14 @@ plotTraj <- function(traj, state.names=NULL, data=NULL, summary=TRUE, alpha=1, p
     }
 
     if(!is.null(data)){
-     
+
         data <- melt(data, measure.vars="obs",variable.name="state")
         p <- p + geom_point(data=data,aes(x=time,y=value),colour="black")
         
+    }
+
+    if(p.extinction){
+        p <- p+geom_line(data=df.p.ext,aes(x=time,y=value),color="black",alpha=1)        
     }
 
     p <- p + theme_bw()
@@ -95,7 +110,7 @@ plotTraj <- function(traj, state.names=NULL, data=NULL, summary=TRUE, alpha=1, p
 #'     \item \code{simulations} \code{data.frame} of \code{n.replicates} simulated observations.
 #'     \item \code{plot} the plot of the fit.
 #' }
-plotFit <- function(fitmodel, theta, state.init, data, n.replicates=1, summary=TRUE, alpha=min(1,10/n.replicates), all.vars=FALSE, plot=TRUE) {
+plotFit <- function(fitmodel, theta, state.init, data, n.replicates=1, summary=TRUE, alpha=min(1,10/n.replicates), all.vars=FALSE, p.extinction=FALSE, plot=TRUE) {
 
     times <- c(0, data$time)
 
@@ -108,7 +123,7 @@ plotFit <- function(fitmodel, theta, state.init, data, n.replicates=1, summary=T
         state.names <- c("obs")
     }
 
-    p <- plotTraj(traj=traj, state.names=state.names, data=data, summary=summary, alpha=alpha, plot=FALSE)
+    p <- plotTraj(traj=traj, state.names=state.names, data=data, summary=summary, alpha=alpha, p.extinction=p.extinction, plot=FALSE)
 
     if(plot){
         print(p)
