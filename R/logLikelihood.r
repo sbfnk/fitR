@@ -67,7 +67,7 @@ logPosterior <- function(fitmodel, theta, state.init, data, margLogLike = trajLo
 
 	log.prior <- fitmodel$logPrior(theta=theta)
 
-	if(is.finite(theta.log.prior)){
+	if(is.finite(log.prior)){
 		log.likelihood <- margLogLike(fitmodel=fitmodel, theta=theta, state.init=state.init, data=data, ...)
 	}else{
 		# do not compute log-likelihood (theta prior is 0)
