@@ -241,7 +241,7 @@ testFitmodel <- function(fitmodel, theta, state.init, data = NULL, verbose=TRUE)
 	# data must have a column named time, should not start at 0
 	if (!is.null(data)) {
 		if(!all(c("time","obs")%in%names(data))){
-			stop(sQuote("data")," argument must have columns named ",sQuote("time")," and ", sQuote("obs")
+			stop(sQuote("data")," argument must have columns named ",sQuote("time")," and ", sQuote("obs"))
 		}else if(data$time[1]==0){
 			stop("the first observation time in data argument should not be 0")
 		}
@@ -351,31 +351,42 @@ SEITL_sto <- function() {
 }
 
 
-# #'The deterministic SEIT2L model
-# #'
-# #' To get the deterministic SEIT2L model, type
-# #' \code{example(SEIT2L_deter)}. This executes the code listed below
-# #' under "Examples".
-# #' @usage example(SEIT2L_deter)
-# #' @seealso \code{\link{fitmodel}}
-# #' @example inst/examples/example-SEIT2L-deter.r
-# SEIT2L_deter <- function() {
-#         cat ("To load the deterministic SEIT2L model, type example(SEIT2L_deter)\n")
-# }
+#'The deterministic SEIT2L model
+#'
+#' To get the deterministic SEIT2L model, type
+#' \code{example(SEIT2L_deter)}. This executes the code listed below
+#' under "Examples".
+#' @usage example(SEIT2L_deter)
+#' @seealso \code{\link{fitmodel}}
+#' @example inst/examples/example-SEIT2L-deter.r
+SEIT2L_deter <- function() {
+        cat ("To load the deterministic SEIT2L model, type example(SEIT2L_deter)\n")
+}
 
 
-# #'The stochastic SEIT2L model
-# #'
-# #' To get the stochastic SEIT2L model, type
-# #' \code{example(SEIT2L_sto)}. This executes the code listed below
-# #' under "Examples".
-# #' @usage example(SEIT2L_sto)
-# #' @seealso \code{\link{fitmodel}}
-# #' @example inst/examples/example-SEIT2L-sto.r
-# SEIT2L_sto <- function() {
-#         cat ("To load the stochastic SEIT2L model, type example(SEIT2L_sto)\n")
-# }
+#'The stochastic SEIT2L model
+#'
+#' To get the stochastic SEIT2L model, type
+#' \code{example(SEIT2L_sto)}. This executes the code listed below
+#' under "Examples".
+#' @usage example(SEIT2L_sto)
+#' @seealso \code{\link{fitmodel}}
+#' @example inst/examples/example-SEIT2L-sto.r
+SEIT2L_sto <- function() {
+        cat ("To load the stochastic SEIT2L model, type example(SEIT2L_sto)\n")
+}
 
+
+#'Three sets of guess values for the SEITL model
+#'
+#' To get 3 example of parameters and initial state values, type
+#' \code{example(SEITL_guess_values)}. This executes the code listed below
+#' under "Examples".
+#' @usage example(SEITL_guess_values)
+#' @example inst/examples/example-SEITL-guess-values.r
+SEITL_guess_values <- function() {
+        cat ("To load the guess values for the SEITL model, type example(SEITL_guess_values)\n")
+}
 
 
 
