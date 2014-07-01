@@ -178,9 +178,9 @@ export2Tracer <- function(trace, file) {
 #' @inheritParams base::paste
 #' @export
 #' @seealso \code{\link[base]{sprintf}}
-printNamedVector <- function(x, fmt="%.2f", sep="|") {
+printNamedVector <- function(x, fmt="%.2f", sep=" | ") {
 
-    paste(paste(names(x),sprintf(fmt,x),sep="="),collapse=sep)
+    paste(paste(names(x),sprintf(fmt,x),sep=" = "),collapse=sep)
 
 }
 

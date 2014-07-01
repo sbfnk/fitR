@@ -142,7 +142,11 @@ mcmcMH <- function(target, theta.init, proposal.sd = NULL, n.iterations, covmat 
 			end_iteration_time <- Sys.time()
 			state.mcmc <- trace[nrow(trace),]
 			suppressMessages(time.estimation <- round(as.period((end_iteration_time-start_iteration_time)*10000/round(print.info.every))))
-			message("Iteration: ",i.iteration,"/",n.iterations," Time 10000 iter: ",time.estimation," Acceptance rate: ",sprintf("%.3f",acceptance.rate)," Scaling.sd: ",sprintf("%.3f",scaling.sd)," State:",printNamedVector(state.mcmc))
+			message("Iteration: ",i.iteration,"/",n.iterations,", ETA: ",time.estimation,", acceptance rate: ",sprintf("%.3f",acceptance.rate),appendLF=FALSE)
+                        if (adapt.size.start > 0 || adapt.shape.start > 0) {
+                                message(", scaling.sd: ",sprintf("%.3f",scaling.sd),appendLF=FALSE)
+                        }
+                        message(", state: ",printNamedVector(state.mcmc))
 			start_iteration_time <- end_iteration_time
 		}
 
