@@ -8,7 +8,8 @@
 #' \item \code{trace} a named numeric vector of values to be printed in the \code{trace} data.frame returned by \code{mcmcMH}.
 #' }
 #' @param theta.init named vector of initial parameter values to start the chain.
-#' @param covmat named numeric covariance matrix of the multivariate Gaussian proposal distribution. Must have named rows and columns with at least all estimated theta. By default it is a diagonal matrix with diagonal elements equal to \code{theta.init/10}.
+#' @param proposal.sd vector of standard deviations. If this is given and covmat is not, a diagonal matrix will be built from this to use as covariance matrix of the multivariate Gaussian proposal distribution. By default, this is set to \code{theta.init/10}.
+#' @param covmat named numeric covariance matrix of the multivariate Gaussian proposal distribution. Must have named rows and columns with at least all estimated theta. If \code{proposal.sd} is given, this is ignored.
 #' @param n.iterations number of iterations to run the MCMC chain.
 #' @param limits limits for the - potentially truncated - multi-variate normal proposal distribution of the MCMC. Contains 2 elements:
 #' \itemize{
@@ -34,7 +35,7 @@
 #'	\item \code{acceptance.rate} acceptance rate of the MCMC chain.
 #'	\item \code{covmat.empirical} empirical covariance matrix of the target sample.
 #'}
-mcmcMH <- function(target, theta.init, covmat = NULL, n.iterations, limits=list(lower=NULL, upper=NULL), adapt.size.start=n.iterations, adapt.size.cooling=0.99, adapt.shape.start=n.iterations, print.info.every=n.iterations/100, ...) {
+mcmcMH <- function(target, theta.init, proposal.sd = NULL, n.iterations, covmat = NULL, limits=list(lower=NULL, upper=NULL), adapt.size.start=0, adapt.size.cooling=0.99, adapt.shape.start=0, print.info.every=n.iterations/100) {
 
 	# initialise theta
 	theta.current <- theta.init
@@ -48,7 +49,10 @@ mcmcMH <- function(target, theta.init, covmat = NULL, n.iterations, limits=list(
 	# reorder vector and matrix by names, set to default if necessary 
 	theta.names <- names(theta.init)
 	if(is.null(covmat.proposal)){
-		covmat.proposal <- matrix(diag(theta.init/10,nrow=length(theta.names)),dimnames=list(theta.names,theta.names))
+                if (is.null(proposal.sd)){
+                        proposal.sd <- rep(theta.init/10, nrow=length(theta.names))
+                }
+                covmat.proposal <- matrix(diag(proposal.sd),nrow=length(theta.names),dimnames=list(theta.names,theta.names))
 	} else {
 		covmat.proposal <- covmat.proposal[theta.names,theta.names]		
 	}
