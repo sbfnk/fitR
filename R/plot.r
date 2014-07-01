@@ -5,12 +5,17 @@
 #' @param state.names character vector. Names of the state variables to plot. Names must match \code{fitmodel$state.names}. If \code{NULL} (default) all state variables are plotted.
 #' @param data data frame. Observation times and observed data. The time column must be named \code{time}, whereas the name of the data column should match one of \code{fitmodel$state.names}.
 #' @param summary logical. If \code{TRUE}, the mean, median as well as the 50th and 95th percentile of the trajectories are plotted (default). If \code{FALSE}, all individual trajectories are plotted (transparency can be set with \code{alpha}).
+#' @param p.extinction logical. If \code{TRUE}, the time-series of the proportion of faded-out epidemics is plotted (default to \code{FALSE}). This is only relevant for stochastic models.
 #' @param alpha transparency of the trajectories (between 0 and 1).
 #' @param plot if \code{TRUE} the plot is displayed, and returned otherwise.
 #' @export
 #' @import reshape2 ggplot2
 #' @seealso \code{\link{simulateModelReplicates}}
-plotTraj <- function(traj=NULL, state.names=NULL, data=NULL, summary=TRUE, alpha=1, plot=TRUE) {
+plotTraj <- function(traj=NULL, state.names=NULL, data=NULL, summary=TRUE, p.extinction=FALSE, alpha=1, plot=TRUE) {
+
+    if(is.null(traj) && is.null(data)){
+        stop("Nothing to plot")
+    }
 
     if(!is.null(traj) & !any(duplicated(traj$time))){
         traj$replicate <- 1
@@ -27,44 +32,59 @@ plotTraj <- function(traj=NULL, state.names=NULL, data=NULL, summary=TRUE, alpha
     }
 
     if (!is.null(traj)) {
+
         df.traj <- melt(traj,measure.vars=state.names,variable.name="state")
-    }
 
-    if(!is.null(traj)) {
-            if (summary){
+        if(p.extinction){
+            infected.names <- unlist(sapply(c("E","I"),grep,x=names(traj),value=TRUE))
+            df.infected <- mutate(traj,infected=eval(parse(text=paste(infected.names,collapse="+"))))
+            df.infected <- melt(df.infected,measure.vars="infected",variable.name="state")
+            df.p.ext <- ddply(df.infected,"time",function(df){
+                return(data.frame(value=sum(df$value==0)/nrow(df)))
+            })
+            df.p.ext$state <- "p. extinction"
+            df.p.ext$replicate <- 0  
+        }
 
-                    message("Compute confidence intervals")
+        if (summary){
 
-                    traj.CI <- ddply(df.traj,c("time","state"),function(df) {
+            message("Compute confidence intervals")
 
-                            tmp <- as.data.frame(t(quantile(df$value,prob=c(0.025,0.25,0.5,0.75,0.975))))
-                            names(tmp) <- c("low_95","low_50","median","up_50","up_95")
-                            tmp$mean <- mean(df$value)
-                            return(tmp)
+            traj.CI <- ddply(df.traj,c("time","state"),function(df) {
 
-                    },.progress="text")
+                tmp <- as.data.frame(t(quantile(df$value,prob=c(0.025,0.25,0.5,0.75,0.975))))
+                names(tmp) <- c("low_95","low_50","median","up_50","up_95")
+                tmp$mean <- mean(df$value)
+                return(tmp)
 
-                    traj.CI.line <- melt(traj.CI[c("time","state","mean","median")],id.vars=c("time","state"))
-                    traj.CI.area <- melt(traj.CI[c("time","state","low_95","low_50","up_50","up_95")],id.vars=c("time","state"))
-                    traj.CI.area$type <- sapply(traj.CI.area$variable,function(x) {str_split(x,"_")[[1]][1]})
-                    traj.CI.area$CI <- sapply(traj.CI.area$variable,function(x) {str_split(x,"_")[[1]][2]})
-                    traj.CI.area$variable <- NULL
-                    traj.CI.area <- dcast(traj.CI.area,"time+state+CI~type")
+            },.progress="text")
 
-                    p <- ggplot(traj.CI.area)+facet_wrap(~state, scales="free_y")
-                    p <- p + geom_ribbon(data=traj.CI.area,aes(x=time,ymin=low,ymax=up,alpha=CI),fill="red")
-                    p <- p + geom_line(data=traj.CI.line,aes(x=time,y=value,linetype=variable),colour="red")
-                    p <- p + scale_alpha_manual("Percentile",values=c("95"=0.25,"50"=0.45),labels=c("95"="95th","50"="50th"))
-                    p <- p + scale_linetype("Stats")
-                    p <- p + guides(linetype = guide_legend(order = 1))
-            } else {
+            traj.CI.line <- melt(traj.CI[c("time","state","mean","median")],id.vars=c("time","state"))
+            traj.CI.area <- melt(traj.CI[c("time","state","low_95","low_50","up_50","up_95")],id.vars=c("time","state"))
+            traj.CI.area$type <- sapply(traj.CI.area$variable,function(x) {str_split(x,"_")[[1]][1]})
+            traj.CI.area$CI <- sapply(traj.CI.area$variable,function(x) {str_split(x,"_")[[1]][2]})
+            traj.CI.area$variable <- NULL
+            traj.CI.area <- dcast(traj.CI.area,"time+state+CI~type")
 
-                    p <- ggplot(df.traj)+facet_wrap(~state, scales="free_y")
-                    p <- p + geom_line(data=df.traj,aes(x=time,y=value,group=replicate),alpha=alpha,colour="red")
+            p <- ggplot(traj.CI.area)+facet_wrap(~state, scales="free_y")
+            p <- p + geom_ribbon(data=traj.CI.area,aes(x=time,ymin=low,ymax=up,alpha=CI),fill="red")
+            p <- p + geom_line(data=traj.CI.line,aes(x=time,y=value,linetype=variable),colour="red")
+            p <- p + scale_alpha_manual("Percentile",values=c("95"=0.25,"50"=0.45),labels=c("95"="95th","50"="50th"))
+            p <- p + scale_linetype("Stats")
+            p <- p + guides(linetype = guide_legend(order = 1))
+        } else {
 
-            }
+            p <- ggplot(df.traj)+facet_wrap(~state, scales="free_y")
+            p <- p + geom_line(data=df.traj,aes(x=time,y=value,group=replicate),alpha=alpha,colour="red")
+
+        }
+
+        if(p.extinction){
+            p <- p+geom_line(data=df.p.ext,aes(x=time,y=value),color="black",alpha=1)        
+        }
+
     } else {
-            p <- ggplot()
+        p <- ggplot()
     }
 
     if(!is.null(data)){
@@ -100,12 +120,12 @@ plotTraj <- function(traj=NULL, state.names=NULL, data=NULL, summary=TRUE, alpha
 #'     \item \code{simulations} \code{data.frame} of \code{n.replicates} simulated observations.
 #'     \item \code{plot} the plot of the fit.
 #' }
-plotFit <- function(fitmodel, theta, state.init, data, n.replicates=1, summary=TRUE, alpha=min(1,10/n.replicates), all.vars=FALSE, plot=TRUE) {
+plotFit <- function(fitmodel, theta, state.init, data, n.replicates=1, summary=TRUE, alpha=min(1,10/n.replicates), all.vars=FALSE, p.extinction=FALSE, plot=TRUE) {
 
     times <- c(0, data$time)
 
     if (n.replicates > 1) {
-            cat("Simulate ",n.replicates," replicate(s)\n")
+        cat("Simulate ",n.replicates," replicate(s)\n")
     }
     traj <- simulateModelReplicates(fitmodel=fitmodel,theta=theta, state.init=state.init, times=times, n=n.replicates, observation=TRUE)
 
@@ -115,7 +135,7 @@ plotFit <- function(fitmodel, theta, state.init, data, n.replicates=1, summary=T
         state.names <- c("obs")
     }
 
-    p <- plotTraj(traj=traj, state.names=state.names, data=data, summary=summary, alpha=alpha, plot=FALSE)
+    p <- plotTraj(traj=traj, state.names=state.names, data=data, summary=summary, alpha=alpha, p.extinction=p.extinction, plot=FALSE)
 
     if(plot){
         print(p)
