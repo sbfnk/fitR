@@ -65,18 +65,18 @@ margLogLikeSto <- function(fitmodel, theta, state.init, data, n.particles, n.cor
 #' }
 logPosterior <- function(fitmodel, theta, state.init, data, margLogLike = trajLogLike, ...) {
 
-	theta.log.prior <- fitmodel$logPrior(theta=theta)
+	log.prior <- fitmodel$logPrior(theta=theta)
 
 	if(is.finite(theta.log.prior)){
-		theta.log.like <- margLogLike(fitmodel=fitmodel, theta=theta, state.init=state.init, data=data, ...)
+		log.likelihood <- margLogLike(fitmodel=fitmodel, theta=theta, state.init=state.init, data=data, ...)
 	}else{
 		# do not compute log-likelihood (theta prior is 0)
-		theta.log.like  <-  -Inf
+		log.likelihood  <-  -Inf
 	}
 
-	theta.log.posterior <- theta.log.prior + theta.log.like
+	log.posterior <- log.prior + log.likelihood
 
-	return(list(log.density=theta.log.posterior, trace=c(theta,log.prior=theta.log.prior,marg.log.like=theta.log.like,log.posterior=theta.log.posterior)))
+	return(list(log.density=log.posterior, trace=c(theta,log.prior=log.prior,log.likelihood=log.likelihood,log.posterior=log.posterior)))
 
 }
 
