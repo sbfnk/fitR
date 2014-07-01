@@ -16,9 +16,9 @@
 #'	\item \code{lower} named numeric vector. Lower truncation points in each dimension of the Gaussian proposal distribution. By default they are set to \code{-Inf}.
 #'	\item \code{upper} named numeric vector. Upper truncation points in each dimension of the Gaussian proposal distribution. By default they are set to \code{Inf}.
 #' }
-#' @param adapt.size.start number of iterations to run before adapting the size of the proposal covariance matrix (see note below).
+#' @param adapt.size.start number of iterations to run before adapting the size of the proposal covariance matrix (see note below). Set to 0 (default) if size is not to be adapted.
 #' @param adapt.size.cooling cooling factor for the scaling factor of the covariance matrix during size adaptation (see note below).
-#' @param adapt.shape.start number of accepted jumps before adapting the shape of the proposal covariance matrix (see note below).
+#' @param adapt.shape.start number of accepted jumps before adapting the shape of the proposal covariance matrix (see note below). Set to 0 (default) if shape is not to be adapted
 #' @param print.info.every frequency of information on the chain: acceptance rate and state of the chain. Default value to \code{n.iterations/100}. Set to \code{NULL} to avoid any info.
 #' @note The size of the proposal covariance matrix is adapted using the following formulae: \deqn{\Sigma_{n+1}=\sigma_n * \Sigma_n} with \eqn{\sigma_n=\sigma_{n-1}*exp(\alpha^n*(acc - 0.234))},
 #' where \eqn{\alpha} is equal to \code{adapt.size.cooling} and \eqn{acc} is the acceptance rate of the chain.
@@ -71,9 +71,9 @@ mcmcMH <- function(target, theta.init, proposal.sd = NULL, n.iterations, covmat 
 
 	# covmat init
 	covmat.proposal.init <- covmat.proposal
-	start.adapt.size <- TRUE
-	start.adapt.shape <- TRUE
-	
+	start.adapt.size <- (adapt.size.start > 0)
+	start.adapt.shape <- (adapt.shape.start > 0)
+
 	# find estimated theta
 	theta.estimated.names <- names(which(diag(covmat.proposal)>0))
 
@@ -89,12 +89,14 @@ mcmcMH <- function(target, theta.init, proposal.sd = NULL, n.iterations, covmat 
 	# scaling factor for covmat size
 	scaling.sd  <- 1
 
-	# empirical covariance matrix (0 everywhere initially)
-	covmat.empirical <- covmat.proposal
-	covmat.empirical[,] <- 0
+        if (adapt.size.start > 0 || adapt.shape.start > 0) {
+	        # empirical covariance matrix (0 everywhere initially)
+                covmat.empirical <- covmat.proposal
+                covmat.empirical[,] <- 0
 
-	# empirical mean vector
-	theta.mean <- theta.current
+	        # empirical mean vector
+                theta.mean <- theta.current
+        }
 
 	# if print.info.every is null never print info
 	if(is.null(print.info.every)){
@@ -106,7 +108,7 @@ mcmcMH <- function(target, theta.init, proposal.sd = NULL, n.iterations, covmat 
 	for (i.iteration in seq_len(n.iterations)) {
 
 		# adaptive step
-		if(i.iteration >= adapt.size.start && acceptance.rate*i.iteration < adapt.shape.start){
+		if(adapt.size.start > 0 && i.iteration >= adapt.size.start && acceptance.rate*i.iteration < adapt.shape.start){
 			if(start.adapt.size){
 				message("\n---> Start adapting size of covariance matrix")
 				start.adapt.size <- 0				
@@ -115,7 +117,7 @@ mcmcMH <- function(target, theta.init, proposal.sd = NULL, n.iterations, covmat 
 			scaling.sd <- scaling.sd*exp(adapt.size.cooling^(i.iteration-adapt.size.start)*(acceptance.rate - 0.234))
 			covmat.proposal <- scaling.sd^2*covmat.proposal.init
 
-		}else if(acceptance.rate*i.iteration >= adapt.shape.start){
+		}else if(adapt.shape.start > 0 && acceptance.rate*i.iteration >= adapt.shape.start){
 			if(start.adapt.shape){
 				message("\n---> Start adapting shape of covariance matrix")
 				# flush.console()
@@ -169,13 +171,19 @@ mcmcMH <- function(target, theta.init, proposal.sd = NULL, n.iterations, covmat 
 		acceptance.rate <- acceptance.rate + (is.accepted - acceptance.rate)/i.iteration
 
 		# update empirical covariance matrix
-		tmp <- updateCovmat(covmat.empirical,theta.mean,theta.current,i.iteration)
-		covmat.empirical <- tmp$covmat
-		theta.mean <- tmp$theta.mean
+                if (adapt.size.start > 0 || adapt.shape.start > 0) {
+                        tmp <- updateCovmat(covmat.empirical,theta.mean,theta.current,i.iteration)
+                        covmat.empirical <- tmp$covmat
+                        theta.mean <- tmp$theta.mean
+                }
 
 	}
 
-	return(list(trace=trace,acceptance.rate=acceptance.rate,covmat.empirical=covmat.empirical))
+        if (start.adapt.shape){
+                return(list(trace=trace,acceptance.rate=acceptance.rate,covmat.empirical=covmat.empirical))
+        } else {
+                return(list(trace=trace,acceptance.rate=acceptance.rate))
+        }
 }
 
 
