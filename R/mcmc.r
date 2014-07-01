@@ -48,7 +48,7 @@ mcmcMH <- function(target, theta.init, gaussian.proposal=list(covmat=NULL, lower
 	# reorder vector and matrix by names, set to default if necessary 
 	theta.names <- names(theta.init)
 	if(is.null(covmat.proposal)){
-		covmat.proposal <- matrix(diag(theta.init/10),nrow=length(theta.names),dimnames=list(theta.names,theta.names))
+		covmat.proposal <- matrix(diag(theta.init/10,nrow=length(theta.names)),dimnames=list(theta.names,theta.names))
 	} else {
 		covmat.proposal <- covmat.proposal[theta.names,theta.names]		
 	}
