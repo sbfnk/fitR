@@ -80,8 +80,18 @@ mcmcMH <- function(target, theta.init, proposal.sd = NULL, n.iterations, covmat 
 	# evaluate target at theta init
 	target.theta.current <- target(theta.current)
 
+        # if return value is a vector, set log.density and trace
+        if (class(target.theta.current) == "numeric") {
+                suppressWarnings(target.theta.current$log.density <- target.theta.current)
+                suppressWarnings(target.theta.current$trace <- theta.current)
+        }
+
 	# initialise trace data.frame
-	trace <- data.frame(t(target.theta.current$trace), weight=1)
+        if (is.na(target.theta.current["trace"])) {
+            trace <- data.frame(t(target.theta.current), weight=1)
+        } else {
+            trace <- data.frame(t(target.theta.current[["trace"]]), weight=1)
+        }
 
 	# acceptance rate
 	acceptance.rate <- 0
@@ -145,6 +155,11 @@ mcmcMH <- function(target, theta.init, proposal.sd = NULL, n.iterations, covmat 
 
 		# evaluate posterior of proposed parameter
 		target.theta.propose <- target(theta.propose)
+                # if return value is a vector, set log.density and trace
+                if (class(target.theta.propose) == "numeric") {
+                        suppressWarnings(target.theta.propose$log.density <- target.theta.propose)
+                        suppressWarnings(target.theta.propose$trace <- theta.propose)
+                }
 
 		if(!is.finite(target.theta.propose$log.density)){
 			# if posterior is 0 then do not compute anything else and don't accept
