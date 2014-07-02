@@ -322,9 +322,9 @@ plotPosteriorFit <- function(trace, fitmodel, state.init, posterior.summary=c("s
 ##' Takes an mcmc trace and tests the ESS at different values of burn-in
 ##' @param trace A data frame of an MCMC chain with one column per parameter
 ##' @param longest.burn.in The longest burn in to test. Defaults to half the length of the trace
-##' @param step.size The size of the steps of burn-in to test. Defaults to 1/100th of the length of the chain
+##' @param step.size The size of the steps of burn-in to test. Defaults to 1/50th of \code{longest.burn.in}
 ##' @return a plot of the ESS against burn.in
-plotESSBurn <- function(trace, longest.burn.in = nrow(trace) / 2, step.size = nrow(trace) / 100) {
+plotESSBurn <- function(trace, longest.burn.in = nrow(trace) / 2, step.size = round(longest.burn.in / 50)) {
 
         test.burn.in <- seq(0, longest.burn.in, step.size) # test values
         # initialise data.frame of ess estimates
