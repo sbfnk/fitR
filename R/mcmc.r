@@ -111,7 +111,7 @@ mcmcMH <- function(target, theta.init, proposal.sd = NULL, n.iterations, covmat 
 	for (i.iteration in seq_len(n.iterations)) {
 
 		# adaptive step
-		if(adapt.size.start > 0 && i.iteration >= adapt.size.start && acceptance.rate*i.iteration < adapt.shape.start){
+		if(!is.null(adapt.size.start) && i.iteration >= adapt.size.start && acceptance.rate*i.iteration < adapt.shape.start){
 			if(!adapting.size){
 				message("\n---> Start adapting size of covariance matrix")
 				adapting.size <- TRUE
@@ -120,7 +120,7 @@ mcmcMH <- function(target, theta.init, proposal.sd = NULL, n.iterations, covmat 
 			scaling.sd <- scaling.sd*exp(adapt.size.cooling^(i.iteration-adapt.size.start)*(acceptance.rate - 0.234))
 			covmat.proposal <- scaling.sd^2*covmat.proposal.init
 
-		}else if(adapt.shape.start > 0 && acceptance.rate*i.iteration >= adapt.shape.start){
+		}else if(!is.null(adapt.shape.start) && acceptance.rate*i.iteration >= adapt.shape.start){
 			if(!adapting.shape){
 				message("\n---> Start adapting shape of covariance matrix")
 				# flush.console()
@@ -137,7 +137,7 @@ mcmcMH <- function(target, theta.init, proposal.sd = NULL, n.iterations, covmat 
 			## suppressMessages(time.estimation <- round(as.period((end_iteration_time-start_iteration_time)*10000/round(print.info.every))))
 			## message("Iteration: ",i.iteration,"/",n.iterations,", ETA: ",time.estimation,", acceptance rate: ",sprintf("%.3f",acceptance.rate),appendLF=FALSE)
 			message("Iteration: ",i.iteration,"/",n.iterations,", acceptance rate: ",sprintf("%.3f",acceptance.rate),appendLF=FALSE)
-                        if (adapt.size.start > 0 || adapt.shape.start > 0) {
+                        if (!is.null(adapt.size.start) || !is.null(adapt.shape.start)) {
                                 message(", scaling.sd: ",sprintf("%.3f",scaling.sd),appendLF=FALSE)
                         }
                         message(", state: ",printNamedVector(state.mcmc))
