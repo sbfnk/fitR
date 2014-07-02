@@ -114,21 +114,17 @@ updateCovmat <- function(covmat,theta.mean,theta,i) {
 #'Return a burned and thined trace of the chain.
 #' @param trace a \code{data.frame} with all variables in column, as outputed by \code{\link{mcmcMH}}.
 #' @param burn proportion of the chain to burn.
-#' @param thin number of samples to keep from the chain.
+#' @param thin number of samples to discard per sample that is being kept
 #' @export
 #' @return a \code{data.frame}.
-burnAndThin <- function(trace,burn=0.1,thin=nrow(trace)/2) {
+burnAndThin <- function(trace, burn = 0, thin = 0) {
 
-    if ("weight" %in% colnames(trace)) {
-        trace <- as.data.frame(apply(trace, 2, rep, times = trace$weight))
-    }
     trace$iteration <- 1:nrow(trace)
 
     # remove burn
-    trace <- subset(trace,iteration > burn * max(iteration))
+    trace <- subset(trace,iteration > burn)
     # thin
-    thin_every <- floor(nrow(trace)/thin)
-    trace <- trace[seq(1,nrow(trace),thin_every),]
+    trace <- trace[seq(1, nrow(trace), thin + 1), ]
 
     return(trace)
 }
