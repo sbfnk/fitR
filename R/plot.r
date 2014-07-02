@@ -324,6 +324,8 @@ plotPosteriorFit <- function(trace, fitmodel, state.init, posterior.summary=c("s
 ##' @param longest.burn.in The longest burn in to test. Defaults to half the length of the trace
 ##' @param step.size The size of the steps of burn-in to test. Defaults to 1/50th of \code{longest.burn.in}
 ##' @return a plot of the ESS against burn.in
+##' @export
+##' @import coda ggplot2 reshape2
 plotESSBurn <- function(trace, longest.burn.in = nrow(trace) / 2, step.size = round(longest.burn.in / 50)) {
 
         test.burn.in <- seq(0, longest.burn.in, step.size) # test values
