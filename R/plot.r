@@ -43,7 +43,7 @@ plotTraj <- function(traj=NULL, state.names=NULL, data=NULL, summary=TRUE, p.ext
                 return(data.frame(value=sum(df$value==0)/nrow(df)))
             })
             df.p.ext$state <- "p. extinction"
-            df.p.ext$replicate <- 0  
+            df.p.ext$replicate <- 0
         }
 
         if (summary){
@@ -80,7 +80,7 @@ plotTraj <- function(traj=NULL, state.names=NULL, data=NULL, summary=TRUE, p.ext
         }
 
         if(p.extinction){
-            p <- p+geom_line(data=df.p.ext,aes(x=time,y=value),color="black",alpha=1)        
+            p <- p+geom_line(data=df.p.ext,aes(x=time,y=value),color="black",alpha=1)
         }
 
     } else {
@@ -94,7 +94,7 @@ plotTraj <- function(traj=NULL, state.names=NULL, data=NULL, summary=TRUE, p.ext
 
     }
 
-    p <- p + theme_bw() + theme(legend.position="top", legend.box="horizontal") 
+    p <- p + theme_bw() + theme(legend.position="top", legend.box="horizontal")
 
     if(plot){
         print(p)
@@ -317,9 +317,28 @@ plotPosteriorFit <- function(trace, fitmodel, state.init, posterior.summary=c("s
 
 }
 
+##' Plot Effective Sample Size (ESS) against burn-in
+##'
+##' Takes an mcmc trace and tests the ESS at different values of burn-in
+##' @param trace A data frame of an MCMC chain with one column per parameter
+##' @param longest.burn.in The longest burn in to test. Defaults to half the length of the trace
+##' @param step.size The size of the steps of burn-in to test. Defaults to 1/100th of the length of the chain
+##' @return a plot of the ESS against burn.in
+plotESSBurn <- function(trace, longest.burn.in = nrow(trace) / 2, step.size = nrow(trace) / 100) {
 
+        test.burn.in <- seq(0, longest.burn.in, step.size) # test values
+        # initialise data.frame of ess estimates
+        ess.burn.in <- data.frame(t(effectiveSize(trace)))
+        for (burn.in in test.burn.in[-1]) { # loop over all test values after 0
+                # test burn-in
+                test.trace <- burnAndThin(trace, burn = burn.in)
+                # estimate ESS and at to vector of ess estimates
+                ess.burn.in <- rbind(ess.burn.in, t(effectiveSize(mcmc(test.trace))))
+        }
+        ess.burn.in$burn.in <- test.burn.in
+        ess.long <- melt(ess.burn.in, id.vars = c("burn.in"),
+                         value.name = "ESS", variable.name = "parameter")
+        p <- ggplot(ess.long, aes(x = burn.in, y = ESS))+ facet_wrap(~ parameter)+ geom_line()
 
-
-
-
-
+        print(p)
+}
