@@ -50,58 +50,6 @@ SEITL_simulateDeterministic <- function(theta,state.init,times) {
 
 }
 
-# Simulate realisation of the stochastic version of the SEITL model.
-SEITL_simulateStochastic <- function(theta,state.init,times) {
-
-	
-	SEITL_transitions <- list(
-		c(S=-1,E=1),# infection
-		c(E=-1,I=1,Inc=1),# infectiousness + incidence
-		c(I=-1,T=1),# recovery + short term protection
-		c(T=-1,L=1),# efficient long term protection
-		c(T=-1,S=1)# deficient long term protection
-		)
-
-	SEITL_rateFunc <- function(state,theta,t) {
-
-		# param
-		beta <- theta[["R0"]]/theta[["D.inf"]]
-		epsilon <- 1/theta[["D.lat"]]
-		nu <- 1/theta[["D.inf"]]
-		alpha <- theta[["alpha"]]
-		tau <- 1/theta[["D.imm"]]
-
-		# states
-		S <- state[["S"]]
-		E <- state[["E"]]
-		I <- state[["I"]]
-		T <- state[["T"]]
-		L <- state[["L"]]
-		Inc <- state[["Inc"]]
-
-		N <- S + E +I + T + L
-
-		return(c(
-			beta*S*I/N, # infection
-			epsilon*E, # infectiousness + incidence
-			nu*I, # recovery + short term protection
-			alpha*tau*T, # efficient long term protection
-			(1-alpha)*tau*T # deficient long term protection
-			)
-		)
-	}
-
-	# put incidence at 0 in state.init
-	state.init["Inc"] <- 0
-
-	traj <- simulateModelStochastic(theta,state.init,times,SEITL_transitions,SEITL_rateFunc) 
-	
-	# compute incidence of each time interval
-	traj <- mutate(traj,Inc=c(0,diff(Inc)))
-
-	return(traj)
-
-}
 
 # Generate an observed incidence under a Poisson observation process.  
 SEITL_genObsPoint <- function(model.point, theta){
@@ -114,12 +62,12 @@ SEITL_genObsPoint <- function(model.point, theta){
 # Evaluate the log of the prior density distribution of the parameter values.
 SEITL_logPrior <- function(theta) {
 
-	log.prior.R0 <- dunif(theta["R0"], min = 1, max = 50, log = TRUE)
-	log.prior.latent.period <- dunif(theta["D.lat"], min = 0, max = 10, log = TRUE)
-	log.prior.infectious.period <- dunif(theta["D.inf"], min = 0, max = 15, log = TRUE)
-	log.prior.temporary.immune.period <- dunif(theta["D.imm"], min = 0, max = 50, log = TRUE)
-	log.prior.probability.long.term.immunity <- dunif(theta["alpha"], min = 0, max = 1, log = TRUE)
-	log.prior.reporting.rate <- dunif(theta["rho"], min = 0, max = 1, log = TRUE)
+	log.prior.R0 <- dunif(theta[["R0"]], min = 1, max = 50, log = TRUE)
+	log.prior.latent.period <- dunif(theta[["D.lat"]], min = 0, max = 10, log = TRUE)
+	log.prior.infectious.period <- dunif(theta[["D.inf"]], min = 0, max = 15, log = TRUE)
+	log.prior.temporary.immune.period <- dunif(theta[["D.imm"]], min = 0, max = 50, log = TRUE)
+	log.prior.probability.long.term.immunity <- dunif(theta[["alpha"]], min = 0, max = 1, log = TRUE)
+	log.prior.reporting.rate <- dunif(theta[["rho"]], min = 0, max = 1, log = TRUE)
 	
 	return(log.prior.R0 + log.prior.latent.period + log.prior.infectious.period + log.prior.temporary.immune.period + log.prior.probability.long.term.immunity + log.prior.reporting.rate)
 

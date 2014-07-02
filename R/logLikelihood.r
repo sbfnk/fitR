@@ -15,7 +15,7 @@ trajLogLike <- function(fitmodel, theta, state.init, data) {
 	# simulate model at successive observation times of data
 	traj <- fitmodel$simulate(theta,state.init,times)
 
-        logLike <- 0
+	logLike <- 0
 
         # compute log-likelihood by summing the log-likelihood of each data point
 	for(i in 1:nrow(data)){
@@ -93,12 +93,12 @@ logPosterior <- function(fitmodel, theta, state.init, data, margLogLike = trajLo
 genObsTraj <- function(fitmodel, theta, state.init, times) {
 
         ## simulate model at successive observation times of data
-        traj <- fitmodel$simulate(theta, state.init, times)
+	traj <- fitmodel$simulate(theta, state.init, times)
 
         ## generate observations by applying fitmodel$genObsPoint to
         ## each row of traj. The parameter value theta as passed as
         ## extra argument to fitmodel$genObsPoint
-        traj$obs <- apply(X = traj, MARGIN = 1, FUN = fitmodel$genObsPoint,
-                          theta = theta)
-        return(traj)
+	traj$obs <- apply(X = traj, MARGIN = 1, FUN = fitmodel$genObsPoint,
+		theta = theta)
+	return(traj)
 }

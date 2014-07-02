@@ -3,14 +3,14 @@
 \alias{burnAndThin}
 \title{Burn and thin MCMC chain}
 \usage{
-burnAndThin(trace, burn = 0.1, thin = nrow(trace)/2)
+burnAndThin(trace, burn = 0, thin = 0)
 }
 \arguments{
 \item{trace}{a \code{data.frame} with all variables in column, as outputed by \code{\link{mcmcMH}}.}
 
 \item{burn}{proportion of the chain to burn.}
 
-\item{thin}{number of samples to keep from the chain.}
+\item{thin}{number of samples to discard per sample that is being kept}
 }
 \value{
 a \code{data.frame}.
