@@ -216,7 +216,7 @@ mcmcMH <- function(target, theta.init, proposal.sd = NULL,
                          upper =
                              upper.proposal[theta.estimated.names],
                          log = TRUE)
-            log.acceptance <- log.accepteance -
+            log.acceptance <- log.acceptance -
                 dtmvnorm(x = theta.propose[theta.estimated.names],
                          mean = theta.current[theta.estimated.names],
                          sigma =
