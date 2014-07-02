@@ -71,8 +71,8 @@ mcmcMH <- function(target, theta.init, proposal.sd = NULL, n.iterations, covmat 
 
 	# covmat init
 	covmat.proposal.init <- covmat.proposal
-	start.adapt.size <- (adapt.size.start > 0)
-	start.adapt.shape <- (adapt.shape.start > 0)
+	adapting.size <- FALSE # will be set to TRUE once we start adapting the size
+	adapting.shape <- FALSE # will be set to TRUE once we start adapting the shape
 
 	# find estimated theta
 	theta.estimated.names <- names(which(diag(covmat.proposal)>0))
@@ -114,19 +114,19 @@ mcmcMH <- function(target, theta.init, proposal.sd = NULL, n.iterations, covmat 
 
 		# adaptive step
 		if(adapt.size.start > 0 && i.iteration >= adapt.size.start && acceptance.rate*i.iteration < adapt.shape.start){
-			if(start.adapt.size){
+			if(!adapting.size){
 				message("\n---> Start adapting size of covariance matrix")
-				start.adapt.size <- 0				
+				adapting.size <- TRUE
 			}
 			# adapt size of covmat until we get enough accepted jumps
 			scaling.sd <- scaling.sd*exp(adapt.size.cooling^(i.iteration-adapt.size.start)*(acceptance.rate - 0.234))
 			covmat.proposal <- scaling.sd^2*covmat.proposal.init
 
 		}else if(adapt.shape.start > 0 && acceptance.rate*i.iteration >= adapt.shape.start){
-			if(start.adapt.shape){
+			if(!adapting.shape){
 				message("\n---> Start adapting shape of covariance matrix")
 				# flush.console()
-				start.adapt.shape <- 0
+				adapting.shape <- TRUE
 			}
 			# adapt shape of covmat using optimal scaling factor for multivariate traget distributions
 			covmat.proposal <- 2.38^2/length(theta.estimated.names)*covmat.empirical
