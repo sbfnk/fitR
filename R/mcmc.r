@@ -20,7 +20,6 @@
 #' @param adapt.size.cooling cooling factor for the scaling factor of the covariance matrix during size adaptation (see note below).
 #' @param adapt.shape.start number of accepted jumps before adapting the shape of the proposal covariance matrix (see note below). Set to 0 (default) if shape is not to be adapted
 #' @param print.info.every frequency of information on the chain: acceptance rate and state of the chain. Default value to \code{n.iterations/100}. Set to \code{NULL} to avoid any info.
-#' @param save.weights if is set to TRUE, a \code{weight} column is added to the returned trace, containing  the number of iteration the chain stayed in each state. This offers a compact storage for the full trace of the chain.
 #' @note The size of the proposal covariance matrix is adapted using the following formulae: \deqn{\Sigma_{n+1}=\sigma_n * \Sigma_n} with \eqn{\sigma_n=\sigma_{n-1}*exp(\alpha^n*(acc - 0.234))},
 #' where \eqn{\alpha} is equal to \code{adapt.size.cooling} and \eqn{acc} is the acceptance rate of the chain.
 #'
@@ -36,7 +35,7 @@
 #'	\item \code{acceptance.rate} acceptance rate of the MCMC chain.
 #'	\item \code{covmat.empirical} empirical covariance matrix of the target sample.
 #'}
-mcmcMH <- function(target, theta.init, proposal.sd = NULL, n.iterations, covmat = NULL, limits=list(lower=NULL, upper=NULL), adapt.size.start=0, adapt.size.cooling=0.99, adapt.shape.start=0, print.info.every=n.iterations/100, save.weights = FALSE) {
+mcmcMH <- function(target, theta.init, proposal.sd = NULL, n.iterations, covmat = NULL, limits=list(lower = NULL, upper = NULL), adapt.size.start = NULL, adapt.size.cooling = 0.99, adapt.shape.start = NULL, print.info.every = n.iterations/100) {
 
 	# initialise theta
 	theta.current <- theta.init
@@ -87,20 +86,7 @@ mcmcMH <- function(target, theta.init, proposal.sd = NULL, n.iterations, covmat 
                 suppressWarnings(target.theta.current$trace <- theta.current)
         }
 
-	# initialise trace data.frame
-        if (is.na(target.theta.current["trace"])) {
-                if (save.weights) {
-                        trace <- data.frame(t(target.theta.current), weight=1)
-                } else {
-                        trace <- data.frame(t(target.theta.current))
-                }
-        } else {
-                if (save.weights) {
-                        trace <- data.frame(t(target.theta.current[["trace"]]), weight=1)
-                } else {
-                        trace <- data.frame(t(target.theta.current[["trace"]]))
-                }
-        }
+        trace <- data.frame(t(target.theta.current[["trace"]]))
 
 	# acceptance rate
 	acceptance.rate <- 0
@@ -187,22 +173,11 @@ mcmcMH <- function(target, theta.init, proposal.sd = NULL, n.iterations, covmat 
 		}
 
 		if(is.accepted <- (log(runif(1)) < log.acceptance)){
-			# accept proposed parameter set
-                        if (save.weights) {
-                                trace <- rbind(trace,c(target.theta.propose$trace, weight=1))
-                        } else {
-                                trace <- rbind(trace,c(target.theta.propose$trace))
-                        }
-			theta.current <- theta.propose
-			target.theta.current <- target.theta.propose
-		}else{
-			# reject
-                        if (save.weights) {
-                                trace$weight[nrow(trace)] <- trace$weight[nrow(trace)] + 1
-                        } else {
-                                trace <- rbind(trace,c(target.theta.current$trace))
-                        }
-		}
+                    # accept proposed parameter set
+                    theta.current <- theta.propose
+                    target.theta.current <- target.theta.propose
+                }
+                trace <- rbind(trace,c(target.theta.current$trace))
 
 		# update acceptance rate
 		acceptance.rate <- acceptance.rate + (is.accepted - acceptance.rate)/i.iteration
