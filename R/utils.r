@@ -119,10 +119,10 @@ updateCovmat <- function(covmat,theta.mean,theta,i) {
 #' @return a \code{data.frame}.
 burnAndThin <- function(trace, burn = 0, thin = 0) {
 
-    trace$iteration <- 1:nrow(trace)
-
     # remove burn
-    trace <- subset(trace,iteration > burn)
+    if (burn > 0) {
+        trace <- trace[-(1:burn), ]
+    }
     # thin
     trace <- trace[seq(1, nrow(trace), thin + 1), ]
 
