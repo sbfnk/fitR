@@ -50,7 +50,7 @@ mcmcMH <- function(target, theta.init, proposal.sd = NULL, n.iterations, covmat 
 	theta.names <- names(theta.init)
 	if(is.null(covmat.proposal)){
                 if (is.null(proposal.sd)){
-                        proposal.sd <- rep(theta.init/10, nrow=length(theta.names))
+                        proposal.sd <- theta.init/10
                 }
                 covmat.proposal <- matrix(diag(proposal.sd^2),nrow=length(theta.names),dimnames=list(theta.names,theta.names))
 	} else {
