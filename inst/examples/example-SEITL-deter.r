@@ -62,12 +62,12 @@ SEITL_genObsPoint <- function(model.point, theta){
 # Evaluate the log of the prior density distribution of the parameter values.
 SEITL_logPrior <- function(theta) {
 
-	log.prior.R0 <- dunif(theta["R0"], min = 1, max = 50, log = TRUE)
-	log.prior.latent.period <- dunif(theta["D.lat"], min = 0, max = 10, log = TRUE)
-	log.prior.infectious.period <- dunif(theta["D.inf"], min = 0, max = 15, log = TRUE)
-	log.prior.temporary.immune.period <- dunif(theta["D.imm"], min = 0, max = 50, log = TRUE)
-	log.prior.probability.long.term.immunity <- dunif(theta["alpha"], min = 0, max = 1, log = TRUE)
-	log.prior.reporting.rate <- dunif(theta["rho"], min = 0, max = 1, log = TRUE)
+	log.prior.R0 <- dunif(theta[["R0"]], min = 1, max = 50, log = TRUE)
+	log.prior.latent.period <- dunif(theta[["D.lat"]], min = 0, max = 10, log = TRUE)
+	log.prior.infectious.period <- dunif(theta[["D.inf"]], min = 0, max = 15, log = TRUE)
+	log.prior.temporary.immune.period <- dunif(theta[["D.imm"]], min = 0, max = 50, log = TRUE)
+	log.prior.probability.long.term.immunity <- dunif(theta[["alpha"]], min = 0, max = 1, log = TRUE)
+	log.prior.reporting.rate <- dunif(theta[["rho"]], min = 0, max = 1, log = TRUE)
 	
 	return(log.prior.R0 + log.prior.latent.period + log.prior.infectious.period + log.prior.temporary.immune.period + log.prior.probability.long.term.immunity + log.prior.reporting.rate)
 
