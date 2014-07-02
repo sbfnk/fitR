@@ -119,7 +119,9 @@ updateCovmat <- function(covmat,theta.mean,theta,i) {
 #' @return a \code{data.frame}.
 burnAndThin <- function(trace,burn=0.1,thin=nrow(trace)/2) {
 
-    trace <- as.data.frame(apply(trace, 2, rep, times = trace$weight))
+    if ("weight" %in% colnames(trace)) {
+        trace <- as.data.frame(apply(trace, 2, rep, times = trace$weight))
+    }
     trace$iteration <- 1:nrow(trace)
 
     # remove burn
@@ -178,9 +180,9 @@ export2Tracer <- function(trace, file) {
 #' @inheritParams base::paste
 #' @export
 #' @seealso \code{\link[base]{sprintf}}
-printNamedVector <- function(x, fmt="%.2f", sep="|") {
+printNamedVector <- function(x, fmt="%.2f", sep=" | ") {
 
-    paste(paste(names(x),sprintf(fmt,x),sep="="),collapse=sep)
+    paste(paste(names(x),sprintf(fmt,x),sep=" = "),collapse=sep)
 
 }
 

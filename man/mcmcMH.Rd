@@ -3,10 +3,10 @@
 \alias{mcmcMH}
 \title{Metropolis-Hasting MCMC}
 \usage{
-mcmcMH(target, theta.init, covmat = NULL, n.iterations, limits = list(lower
-  = NULL, upper = NULL), adapt.size.start = n.iterations,
-  adapt.size.cooling = 0.99, adapt.shape.start = n.iterations,
-  print.info.every = n.iterations/100, ...)
+mcmcMH(target, theta.init, proposal.sd = NULL, n.iterations, covmat = NULL,
+  limits = list(lower = NULL, upper = NULL), adapt.size.start = 0,
+  adapt.size.cooling = 0.99, adapt.shape.start = 0,
+  print.info.every = n.iterations/100, save.weights = FALSE)
 }
 \arguments{
 \item{target}{\R-function that takes a single argument: \code{theta} (named numeric vector of parameter values) and returns a list of 2 elements:
@@ -17,7 +17,9 @@ mcmcMH(target, theta.init, covmat = NULL, n.iterations, limits = list(lower
 
 \item{theta.init}{named vector of initial parameter values to start the chain.}
 
-\item{covmat}{named numeric covariance matrix of the multivariate Gaussian proposal distribution. Must have named rows and columns with at least all estimated theta. By default it is a diagonal matrix with diagonal elements equal to \code{theta.init/10}.}
+\item{proposal.sd}{vector of standard deviations. If this is given and covmat is not, a diagonal matrix will be built from this to use as covariance matrix of the multivariate Gaussian proposal distribution. By default, this is set to \code{theta.init/10}.}
+
+\item{covmat}{named numeric covariance matrix of the multivariate Gaussian proposal distribution. Must have named rows and columns with at least all estimated theta. If \code{proposal.sd} is given, this is ignored.}
 
 \item{n.iterations}{number of iterations to run the MCMC chain.}
 
@@ -27,18 +29,20 @@ mcmcMH(target, theta.init, covmat = NULL, n.iterations, limits = list(lower
     \item \code{upper} named numeric vector. Upper truncation points in each dimension of the Gaussian proposal distribution. By default they are set to \code{Inf}.
 }}
 
-\item{adapt.size.start}{number of iterations to run before adapting the size of the proposal covariance matrix (see note below).}
+\item{adapt.size.start}{number of iterations to run before adapting the size of the proposal covariance matrix (see note below). Set to 0 (default) if size is not to be adapted.}
 
 \item{adapt.size.cooling}{cooling factor for the scaling factor of the covariance matrix during size adaptation (see note below).}
 
-\item{adapt.shape.start}{number of accepted jumps before adapting the shape of the proposal covariance matrix (see note below).}
+\item{adapt.shape.start}{number of accepted jumps before adapting the shape of the proposal covariance matrix (see note below). Set to 0 (default) if shape is not to be adapted}
 
 \item{print.info.every}{frequency of information on the chain: acceptance rate and state of the chain. Default value to \code{n.iterations/100}. Set to \code{NULL} to avoid any info.}
+
+\item{save.weights}{if is set to TRUE, a \code{weight} column is added to the returned trace, containing  the number of iteration the chain stayed in each state. This offers a compact storage for the full trace of the chain.}
 }
 \value{
 a list with 3 elements:
 \itemize{
-	\item \code{trace} a \code{data.frame}. Each row contains a state of the chain (as returned by \code{target}) and the last column \code{weight} is the number of iteration the chain stayed in that state. This offers a compact storage for the full trace of the chain.
+	\item \code{trace} a \code{data.frame}. Each row contains a state of the chain (as returned by \code{target}).
 	\item \code{acceptance.rate} acceptance rate of the MCMC chain.
 	\item \code{covmat.empirical} empirical covariance matrix of the target sample.
 }
