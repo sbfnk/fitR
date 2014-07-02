@@ -94,14 +94,12 @@ mcmcMH <- function(target, theta.init, proposal.sd = NULL, n.iterations, covmat 
 	# scaling factor for covmat size
 	scaling.sd  <- 1
 
-        if (adapt.size.start > 0 || adapt.shape.start > 0) {
-	        # empirical covariance matrix (0 everywhere initially)
-                covmat.empirical <- covmat.proposal
-                covmat.empirical[,] <- 0
+        # empirical covariance matrix (0 everywhere initially)
+        covmat.empirical <- covmat.proposal
+        covmat.empirical[,] <- 0
 
-	        # empirical mean vector
-                theta.mean <- theta.current
-        }
+        # empirical mean vector
+        theta.mean <- theta.current
 
 	# if print.info.every is null never print info
 	if(is.null(print.info.every)){
@@ -183,19 +181,13 @@ mcmcMH <- function(target, theta.init, proposal.sd = NULL, n.iterations, covmat 
 		acceptance.rate <- acceptance.rate + (is.accepted - acceptance.rate)/i.iteration
 
 		# update empirical covariance matrix
-                if (adapt.size.start > 0 || adapt.shape.start > 0) {
-                        tmp <- updateCovmat(covmat.empirical,theta.mean,theta.current,i.iteration)
-                        covmat.empirical <- tmp$covmat
-                        theta.mean <- tmp$theta.mean
-                }
+                tmp <- updateCovmat(covmat.empirical,theta.mean,theta.current,i.iteration)
+                covmat.empirical <- tmp$covmat
+                theta.mean <- tmp$theta.mean
 
 	}
 
-        if (start.adapt.shape){
-                return(list(trace=trace,acceptance.rate=acceptance.rate,covmat.empirical=covmat.empirical))
-        } else {
-                return(list(trace=trace,acceptance.rate=acceptance.rate))
-        }
+        return(list(trace=trace,acceptance.rate=acceptance.rate,covmat.empirical=covmat.empirical))
 }
 
 
