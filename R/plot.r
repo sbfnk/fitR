@@ -251,7 +251,7 @@ plotPosteriorTheta <- function(trace, estimated.only = FALSE){
 #'    \item \code{posterior.traj} a \code{data.frame} with the trajectories (and observations) sampled from the posterior distribution.
 #'    \item \code{plot} the plot of the fit displayed.
 #'}
-plotPosteriorFit <- function(trace, fitmodel, state.init, posterior.summary=c("sample","median","mean","max"), summary=TRUE, sample.size = 100, alpha=min(1,10/sample.size), plot=TRUE) {
+plotPosteriorFit <- function(trace, fitmodel, state.init, data, posterior.summary=c("sample","median","mean","max"), summary=TRUE, sample.size = 100, alpha=min(1,10/sample.size), plot=TRUE, all.vars = FALSE) {
 
     posterior.summary <- match.arg(posterior.summary)
 
@@ -267,17 +267,17 @@ plotPosteriorFit <- function(trace, fitmodel, state.init, posterior.summary=c("s
     if(posterior.summary=="median"){
 
         theta.median <- apply(trace[theta.names],2,median)
-        traj <- simulateModelReplicates(fitmodel=fitmodel,theta=theta.median,times=times,n=sample.size,observation=TRUE)
+        traj <- simulateModelReplicates(fitmodel=fitmodel,state.init=state.init, theta=theta.median,times=times,n=sample.size,observation=TRUE)
 
     } else if(posterior.summary=="mean"){
 
         theta.mean <- apply(trace[theta.names],2,mean)
-        traj <- simulateModelReplicates(fitmodel=fitmodel,theta=theta.mean,times=times,n=sample.size,observation=TRUE)
+        traj <- simulateModelReplicates(fitmodel=fitmodel,state.init=state.init, theta=theta.mean,times=times,n=sample.size,observation=TRUE)
 
     } else if(posterior.summary=="max"){
         ind <- which.max(trace$log.posterior)
         theta.max <- trace[ind,theta.names]
-        traj <- simulateModelReplicates(fitmodel=fitmodel,theta=theta.mean,times=times,n=sample.size,observation=TRUE)
+        traj <- simulateModelReplicates(fitmodel=fitmodel,state.init=state.init, theta=theta.max,times=times,n=sample.size,observation=TRUE)
 
     } else {
 
@@ -299,10 +299,10 @@ plotPosteriorFit <- function(trace, fitmodel, state.init, posterior.summary=c("s
     }
 
 
-    if(only.fit){
-        state.names <- c("obs")
-    } else {
+    if(all.vars){
         state.names <- NULL
+    } else {
+        state.names <- c("obs")
     }
 
     p <- plotTraj(traj=traj, state.names=state.names, data=data, summary=summary, alpha=alpha, plot=FALSE)
@@ -340,7 +340,10 @@ plotESSBurn <- function(trace, longest.burn.in = nrow(trace) / 2, step.size = ro
         ess.burn.in$burn.in <- test.burn.in
         ess.long <- melt(ess.burn.in, id.vars = c("burn.in"),
                          value.name = "ESS", variable.name = "parameter")
-        p <- ggplot(ess.long, aes(x = burn.in, y = ESS))+ facet_wrap(~ parameter)+ geom_line()
+        p <- ggplot(ess.long, aes(x = burn.in, y = ESS))
+        p <- p + facet_wrap(~ parameter)
+        p <- p + geom_line()
+        p <- p + theme_bw()
 
         print(p)
 }
