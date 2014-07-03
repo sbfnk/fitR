@@ -118,7 +118,7 @@ updateCovmat <- function(covmat,theta.mean,theta,i) {
 #' @export
 #' @import coda
 #' @return an \code{mcmc} or \code{mcmc.list} object
-burnAndThin <- function(trace, burn = 1500, thin = 60) {
+burnAndThin <- function(trace, burn = 0, thin = 0) {
 
     if(class(trace)=="mcmc"){
         trace <- as.data.frame(trace)
