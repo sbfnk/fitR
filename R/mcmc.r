@@ -60,7 +60,8 @@ mcmcMH <- function(target, theta.init, proposal.sd = NULL,
             proposal.sd <- theta.init/10
         }
         covmat.proposal <-
-            matrix(diag(proposal.sd^2), nrow = length(theta.names),
+            matrix(diag(proposal.sd^2, nrow = length(theta.names)),
+                   nrow = length(theta.names),
                    dimnames = list(theta.names, theta.names))
     } else {
         covmat.proposal <- covmat.proposal[theta.names,theta.names]
