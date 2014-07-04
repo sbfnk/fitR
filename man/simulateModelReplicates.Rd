@@ -3,7 +3,7 @@
 \alias{simulateModelReplicates}
 \title{Simulate several replicate of the model}
 \usage{
-simulateModelReplicates(fitmodel, theta, state.init, times, n,
+simulateModelReplicates(fitmodel, theta, init.state, times, n,
   observation = FALSE)
 }
 \arguments{
@@ -17,10 +17,10 @@ simulateModelReplicates(fitmodel, theta, state.init, times, n,
 
 \item{theta}{named numeric vector. Values of the parameters. Names should match \code{fitmodel$theta.names}.}
 
-\item{state.init}{named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.}
+\item{init.state}{named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.}
 }
 \value{
-a data.frame of dimension \code{[nxlength(times)]x[length(state.init)+2]} with column names equal to \code{c("replicate","time",names(state.init))}.
+a data.frame of dimension \code{[nxlength(times)]x[length(init.state)+2]} with column names equal to \code{c("replicate","time",names(init.state))}.
 }
 \description{
 Simulate several replicate of a fitmodel using its function simulate

@@ -19,7 +19,7 @@ SEITL_theta.names <- c("R0", "D.lat", "D.inf", "alpha", "D.imm", "rho")
 
 
 # Solves the system of ordinary differential equations for the SEITL model.
-SEITL_simulateDeterministic <- function(theta,state.init,times) {
+SEITL_simulateDeterministic <- function(theta,init.state,times) {
 
 	SEITL_ode <- function(time, state, theta) {
 
@@ -51,10 +51,10 @@ SEITL_simulateDeterministic <- function(theta,state.init,times) {
 	}
 
 
-	# put incidence at 0 in state.init
-	state.init["Inc"] <- 0
+	# put incidence at 0 in init.state
+	init.state["Inc"] <- 0
 
-	traj <- as.data.frame(ode(state.init, times, SEITL_ode, theta, method = "ode45"))
+	traj <- as.data.frame(ode(init.state, times, SEITL_ode, theta, method = "ode45"))
 
 	# compute incidence of each time interval
 	traj <- mutate(traj,Inc=c(0,diff(Inc)))
@@ -108,9 +108,9 @@ SEITL_deter <- fitmodel(
 ## test it
 
 # theta <- c("R0"=10, "D.lat"=2 , "D.inf"=3, "alpha"=0.5, "D.imm"=15, "rho"=0.7)
-# state.init <- c("S"=280,"E"=0,"I"=2,"T"=0,"L"=4,"Inc"=0)
+# init.state <- c("S"=280,"E"=0,"I"=2,"T"=0,"L"=4,"Inc"=0)
 # data(FluTdC1971)
-# testFitmodel(fitmodel=SEITL, theta=theta, state.init=state.init, data= FluTdC1971, verbose=TRUE)
+# testFitmodel(fitmodel=SEITL, theta=theta, init.state=init.state, data= FluTdC1971, verbose=TRUE)
 
 
 }

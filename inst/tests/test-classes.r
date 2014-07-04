@@ -19,16 +19,16 @@ test_that("constructor for SEITL model",{
 
 	## test them
 	theta <- c("R0"=10, "D.lat"=2 , "D.inf"=3, "alpha"=0.5, "D.imm"=15, "rho"=0.7)
-	state.init <- c("S"=280,"E"=0,"I"=2,"T"=0,"L"=4,"Inc"=0)
+	init.state <- c("S"=280,"E"=0,"I"=2,"T"=0,"L"=4,"Inc"=0)
 
 	data("FluTdC1971",envir = environment())
 
-	testFitmodel(fitmodel=SEITL_det, theta=theta, state.init=state.init, data=FluTdC1971, verbose=TRUE)
-	testFitmodel(fitmodel=SEITL_sto, theta=theta, state.init=state.init, data=FluTdC1971, verbose=TRUE)
+	testFitmodel(fitmodel=SEITL_det, theta=theta, init.state=init.state, data=FluTdC1971, verbose=TRUE)
+	testFitmodel(fitmodel=SEITL_sto, theta=theta, init.state=init.state, data=FluTdC1971, verbose=TRUE)
 
-	state.init <- c("S"=280,"E"=0,"I"=2,"T1"=0,"T2"=0,"L"=4,"Inc"=0)
+	init.state <- c("S"=280,"E"=0,"I"=2,"T1"=0,"T2"=0,"L"=4,"Inc"=0)
 
-	testFitmodel(fitmodel=SEIT2L_det, theta=theta, state.init=state.init, data=FluTdC1971, verbose=TRUE)
-	testFitmodel(fitmodel=SEIT2L_sto, theta=theta, state.init=state.init, data=FluTdC1971, verbose=TRUE)
+	testFitmodel(fitmodel=SEIT2L_det, theta=theta, init.state=init.state, data=FluTdC1971, verbose=TRUE)
+	testFitmodel(fitmodel=SEIT2L_sto, theta=theta, init.state=init.state, data=FluTdC1971, verbose=TRUE)
 
 })

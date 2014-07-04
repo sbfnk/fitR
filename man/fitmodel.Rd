@@ -17,8 +17,8 @@ fitmodel(name = NULL, state.names = NULL, theta.names = NULL,
 \item{simulate}{\R-function to simulate forward the model (required). This function takes 3 arguments:
 \itemize{
 \item \code{theta} named numeric vector. Values of the parameters. Names should match \code{theta.names}.
-\item \code{state.init} named numeric vector. Initial values of the state variables. Names should match \code{state.names}.
-\item \code{times} numeric vector. Time sequence for which the state of the model is wanted; the first value of times must be the initial time, i.e. the time of \code{state.init}.
+\item \code{init.state} named numeric vector. Initial values of the state variables. Names should match \code{state.names}.
+\item \code{times} numeric vector. Time sequence for which the state of the model is wanted; the first value of times must be the initial time, i.e. the time of \code{init.state}.
 }
 and returns a \code{data.fame} containing the simulated trajectories that is the values of the state variables (1 per column) at each observation time (1 per row). The first column is \code{time}.}
 
@@ -49,7 +49,7 @@ a \code{fitmodel} object that is a \code{list} of 7 elements:
 	\item \code{name} character, name of the model
 	\item \code{state.names} vector, names of the state variables.
 	\item \code{theta.names} vector, names of the parameters.
-	\item \code{simulate} \R-function to simulate forward the model; usage: \code{simulate(theta,state.init,times)}.
+	\item \code{simulate} \R-function to simulate forward the model; usage: \code{simulate(theta,init.state,times)}.
 	\item \code{genObsPoint} \R-function to generate simulated observations; usage: \code{genObsPoint(model.point, theta)}.
 	\item \code{logPrior} \R-function to evaluate the log-prior of the parameter values; usage: \code{logPrior(theta)}.
 	\item \code{pointLogLike} \R-function to evaluate the log-likelihood of one data point; usage: \code{pointLogLike(data.point, model.point, theta)}.
@@ -65,7 +65,7 @@ SIR_name <- "SIR with constant population size"
 SIR_state.names <- c("S","I","R")
 SIR_theta.names <- c("R0","D.inf")
 
-SIR_simulateDeterministic <- function(theta,state.init,times) {
+SIR_simulateDeterministic <- function(theta,init.state,times) {
 
         SIR_ode <- function(time, state, parameters) {
 
@@ -87,7 +87,7 @@ SIR_simulateDeterministic <- function(theta,state.init,times) {
                 return(list(c(dS, dI, dR)))
         }
 
-	trajectory <- data.frame(ode(y=state.init,times=times,func=SIR_ode,parms=theta, method = "ode45"))
+	trajectory <- data.frame(ode(y=init.state,times=times,func=SIR_ode,parms=theta, method = "ode45"))
 
 	return(trajectory)
 }
@@ -131,11 +131,11 @@ SIR <- fitmodel(
 
 ## test them
 theta <- c(R0 = 3, D.inf = 2)
-state.init <- c(S = 999, I = 1, R = 0)
+init.state <- c(S = 999, I = 1, R = 0)
 data(epi)
 
 ## SIR
-## testFitmodel(fitmodel=SIR, theta=theta, state.init=state.init, data= epi1, verbose=TRUE)
+## testFitmodel(fitmodel=SIR, theta=theta, init.state=init.state, data= epi1, verbose=TRUE)
 
 }
 \seealso{

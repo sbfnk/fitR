@@ -16,7 +16,7 @@
 #' \item \code{traj} a list of size \code{n.particles} with all filtered trajectories.
 #' \item \code{traj.weight} a vector of size \code{n.particles} with the normalised weight of the filtered trajectories.
 #' }
-particleFilter <- function(fitmodel, theta, state.init, data, n.particles, progress = FALSE, n.cores = 1)
+particleFilter <- function(fitmodel, theta, init.state, data, n.particles, progress = FALSE, n.cores = 1)
 {
 
     if(is.null(n.cores)){
@@ -36,10 +36,10 @@ particleFilter <- function(fitmodel, theta, state.init, data, n.particles, progr
     margLogLike <- 0
 
     # initial state of particles
-    current.state.particles <- rep(list(state.init),n.particles)
+    current.state.particles <- rep(list(init.state),n.particles)
 
     # filtered trajectories (just add time variable to initial state)
-    traj.particles <- rep(list(data.frame(t(c(time=0,state.init)))),n.particles)
+    traj.particles <- rep(list(data.frame(t(c(time=0,init.state)))),n.particles)
 
     # weight of particles
     weight.particles <- rep(1/n.particles,length=n.particles)
@@ -72,7 +72,7 @@ particleFilter <- function(fitmodel, theta, state.init, data, n.particles, progr
         propagate <- llply(current.state.particles,function(current.state) {
 
             # simulate from previous observation to current observation time
-            traj <- fitmodel$simulate(theta=theta,state.init=current.state,times=times)
+            traj <- fitmodel$simulate(theta=theta,init.state=current.state,times=times)
 
             # compute particle weight
             model.point <- unlist(traj[2,fitmodel$state.names])
@@ -159,7 +159,7 @@ particleFilter <- function(fitmodel, theta, state.init, data, n.particles, progr
 #             current.state.particle <- unlist(state.particles[p])
 
 #             # simulate from current observation time to next observation time
-#             traj <- fitmodel$simulate(theta=theta,state.init=current.state.particle,times=c(current.time,next.time))
+#             traj <- fitmodel$simulate(theta=theta,init.state=current.state.particle,times=c(current.time,next.time))
 
 #             # compute particle weight
 #             weight.particles[p] <- exp(fitmodel$pointLogLike( data=data, simu.traj=traj, theta= theta))

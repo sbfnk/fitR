@@ -4,7 +4,7 @@ example(SEITL_deter)
 SEITL_sto_name <- "stochastic SEITL model with daily incidence and constant population size"
 
 # Simulate realisation of the stochastic version of the SEITL model.
-SEITL_simulateStochastic <- function(theta,state.init,times) {
+SEITL_simulateStochastic <- function(theta,init.state,times) {
 
 	
 	SEITL_transitions <- list(
@@ -44,10 +44,10 @@ SEITL_simulateStochastic <- function(theta,state.init,times) {
 		)
 	}
 
-	# put incidence at 0 in state.init
-	state.init["Inc"] <- 0
+	# put incidence at 0 in init.state
+	init.state["Inc"] <- 0
 
-	traj <- simulateModelStochastic(theta,state.init,times,SEITL_transitions,SEITL_rateFunc) 
+	traj <- simulateModelStochastic(theta,init.state,times,SEITL_transitions,SEITL_rateFunc) 
 	
 	# compute incidence of each time interval
 	traj <- mutate(traj,Inc=c(0,diff(Inc)))

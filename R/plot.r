@@ -120,14 +120,14 @@ plotTraj <- function(traj=NULL, state.names=NULL, data=NULL, summary=TRUE, p.ext
 #'     \item \code{simulations} \code{data.frame} of \code{n.replicates} simulated observations.
 #'     \item \code{plot} the plot of the fit.
 #' }
-plotFit <- function(fitmodel, theta, state.init, data, n.replicates=1, summary=TRUE, alpha=min(1,10/n.replicates), all.vars=FALSE, p.extinction=FALSE, plot=TRUE) {
+plotFit <- function(fitmodel, theta, init.state, data, n.replicates=1, summary=TRUE, alpha=min(1,10/n.replicates), all.vars=FALSE, p.extinction=FALSE, plot=TRUE) {
 
     times <- c(0, data$time)
 
     if (n.replicates > 1) {
         cat("Simulate ",n.replicates," replicate(s)\n")
     }
-    traj <- simulateModelReplicates(fitmodel=fitmodel,theta=theta, state.init=state.init, times=times, n=n.replicates, observation=TRUE)
+    traj <- simulateModelReplicates(fitmodel=fitmodel,theta=theta, init.state=init.state, times=times, n=n.replicates, observation=TRUE)
 
     if(all.vars){
         state.names <- NULL
@@ -251,7 +251,7 @@ plotPosteriorTheta <- function(trace, estimated.only = FALSE){
 #'    \item \code{posterior.traj} a \code{data.frame} with the trajectories (and observations) sampled from the posterior distribution.
 #'    \item \code{plot} the plot of the fit displayed.
 #'}
-plotPosteriorFit <- function(trace, fitmodel, state.init, data, posterior.summary=c("sample","median","mean","max"), summary=TRUE, sample.size = 100, alpha=min(1,10/sample.size), plot=TRUE, all.vars = FALSE) {
+plotPosteriorFit <- function(trace, fitmodel, init.state, data, posterior.summary=c("sample","median","mean","max"), summary=TRUE, sample.size = 100, alpha=min(1,10/sample.size), plot=TRUE, all.vars = FALSE) {
 
     posterior.summary <- match.arg(posterior.summary)
 
@@ -267,17 +267,17 @@ plotPosteriorFit <- function(trace, fitmodel, state.init, data, posterior.summar
     if(posterior.summary=="median"){
 
         theta.median <- apply(trace[theta.names],2,median)
-        traj <- simulateModelReplicates(fitmodel=fitmodel,state.init=state.init, theta=theta.median,times=times,n=sample.size,observation=TRUE)
+        traj <- simulateModelReplicates(fitmodel=fitmodel,init.state=init.state, theta=theta.median,times=times,n=sample.size,observation=TRUE)
 
     } else if(posterior.summary=="mean"){
 
         theta.mean <- apply(trace[theta.names],2,mean)
-        traj <- simulateModelReplicates(fitmodel=fitmodel,state.init=state.init, theta=theta.mean,times=times,n=sample.size,observation=TRUE)
+        traj <- simulateModelReplicates(fitmodel=fitmodel,init.state=init.state, theta=theta.mean,times=times,n=sample.size,observation=TRUE)
 
     } else if(posterior.summary=="max"){
         ind <- which.max(trace$log.posterior)
         theta.max <- trace[ind,theta.names]
-        traj <- simulateModelReplicates(fitmodel=fitmodel,state.init=state.init, theta=theta.max,times=times,n=sample.size,observation=TRUE)
+        traj <- simulateModelReplicates(fitmodel=fitmodel,init.state=init.state, theta=theta.max,times=times,n=sample.size,observation=TRUE)
 
     } else {
 
@@ -292,7 +292,7 @@ plotPosteriorFit <- function(trace, fitmodel, state.init, data, posterior.summar
             theta <- trace[ind,theta.names]
 
             # simulate model at successive observation times of data
-            traj <- genObsTraj(fitmodel, theta, state.init, times)
+            traj <- genObsTraj(fitmodel, theta, init.state, times)
 
             return(traj)
         },.progress="text",.id="replicate")

@@ -2,14 +2,14 @@
 #'
 #'Solves the system of ordinary differential equations for the SEITL model using the \code{\link[deSolve]{ode}} function.
 #' @param theta named numeric vector. Parameter values. Must include the following parameters: "R0", "D.lat", "D.inf", "alpha", "D.imm" and "rho"
-#' @param state.init named numeric vector. Initial state of the SEITL model. Must include the following states: "S", "E", "I", "T", "L" and "Inc".
-#' @param times numeric vector. Time sequence for which state of the model is wanted; the first value of times must be the initial time, i.e. the time of \code{state.init}.
+#' @param init.state named numeric vector. Initial state of the SEITL model. Must include the following states: "S", "E", "I", "T", "L" and "Inc".
+#' @param times numeric vector. Time sequence for which state of the model is wanted; the first value of times must be the initial time, i.e. the time of \code{init.state}.
 #' @export
-#' @note The incidence \code{state.init[["Inc"]]} will be set to 0 at the start of the simulation and computed for each time interval of the vector \code{times}.
+#' @note The incidence \code{init.state[["Inc"]]} will be set to 0 at the start of the simulation and computed for each time interval of the vector \code{times}.
 #' For instance, if \code{times} contains daily time steps, then the returned data frame will contain daily incidence. 
 #' @import deSolve plyr
 #' @return a \code{data.fame} containing the simulated trajectories that is the values of the state variables (1 per column) at each observation time (1 per row). The first column is \code{time}.
-SEITL_simulateDeterministic <- function(theta,state.init,times) {
+SEITL_simulateDeterministic <- function(theta,init.state,times) {
 
 	SEITL_ode <- function(time, state, theta) {
 
@@ -41,10 +41,10 @@ SEITL_simulateDeterministic <- function(theta,state.init,times) {
 	}
 
 
-	# put incidence at 0 in state.init
-	state.init["Inc"] <- 0
+	# put incidence at 0 in init.state
+	init.state["Inc"] <- 0
 
-	traj <- as.data.frame(ode(state.init, times, SEITL_ode, theta, method = "ode45"))
+	traj <- as.data.frame(ode(init.state, times, SEITL_ode, theta, method = "ode45"))
 
 	# compute incidence of each time interval
 	traj <- mutate(traj,Inc=c(0,diff(Inc)))
@@ -57,13 +57,13 @@ SEITL_simulateDeterministic <- function(theta,state.init,times) {
 #'
 #'Simulate realisation of the stochastic version of the SEITL model using the \code{\link{simulateModelStochastic}} function.
 #' @inheritParams SEITL_simulateDeterministic
-#' @note The incidence \code{state.init[["Inc"]]} will be set to 0 at the start of the simulation and computed for each time interval of the vector \code{times}.
+#' @note The incidence \code{init.state[["Inc"]]} will be set to 0 at the start of the simulation and computed for each time interval of the vector \code{times}.
 #' For instance, if \code{times} contains daily time steps, then the returned data frame will contain daily incidence. 
 #' @import plyr
 #' @export
 #' @seealso \code{\link{fitmodel}}, \code{\link{simulateModelStochastic}}
 #' @return a \code{data.fame} containing the simulated trajectories that is the values of the state variables (1 per column) at each observation time (1 per row). The first column is \code{time}.
-SEITL_simulateStochastic <- function(theta,state.init,times) {
+SEITL_simulateStochastic <- function(theta,init.state,times) {
 
 	
 	SEITL_transitions <- list(
@@ -103,10 +103,10 @@ SEITL_simulateStochastic <- function(theta,state.init,times) {
 		)
 	}
 
-	# put incidence at 0 in state.init
-	state.init["Inc"] <- 0
+	# put incidence at 0 in init.state
+	init.state["Inc"] <- 0
 
-	traj <- simulateModelStochastic(theta,state.init,times,SEITL_transitions,SEITL_rateFunc) 
+	traj <- simulateModelStochastic(theta,init.state,times,SEITL_transitions,SEITL_rateFunc) 
 	
 	# compute incidence of each time interval
 	traj <- mutate(traj,Inc=c(0,diff(Inc)))

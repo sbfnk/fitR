@@ -4,7 +4,7 @@ example(SEITL_deter)
 SEIT2L_deter_name <- "deterministic SEIT2L model with daily incidence and constant population size"
 SEIT2L_state.names <- c("S","E","I","T1", "T2","L","Inc")
 
-SEIT2L_simulateDeterministic <- function(theta,state.init,times) {
+SEIT2L_simulateDeterministic <- function(theta,init.state,times) {
 
 	SEIT2L_ode <- function(time, state, theta) {
 
@@ -38,10 +38,10 @@ SEIT2L_simulateDeterministic <- function(theta,state.init,times) {
 	}
 
 
-	# put incidence at 0 in state.init
-	state.init["Inc"] <- 0
+	# put incidence at 0 in init.state
+	init.state["Inc"] <- 0
 
-	traj <- as.data.frame(ode(state.init, times, SEIT2L_ode, theta, method = "ode45"))
+	traj <- as.data.frame(ode(init.state, times, SEIT2L_ode, theta, method = "ode45"))
 
 	# compute incidence of each time interval
 	traj <- mutate(traj,Inc=c(0,diff(Inc)))

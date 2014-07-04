@@ -4,7 +4,7 @@ SIR_name <- "SIR with constant population size"
 SIR_state.names <- c("S","I","R")
 SIR_theta.names <- c("R0","D.inf")
 
-SIR_simulateDeterministic <- function(theta,state.init,times) {
+SIR_simulateDeterministic <- function(theta,init.state,times) {
 
         SIR_ode <- function(time, state, parameters) {
 
@@ -26,7 +26,7 @@ SIR_simulateDeterministic <- function(theta,state.init,times) {
                 return(list(c(dS, dI, dR)))
         }
 
-	trajectory <- data.frame(ode(y=state.init,times=times,func=SIR_ode,parms=theta, method = "ode45"))
+	trajectory <- data.frame(ode(y=init.state,times=times,func=SIR_ode,parms=theta, method = "ode45"))
 
 	return(trajectory)
 }
@@ -70,9 +70,9 @@ SIR <- fitmodel(
 
 ## test them
 theta <- c(R0 = 3, D.inf = 2)
-state.init <- c(S = 999, I = 1, R = 0)
+init.state <- c(S = 999, I = 1, R = 0)
 data(epi)
 
 ## SIR
-## testFitmodel(fitmodel=SIR, theta=theta, state.init=state.init, data= epi1, verbose=TRUE)
+## testFitmodel(fitmodel=SIR, theta=theta, init.state=init.state, data= epi1, verbose=TRUE)
 

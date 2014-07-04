@@ -3,12 +3,12 @@
 \alias{simulateModelStochastic}
 \title{Simulate forward a stochastic model}
 \usage{
-simulateModelStochastic(theta, state.init, times, transitions, rateFunc)
+simulateModelStochastic(theta, init.state, times, transitions, rateFunc)
 }
 \arguments{
 \item{theta}{named vector of model parameters.}
 
-\item{state.init}{named vector of initial state of the model.}
+\item{init.state}{named vector of initial state of the model.}
 
 \item{times}{time sequence for which state of the model is wanted; the first value of times must be the initial time.}
 
@@ -44,7 +44,7 @@ simulateModelStochastic(theta, state.init, times, transitions, rateFunc)
   }
 }
 \value{
-a data.frame of dimension \code{length(times)x(length(state.init)+1)} with column names equal to \code{c("time",names(state.init))}.
+a data.frame of dimension \code{length(times)x(length(init.state)+1)} with column names equal to \code{c("time",names(init.state))}.
 }
 \description{
 This function uses the function \code{\link[adaptivetau]{ssa.adaptivetau}} to simulate the model and returns the trajectories in a valid format for the class \code{\link{fitmodel}}.

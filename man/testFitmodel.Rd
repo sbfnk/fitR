@@ -3,14 +3,14 @@
 \alias{testFitmodel}
 \title{Test a fitmodel}
 \usage{
-testFitmodel(fitmodel, theta, state.init, data = NULL, verbose = TRUE)
+testFitmodel(fitmodel, theta, init.state, data = NULL, verbose = TRUE)
 }
 \arguments{
 \item{fitmodel}{a \code{\link{fitmodel}} object}
 
 \item{theta}{named numeric vector. Values of the parameters. Names should match \code{fitmodel$theta.names}.}
 
-\item{state.init}{named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.}
+\item{init.state}{named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.}
 
 \item{data}{data frame. Observation times and observed data. The time column must be named \code{"time"} and the observation column must be named \code{"obs"}.}
 
@@ -27,7 +27,7 @@ SIR_name <- "SIR with constant population size"
 SIR_state.names <- c("S","I","R")
 SIR_theta.names <- c("R0","D.inf")
 
-SIR_simulateDeterministic <- function(theta,state.init,times) {
+SIR_simulateDeterministic <- function(theta,init.state,times) {
 
         SIR_ode <- function(time, state, parameters) {
 
@@ -49,7 +49,7 @@ SIR_simulateDeterministic <- function(theta,state.init,times) {
                 return(list(c(dS, dI, dR)))
         }
 
-	trajectory <- data.frame(ode(y=state.init,times=times,func=SIR_ode,parms=theta, method = "ode45"))
+	trajectory <- data.frame(ode(y=init.state,times=times,func=SIR_ode,parms=theta, method = "ode45"))
 
 	return(trajectory)
 }
@@ -93,11 +93,11 @@ SIR <- fitmodel(
 
 ## test them
 theta <- c(R0 = 3, D.inf = 2)
-state.init <- c(S = 999, I = 1, R = 0)
+init.state <- c(S = 999, I = 1, R = 0)
 data(epi)
 
 ## SIR
-## testFitmodel(fitmodel=SIR, theta=theta, state.init=state.init, data= epi1, verbose=TRUE)
+## testFitmodel(fitmodel=SIR, theta=theta, init.state=init.state, data= epi1, verbose=TRUE)
 
 }
 \seealso{

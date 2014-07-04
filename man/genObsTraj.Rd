@@ -3,7 +3,7 @@
 \alias{genObsTraj}
 \title{Generate an observation trajectory for a fitmodel}
 \usage{
-genObsTraj(fitmodel, theta, state.init, times)
+genObsTraj(fitmodel, theta, init.state, times)
 }
 \arguments{
 \item{times}{the times at which to generate observations}
@@ -12,7 +12,7 @@ genObsTraj(fitmodel, theta, state.init, times)
 
 \item{theta}{named numeric vector. Values of the parameters. Names should match \code{fitmodel$theta.names}.}
 
-\item{state.init}{named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.}
+\item{init.state}{named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.}
 }
 \value{
 numeric value of the log-likelihood

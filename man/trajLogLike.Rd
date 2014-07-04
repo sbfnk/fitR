@@ -3,14 +3,14 @@
 \alias{trajLogLike}
 \title{Log-likelihood of a trajectory for a deterministic model}
 \usage{
-trajLogLike(fitmodel, theta, state.init, data)
+trajLogLike(fitmodel, theta, init.state, data)
 }
 \arguments{
 \item{fitmodel}{a \code{\link{fitmodel}} object}
 
 \item{theta}{named numeric vector. Values of the parameters. Names should match \code{fitmodel$theta.names}.}
 
-\item{state.init}{named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.}
+\item{init.state}{named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.}
 
 \item{data}{data frame. Observation times and observed data. The time column must be named \code{"time"} and the observation column must be named \code{"obs"}.}
 }

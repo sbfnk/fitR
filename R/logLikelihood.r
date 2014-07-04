@@ -7,13 +7,13 @@
 #' @export
 #' @seealso \code{\link{genObsTraj}}
 #' @return numeric value of the log-likelihood
-trajLogLike <- function(fitmodel, theta, state.init, data) {
+trajLogLike <- function(fitmodel, theta, init.state, data) {
 
 	# time sequence (must include initial time)
 	times <- c(0,data$time)
 
 	# simulate model at successive observation times of data
-	traj <- fitmodel$simulate(theta,state.init,times)
+	traj <- fitmodel$simulate(theta,init.state,times)
 
 	logLike <- 0
 
@@ -42,10 +42,10 @@ trajLogLike <- function(fitmodel, theta, state.init, data) {
 #' @export
 #' @seealso particleFilter
 #' @return Monte-Carlo estimate of the marginal log-likelihood of \code{theta}
-margLogLikeSto <- function(fitmodel, theta, state.init, data, n.particles, n.cores = 1) {
+margLogLikeSto <- function(fitmodel, theta, init.state, data, n.particles, n.cores = 1) {
 
 	# run SMC
-	smc <- particleFilter(fitmodel=fitmodel, theta=theta, state.init=state.init, data=data, n.particles=n.particles, n.cores=n.cores)
+	smc <- particleFilter(fitmodel=fitmodel, theta=theta, init.state=init.state, data=data, n.particles=n.particles, n.cores=n.cores)
 
 	return(smc$margLogLike)
 }
@@ -63,12 +63,12 @@ margLogLikeSto <- function(fitmodel, theta, state.init, data, n.particles, n.cor
 #' 	\item \code{log.density} numeric, logged value of the posterior density evaluated at \code{theta}
 #' 	\item \code{trace} named vector with trace information (theta, log.prior, marg.log.like, log.posterior)
 #' }
-logPosterior <- function(fitmodel, theta, state.init, data, margLogLike = trajLogLike, ...) {
+logPosterior <- function(fitmodel, theta, init.state, data, margLogLike = trajLogLike, ...) {
 
 	log.prior <- fitmodel$logPrior(theta=theta)
 
 	if(is.finite(log.prior)){
-		log.likelihood <- margLogLike(fitmodel=fitmodel, theta=theta, state.init=state.init, data=data, ...)
+		log.likelihood <- margLogLike(fitmodel=fitmodel, theta=theta, init.state=init.state, data=data, ...)
 	}else{
 		# do not compute log-likelihood (theta prior is 0)
 		log.likelihood  <-  -Inf
@@ -90,10 +90,10 @@ logPosterior <- function(fitmodel, theta, state.init, data, margLogLike = trajLo
 #' @export
 #' @seealso \code{\link{trajLogLike}}
 #' @return numeric value of the log-likelihood
-genObsTraj <- function(fitmodel, theta, state.init, times) {
+genObsTraj <- function(fitmodel, theta, init.state, times) {
 
         ## simulate model at successive observation times of data
-	traj <- fitmodel$simulate(theta, state.init, times)
+	traj <- fitmodel$simulate(theta, init.state, times)
 
         ## generate observations by applying fitmodel$genObsPoint to
         ## each row of traj. The parameter value theta as passed as

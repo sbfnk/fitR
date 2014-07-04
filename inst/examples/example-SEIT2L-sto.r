@@ -5,7 +5,7 @@ SEIT2L_sto_name <- "stochastic SEIT2L model with daily incidence and constant po
 SEIT2L_state.names <- c("S","E","I","T1", "T2","L","Inc")
 
 # Simulate realisation of the stochastic version of the SEIT2L model.
-SEIT2L_simulateStochastic <- function(theta,state.init,times) {
+SEIT2L_simulateStochastic <- function(theta,init.state,times) {
 
 	
 	SEIT2L_transitions <- list(
@@ -48,10 +48,10 @@ SEIT2L_simulateStochastic <- function(theta,state.init,times) {
 		)
 	}
 
-	# put incidence at 0 in state.init
-	state.init["Inc"] <- 0
+	# put incidence at 0 in init.state
+	init.state["Inc"] <- 0
 
-	traj <- simulateModelStochastic(theta,state.init,times,SEIT2L_transitions,SEIT2L_rateFunc) 
+	traj <- simulateModelStochastic(theta,init.state,times,SEIT2L_transitions,SEIT2L_rateFunc) 
 	
 	# compute incidence of each time interval
 	traj <- mutate(traj,Inc=c(0,diff(Inc)))

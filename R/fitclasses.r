@@ -7,8 +7,8 @@
 #' @param simulate \R-function to simulate forward the model (required). This function takes 3 arguments:
 #' \itemize{
 #' \item \code{theta} named numeric vector. Values of the parameters. Names should match \code{theta.names}. 
-#' \item \code{state.init} named numeric vector. Initial values of the state variables. Names should match \code{state.names}. 
-#' \item \code{times} numeric vector. Time sequence for which the state of the model is wanted; the first value of times must be the initial time, i.e. the time of \code{state.init}.
+#' \item \code{init.state} named numeric vector. Initial values of the state variables. Names should match \code{state.names}. 
+#' \item \code{times} numeric vector. Time sequence for which the state of the model is wanted; the first value of times must be the initial time, i.e. the time of \code{init.state}.
 #' }
 #' and returns a \code{data.fame} containing the simulated trajectories that is the values of the state variables (1 per column) at each observation time (1 per row). The first column is \code{time}.
 #' @param genObsPoint \R-function that generates a (randomly sampled) observation point from a model point, using an observation model (optional). It thus acts as an inverse of \code{pointLogLike} (see below). This function takes 2 arguments
@@ -35,7 +35,7 @@
 #' 	\item \code{name} character, name of the model
 #' 	\item \code{state.names} vector, names of the state variables.
 #' 	\item \code{theta.names} vector, names of the parameters.
-#' 	\item \code{simulate} \R-function to simulate forward the model; usage: \code{simulate(theta,state.init,times)}.
+#' 	\item \code{simulate} \R-function to simulate forward the model; usage: \code{simulate(theta,init.state,times)}.
 #' 	\item \code{genObsPoint} \R-function to generate simulated observations; usage: \code{genObsPoint(model.point, theta)}.
 #' 	\item \code{logPrior} \R-function to evaluate the log-prior of the parameter values; usage: \code{logPrior(theta)}.
 #' 	\item \code{pointLogLike} \R-function to evaluate the log-likelihood of one data point; usage: \code{pointLogLike(data.point, model.point, theta)}.
@@ -87,13 +87,13 @@ fitmodel <- function(name=NULL, state.names=NULL, theta.names=NULL, simulate=NUL
 #'available in the \code{fitR} package. The latters can be used as a correction.
 #' @param fitmodel a \code{\link{fitmodel}} object
 #' @param theta named numeric vector. Values of the parameters. Names should match \code{fitmodel$theta.names}.
-#' @param state.init named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.
+#' @param init.state named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.
 #' @param data data frame. Observation times and observed data. The time column must be named \code{"time"} and the observation column must be named \code{"obs"}.
 #' @param verbose if \code{TRUE}, print details of the test performed to check validity of the arguments
 #' @export
 #' @seealso \code{\link{fitmodel}}
 #' @example inst/examples/example-fitmodel.r
-testFitmodel <- function(fitmodel, theta, state.init, data = NULL, verbose=TRUE) {
+testFitmodel <- function(fitmodel, theta, init.state, data = NULL, verbose=TRUE) {
 
         if (missing(fitmodel)) { stop(sQuote("fitmodel"), " argument missing\n") }
 	if(!inherits(fitmodel,"fitmodel")){
@@ -117,21 +117,21 @@ testFitmodel <- function(fitmodel, theta, state.init, data = NULL, verbose=TRUE)
 		cat("--> ",sQuote("theta")," argument looks good!\n")
 	}
 
-	## test of state.init
-        if (missing(state.init)) { stop(sQuote("state.init"), " argument missing\n") }
+	## test of init.state
+        if (missing(init.state)) { stop(sQuote("init.state"), " argument missing\n") }
 	if(verbose){
-		cat("--- checking ", sQuote("state.init"), "argument\n")
+		cat("--- checking ", sQuote("init.state"), "argument\n")
 		cat("Should contain the states:",sQuote(fitmodel$state.names),"\nTest:\n")
-		print(state.init)
+		print(init.state)
 	}
-	if(length(x <- setdiff(fitmodel$state.names, names(state.init)))){
-		stop("The following states are missing in argument ",sQuote("state.init"),": ",sQuote(x), call.=FALSE)
+	if(length(x <- setdiff(fitmodel$state.names, names(init.state)))){
+		stop("The following states are missing in argument ",sQuote("init.state"),": ",sQuote(x), call.=FALSE)
 	}
-	if(length(x <- setdiff(names(state.init), fitmodel$state.names))){
+	if(length(x <- setdiff(names(init.state), fitmodel$state.names))){
 		stop("The following states are not in ",sQuote("fitmodel$state.names"),": ",sQuote(x), call.=FALSE)
 	}	
 	if(verbose){
-		cat("--> ",sQuote("state.init")," argument looks good!\n")
+		cat("--> ",sQuote("init.state")," argument looks good!\n")
 	}
 
 	test.traj <- NULL
@@ -142,17 +142,17 @@ testFitmodel <- function(fitmodel, theta, state.init, data = NULL, verbose=TRUE)
 			cat("--- checking simulate\n")
 		}
                 ## check arguments
-		fun_args <- c("theta","state.init","times")
+		fun_args <- c("theta","init.state","times")
 		if(!(all(x <- fun_args%in%names(formals(fitmodel$simulate))))){
 			stop("argument(s) ",sQuote(fun_args[!x])," missing in function simulate, see ?fitmodel.")
 		}
 
-		if (!is.null(state.init)) {
+		if (!is.null(init.state)) {
 			times <- 0:10
-			test.traj <- fitmodel$simulate(theta=theta,state.init=state.init,times=times)
+			test.traj <- fitmodel$simulate(theta=theta,init.state=init.state,times=times)
 			# must return a data.frame of dimension 11x(length(state.names)+1)
 			if(verbose){
-				cat("simulate(theta, state.init, times=0:10) should return a non-negative data.frame of dimension",length(times),"x",length(fitmodel$state.names)+1,"with column names:",sQuote(c("time",fitmodel$state.names)),"\nTest:\n")
+				cat("simulate(theta, init.state, times=0:10) should return a non-negative data.frame of dimension",length(times),"x",length(fitmodel$state.names)+1,"with column names:",sQuote(c("time",fitmodel$state.names)),"\nTest:\n")
 				print(test.traj)
 			}
 			if(!is.data.frame(test.traj)){
@@ -174,7 +174,7 @@ testFitmodel <- function(fitmodel, theta, state.init, data = NULL, verbose=TRUE)
 				cat("--> simulate looks good!\n")
 			}
 		} else {
-			warning("state.init not given, not creating test trajectory\n")
+			warning("init.state not given, not creating test trajectory\n")
 		}
 	} else {
 		warning("fitmodel does not contain a simulate method -- not tested\n")

@@ -3,7 +3,7 @@
 \alias{plotPosteriorFit}
 \title{Plot MCMC posterior fit}
 \usage{
-plotPosteriorFit(trace, fitmodel, state.init, data,
+plotPosteriorFit(trace, fitmodel, init.state, data,
   posterior.summary = c("sample", "median", "mean", "max"), summary = TRUE,
   sample.size = 100, alpha = min(1, 10/sample.size), plot = TRUE,
   all.vars = FALSE)
@@ -17,7 +17,7 @@ plotPosteriorFit(trace, fitmodel, state.init, data,
 
 \item{fitmodel}{a \code{\link{fitmodel}} object}
 
-\item{state.init}{named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.}
+\item{init.state}{named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.}
 
 \item{data}{data frame. Observation times and observed data. The time column must be named \code{"time"} and the observation column must be named \code{"obs"}.}
 

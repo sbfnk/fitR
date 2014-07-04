@@ -7,7 +7,7 @@ example(SIR)
 
 SIR_stochastic_name <- "stochastic SIR with constant population size"
 
-SIR_simulateStochastic <- function(theta,state.init,times) {
+SIR_simulateStochastic <- function(theta,init.state,times) {
 
         ## transitions
         SIR_transitions <- list(
@@ -35,7 +35,7 @@ SIR_simulateStochastic <- function(theta,state.init,times) {
 
         # make use of the function simulateModelStochastic that
         # returns trajectories in the correct format
-	return(simulateModelStochastic(theta,state.init,times,SIR_transitions,SIR_rateFunc))
+	return(simulateModelStochastic(theta,init.state,times,SIR_transitions,SIR_rateFunc))
 
 }
 
@@ -51,9 +51,9 @@ SIR_stoch <- fitmodel(
 
 # test it
 theta <- c(R0=3, D=4)
-state.init <- c(S=99,I=1,R=0)
+init.state <- c(S=99,I=1,R=0)
 
 # SIR_stoch
-# testFitmodel(fitmodel=SIR_stoch, theta=theta, state.init=state.init, data= data, verbose=TRUE)
+# testFitmodel(fitmodel=SIR_stoch, theta=theta, init.state=init.state, data= data, verbose=TRUE)
 
 

@@ -2,16 +2,16 @@
 #'
 #' This function uses the function \code{\link[adaptivetau]{ssa.adaptivetau}} to simulate the model and returns the trajectories in a valid format for the class \code{\link{fitmodel}}.
 #' @param theta named vector of model parameters.
-#' @param state.init named vector of initial state of the model.
+#' @param init.state named vector of initial state of the model.
 #' @param times time sequence for which state of the model is wanted; the first value of times must be the initial time.
 #' @inheritParams adaptivetau::ssa.adaptivetau
 #' @export
 #' @import adaptivetau
-#' @return a data.frame of dimension \code{length(times)x(length(state.init)+1)} with column names equal to \code{c("time",names(state.init))}.
-simulateModelStochastic <- function(theta,state.init,times,transitions,rateFunc) {
+#' @return a data.frame of dimension \code{length(times)x(length(init.state)+1)} with column names equal to \code{c("time",names(init.state))}.
+simulateModelStochastic <- function(theta,init.state,times,transitions,rateFunc) {
 
 
-    stoch <- as.data.frame(ssa.adaptivetau(state.init,transitions,rateFunc,theta,tf=diff(range(times))))
+    stoch <- as.data.frame(ssa.adaptivetau(init.state,transitions,rateFunc,theta,tf=diff(range(times))))
 
     # rescale time as absolute value
     stoch$time <- stoch$time + min(times)
@@ -34,8 +34,8 @@ simulateModelStochastic <- function(theta,state.init,times,transitions,rateFunc)
 #' @inheritParams testFitmodel
 #' @export
 #' @import plyr
-#' @return a data.frame of dimension \code{[nxlength(times)]x[length(state.init)+2]} with column names equal to \code{c("replicate","time",names(state.init))}.
-simulateModelReplicates <- function(fitmodel,theta, state.init, times, n, observation=FALSE) {
+#' @return a data.frame of dimension \code{[nxlength(times)]x[length(init.state)+2]} with column names equal to \code{c("replicate","time",names(init.state))}.
+simulateModelReplicates <- function(fitmodel,theta, init.state, times, n, observation=FALSE) {
 
     stopifnot(inherits(fitmodel,"fitmodel"),n>0)
 
@@ -55,9 +55,9 @@ simulateModelReplicates <- function(fitmodel,theta, state.init, times, n, observ
     traj.rep <- ldply(rep,function(x) {
 
         if(observation){
-            traj <- genObsTraj(fitmodel, theta, state.init, times)
+            traj <- genObsTraj(fitmodel, theta, init.state, times)
         } else {
-            traj <- fitmodel$simulate(theta,state.init,times)
+            traj <- fitmodel$simulate(theta,init.state,times)
         }
 
         return(traj)
