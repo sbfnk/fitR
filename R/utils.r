@@ -112,17 +112,21 @@ updateCovmat <- function(covmat,theta.mean,theta,i) {
 #'Burn and thin MCMC chain
 #'
 #'Return a burned and thined trace of the chain.
-#' @param trace either a \code{data.frame} with all variables in column, as outputed by \code{\link{mcmcMH}}, or an \code{mcmc} or \code{mcmc.list} object.
+#' @param trace either a \code{data.frame} or a \code{list} of \code{data.frame} with all variables in column, as outputed by \code{\link{mcmcMH}}. Accept also an \code{mcmc} or \code{mcmc.list} object.
 #' @param burn proportion of the chain to burn.
 #' @param thin number of samples to discard per sample that is being kept
 #' @export
 #' @import coda
-#' @return an \code{mcmc} or \code{mcmc.list} object
+#' @return an object with the same format as \code{trace} (\code{data.frame} or \code{list} of \code{data.frame} or \code{mcmc} object or \code{mcmc.list} object)
 burnAndThin <- function(trace, burn = 0, thin = 0) {
 
+    convert_to_mcmc <- FALSE
+
     if(class(trace)=="mcmc"){
+        convert_to_mcmc <- TRUE
         trace <- as.data.frame(trace)
     } else if(class(trace)=="mcmc.list"){
+        convert_to_mcmc <- TRUE
         trace <- as.list(trace)
     }
 
@@ -135,6 +139,10 @@ burnAndThin <- function(trace, burn = 0, thin = 0) {
         # thin
         trace <- trace[seq(1, nrow(trace), thin + 1), ]
 
+        if(convert_to_mcmc){
+            trace <- mcmc(trace)
+        }
+
     } else {
 
         trace <- lapply(trace, function(x) {
@@ -146,10 +154,16 @@ burnAndThin <- function(trace, burn = 0, thin = 0) {
             # thin
             x <- x[seq(1, nrow(x), thin + 1), ]
 
-            return(mcmc(x))
+            if(convert_to_mcmc){
+                x <- mcmc(x)
+            }
+
+            return(x)
         }) 
 
-        trace <- mcmc.list(trace)
+        if(convert_to_mcmc){
+            trace <- mcmc.list(trace)            
+        }
     }
 
     return(trace)
