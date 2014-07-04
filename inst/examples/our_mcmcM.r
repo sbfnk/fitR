@@ -2,19 +2,19 @@
 ## This is a function that takes four parameters:
 ## - target: the target distribution, a function that takes one argument
 ##           (a vector) and returns the (logged) value of a distribution
-## - theta.init: the initial value of theta, a named vector
+## - init.theta: the initial value of theta, a named vector
 ## - covmat.proposal: the covariance matrix of the (Gaussian) proposal distribution,
 ##                    in the same order as in the "target" vector
 ## - n.iterations: the number of iterations
 ## it returns an MCMC trace (value of theta and target(theta) at every MCMC step)
 
-our_mcmcM <- function(target, theta.init, covmat.proposal, n.iterations) {
+our_mcmcM <- function(target, init.theta, covmat.proposal, n.iterations) {
 
     ## initialise theta
-    theta.current <- theta.init
-    theta.proposed <- theta.init
+    theta.current <- init.theta
+    theta.proposed <- init.theta
 
-    ## evaluate the function "target" at "theta.init", and assign to 
+    ## evaluate the function "target" at "init.theta", and assign to 
     ## a variable called target.theta.current
     target.theta.current <- target(theta.current)
 

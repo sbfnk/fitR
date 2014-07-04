@@ -15,7 +15,7 @@ test_that("mcmcMH for deterministic SEITL model",{
 	}
 
 	# default covariance matrix
-	suppressMessages(ans <- mcmcMH(target=target, theta.init=theta, n.iterations=100, adapt.size.start=10, adapt.size.cooling=0.99, adapt.shape.start=10, print.info.every=NULL))
+	suppressMessages(ans <- mcmcMH(target=target, init.theta=theta, n.iterations=100, adapt.size.start=10, adapt.size.cooling=0.99, adapt.shape.start=10, print.info.every=NULL))
 
 	expect_true(is.data.frame(ans$trace))
 	expect_true(is.numeric(ans$acceptance.rate))
@@ -38,7 +38,7 @@ test_that("mcmcMH for deterministic SEIT2L model",{
 	}
 
 	# default covariance matrix
-	suppressMessages(ans <- mcmcMH(target=target, theta.init=theta, n.iterations=100, adapt.size.start=10, adapt.size.cooling=0.99, adapt.shape.start=10, print.info.every=NULL))
+	suppressMessages(ans <- mcmcMH(target=target, init.theta=theta, n.iterations=100, adapt.size.start=10, adapt.size.cooling=0.99, adapt.shape.start=10, print.info.every=NULL))
 
 	expect_true(is.data.frame(ans$trace))
 	expect_true(is.numeric(ans$acceptance.rate))
@@ -61,7 +61,7 @@ test_that("mcmcMH for stochastic SEITL model",{
 	}
 
 	# default covariance matrix
-	suppressMessages(ans <- mcmcMH(target=target, theta.init=theta, n.iterations=100, adapt.size.start=10, adapt.size.cooling=0.99, adapt.shape.start=10, print.info.every=NULL))
+	suppressMessages(ans <- mcmcMH(target=target, init.theta=theta, n.iterations=100, adapt.size.start=10, adapt.size.cooling=0.99, adapt.shape.start=10, print.info.every=NULL))
 
 	expect_true(is.data.frame(ans$trace))
 	expect_true(is.numeric(ans$acceptance.rate))
@@ -85,7 +85,7 @@ test_that("mcmcMH for stochastic SEIT2L model",{
 	}
 
 	# default covariance matrix
-	suppressMessages(ans <- mcmcMH(target=target, theta.init=theta, n.iterations=100, adapt.size.start=10, adapt.size.cooling=0.99, adapt.shape.start=10, print.info.every=NULL))
+	suppressMessages(ans <- mcmcMH(target=target, init.theta=theta, n.iterations=100, adapt.size.start=10, adapt.size.cooling=0.99, adapt.shape.start=10, print.info.every=NULL))
 
 	expect_true(is.data.frame(ans$trace))
 	expect_true(is.numeric(ans$acceptance.rate))
@@ -99,9 +99,9 @@ test_that("mcmcMH for stochastic SEIT2L model",{
 
 # 	SEIT2L <- SEIT2L_createFitmodel(deterministic=TRUE, verbose=FALSE)
 
-# 	theta.init <- SEIT2L$theta
+# 	init.theta <- SEIT2L$theta
 
-# 	suppressMessages(ans <- mcmcMH(target=targetPosteriorABC, target.args=list(fitmodel=SEIT2L,epsilon=1), theta.init=theta.init, gaussian.proposal=SEIT2L$gaussian.proposal, n.iterations=100, adapt.size.start=10, adapt.size.cooling=0.99, adapt.shape.start=10, print.info.every=NULL))
+# 	suppressMessages(ans <- mcmcMH(target=targetPosteriorABC, target.args=list(fitmodel=SEIT2L,epsilon=1), init.theta=init.theta, gaussian.proposal=SEIT2L$gaussian.proposal, n.iterations=100, adapt.size.start=10, adapt.size.cooling=0.99, adapt.shape.start=10, print.info.every=NULL))
 
 # 	expect_true(is.data.frame(ans$trace))
 # 	expect_true(is.numeric(ans$acceptance.rate))

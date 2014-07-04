@@ -3,7 +3,7 @@
 \alias{mcmcMH}
 \title{Metropolis-Hasting MCMC}
 \usage{
-mcmcMH(target, theta.init, proposal.sd = NULL, n.iterations, covmat = NULL,
+mcmcMH(target, init.theta, proposal.sd = NULL, n.iterations, covmat = NULL,
   limits = list(lower = NULL, upper = NULL), adapt.size.start = NULL,
   adapt.size.cooling = 0.99, adapt.shape.start = NULL,
   print.info.every = n.iterations/100)
@@ -15,9 +15,9 @@ mcmcMH(target, theta.init, proposal.sd = NULL, n.iterations, covmat = NULL,
 \item \code{trace} a named numeric vector of values to be printed in the \code{trace} data.frame returned by \code{mcmcMH}.
 }}
 
-\item{theta.init}{named vector of initial parameter values to start the chain.}
+\item{init.theta}{named vector of initial parameter values to start the chain.}
 
-\item{proposal.sd}{vector of standard deviations. If this is given and covmat is not, a diagonal matrix will be built from this to use as covariance matrix of the multivariate Gaussian proposal distribution. By default, this is set to \code{theta.init/10}.}
+\item{proposal.sd}{vector of standard deviations. If this is given and covmat is not, a diagonal matrix will be built from this to use as covariance matrix of the multivariate Gaussian proposal distribution. By default, this is set to \code{init.theta/10}.}
 
 \item{covmat}{named numeric covariance matrix of the multivariate Gaussian proposal distribution. Must have named rows and columns with at least all estimated theta. If \code{proposal.sd} is given, this is ignored.}
 

@@ -7,8 +7,8 @@
 #' \item \code{log.density} the logged value of the target density, evaluated at \code{theta}.
 #' \item \code{trace} a named numeric vector of values to be printed in the \code{trace} data.frame returned by \code{mcmcMH}.
 #' }
-#' @param theta.init named vector of initial parameter values to start the chain.
-#' @param proposal.sd vector of standard deviations. If this is given and covmat is not, a diagonal matrix will be built from this to use as covariance matrix of the multivariate Gaussian proposal distribution. By default, this is set to \code{theta.init/10}.
+#' @param init.theta named vector of initial parameter values to start the chain.
+#' @param proposal.sd vector of standard deviations. If this is given and covmat is not, a diagonal matrix will be built from this to use as covariance matrix of the multivariate Gaussian proposal distribution. By default, this is set to \code{init.theta/10}.
 #' @param covmat named numeric covariance matrix of the multivariate Gaussian proposal distribution. Must have named rows and columns with at least all estimated theta. If \code{proposal.sd} is given, this is ignored.
 #' @param n.iterations number of iterations to run the MCMC chain.
 #' @param limits limits for the - potentially truncated - multi-variate normal proposal distribution of the MCMC. Contains 2 elements:
@@ -35,7 +35,7 @@
 #'      \item \code{acceptance.rate} acceptance rate of the MCMC chain.
 #'      \item \code{covmat.empirical} empirical covariance matrix of the target sample.
 #' }
-mcmcMH <- function(target, theta.init, proposal.sd = NULL,
+mcmcMH <- function(target, init.theta, proposal.sd = NULL,
                    n.iterations, covmat = NULL,
                    limits=list(lower = NULL, upper = NULL),
                    adapt.size.start = NULL, adapt.size.cooling = 0.99,
@@ -44,8 +44,8 @@ mcmcMH <- function(target, theta.init, proposal.sd = NULL,
 
 
     # initialise theta
-    theta.current <- theta.init
-    theta.propose <- theta.init
+    theta.current <- init.theta
+    theta.propose <- init.theta
 
     # extract theta of gaussian proposal
     covmat.proposal <- covmat
@@ -53,11 +53,11 @@ mcmcMH <- function(target, theta.init, proposal.sd = NULL,
     upper.proposal <- limits$upper
 
     # reorder vector and matrix by names, set to default if necessary
-    theta.names <- names(theta.init)
+    theta.names <- names(init.theta)
 
     if (is.null(covmat.proposal)) {
         if (is.null(proposal.sd)) {
-            proposal.sd <- theta.init/10
+            proposal.sd <- init.theta/10
         }
         covmat.proposal <-
             matrix(diag(proposal.sd^2, nrow = length(theta.names)),
@@ -68,14 +68,14 @@ mcmcMH <- function(target, theta.init, proposal.sd = NULL,
     }
 
     if (is.null(lower.proposal)) {
-        lower.proposal <- theta.init
+        lower.proposal <- init.theta
         lower.proposal[] <- -Inf
     } else {
         lower.proposal <- lower.proposal[theta.names]
     }
 
     if (is.null(upper.proposal)) {
-        upper.proposal <- theta.init
+        upper.proposal <- init.theta
         upper.proposal[] <- Inf
     } else {
         upper.proposal <- upper.proposal[theta.names]
