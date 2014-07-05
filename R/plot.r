@@ -211,29 +211,32 @@ plotTrace <- function(trace, estimated.only = FALSE){
 
 #'Plot MCMC posterior densities
 #'
-#'Plot the posterior density of all estimated variables.
-#' @inheritParams plotTrace
+#'Plot the posterior density.
+#' @inheritParams burnAndThin
 #' @export
 #' @import ggplot2 reshape2
 #' @seealso burnAndThin
-plotPosteriorTheta <- function(trace, estimated.only = FALSE){
+plotPosteriorDensity <- function(trace){
 
-    if(estimated.only){
-        is.fixed <- apply(trace,2,function(x) {length(unique(x))==1})
-        trace <- trace[,-which(is.fixed)]
+    if(class(trace)%in%c("mcmc.list","list")){
+        if(is.null(names(trace))){
+            names(trace) <- seq_along(trace)            
+        }
+        trace <- ldply(trace,.id="chain")
+    } else {
+        trace$chain <- 1
     }
 
-
-    df <- melt(trace,id.vars="iteration")
+    df <- melt(trace,id.vars="chain")
 
     # density
-    p <- ggplot(df,aes(x=value))+facet_wrap(~variable,scales="free")
-    p <- p+geom_histogram(aes(y=..density..),alpha=0.75)
-    p <- p+geom_density()
+    p <- ggplot(df,aes(x=value,colour=chain))+facet_wrap(~variable,scales="free")
+    p <- p+geom_density(aes(y=..scaled..))
+    # p <- p+geom_histogram(aes(y=..density..),colour=NA,alpha=0.5,position="identity")
+    p <- p+theme_bw()
     print(p)
 
 }
-
 
 #'Plot MCMC posterior fit
 #'
@@ -255,6 +258,9 @@ plotPosteriorFit <- function(trace, fitmodel, init.state, data, posterior.summar
 
     posterior.summary <- match.arg(posterior.summary)
 
+    if(class(trace)=="mcmc"){
+        trace <- as.data.frame(trace)
+    }
 
     # names of estimated theta
     theta.names <- fitmodel$theta.names
@@ -328,22 +334,26 @@ plotPosteriorFit <- function(trace, fitmodel, init.state, data, posterior.summar
 ##' @import coda ggplot2 reshape2
 plotESSBurn <- function(trace, longest.burn.in = nrow(trace) / 2, step.size = round(longest.burn.in / 50)) {
 
-        test.burn.in <- seq(0, longest.burn.in, step.size) # test values
-        # initialise data.frame of ess estimates
-        ess.burn.in <- data.frame(t(effectiveSize(trace)))
-        for (burn.in in test.burn.in[-1]) { # loop over all test values after 0
-                # test burn-in
-                test.trace <- burnAndThin(trace, burn = burn.in)
-                # estimate ESS and at to vector of ess estimates
-                ess.burn.in <- rbind(ess.burn.in, t(effectiveSize(mcmc(test.trace))))
-        }
-        ess.burn.in$burn.in <- test.burn.in
-        ess.long <- melt(ess.burn.in, id.vars = c("burn.in"),
-                         value.name = "ESS", variable.name = "parameter")
-        p <- ggplot(ess.long, aes(x = burn.in, y = ESS))
-        p <- p + facet_wrap(~ parameter)
-        p <- p + geom_line()
-        p <- p + theme_bw()
 
-        print(p)
+    test.burn.in <- seq(0, longest.burn.in, step.size) # test values
+
+    # initialise data.frame of ess estimates
+    ess.burn.in <- data.frame(t(effectiveSize(trace)))
+    for (burn.in in test.burn.in[-1]) { 
+    # loop over all test values after 0
+        # test burn-in
+        test.trace <- burnAndThin(trace, burn = burn.in)
+        # estimate ESS and at to vector of ess estimates
+        ess.burn.in <- rbind(ess.burn.in, t(effectiveSize(mcmc(test.trace))))
+    }
+    ess.burn.in$burn.in <- test.burn.in
+
+    ess.long <- melt(ess.burn.in, id.vars = c("burn.in"),value.name = "ESS", variable.name = "parameter")
+
+    p <- ggplot(ess.long, aes(x = burn.in, y = ESS))
+    p <- p + facet_wrap(~ parameter)
+    p <- p + geom_line()
+    p <- p + theme_bw()
+
+    print(p)
 }
