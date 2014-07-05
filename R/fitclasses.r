@@ -328,52 +328,52 @@ SIR_reporting <- function() {
 #'The deterministic SEITL model
 #'
 #' To get the deterministic SEITL model, type
-#' \code{example(SEITL_deter)}. This executes the code listed below
+#' \code{example(SEITL_deterministic)}. This executes the code listed below
 #' under "Examples".
-#' @usage example(SEITL_deter)
+#' @usage example(SEITL_deterministic)
 #' @seealso \code{\link{fitmodel}}
 #' @example inst/examples/example-SEITL-deter.r
-SEITL_deter <- function() {
-        cat ("To load the deterministic SEITL model, type example(SEITL_deter)\n")
+SEITL_deterministic <- function() {
+        cat ("To load the deterministic SEITL model, type example(SEITL_deterministic)\n")
 }
 
 
 #'The stochastic SEITL model
 #'
 #' To get the stochastic SEITL model, type
-#' \code{example(SEITL_sto)}. This executes the code listed below
+#' \code{example(SEITL_stochastic)}. This executes the code listed below
 #' under "Examples".
-#' @usage example(SEITL_sto)
+#' @usage example(SEITL_stochastic)
 #' @seealso \code{\link{fitmodel}}
 #' @example inst/examples/example-SEITL-sto.r
-SEITL_sto <- function() {
-        cat ("To load the stochastic SEITL model, type example(SEITL_sto)\n")
+SEITL_stochastic <- function() {
+        cat ("To load the stochastic SEITL model, type example(SEITL_stochastic)\n")
 }
 
 
 #'The deterministic SEIT2L model
 #'
 #' To get the deterministic SEIT2L model, type
-#' \code{example(SEIT2L_deter)}. This executes the code listed below
+#' \code{example(SEIT2L_deterministic)}. This executes the code listed below
 #' under "Examples".
-#' @usage example(SEIT2L_deter)
+#' @usage example(SEIT2L_deterministic)
 #' @seealso \code{\link{fitmodel}}
 #' @example inst/examples/example-SEIT2L-deter.r
-SEIT2L_deter <- function() {
-        cat ("To load the deterministic SEIT2L model, type example(SEIT2L_deter)\n")
+SEIT2L_deterministic <- function() {
+        cat ("To load the deterministic SEIT2L model, type example(SEIT2L_deterministic)\n")
 }
 
 
 #'The stochastic SEIT2L model
 #'
 #' To get the stochastic SEIT2L model, type
-#' \code{example(SEIT2L_sto)}. This executes the code listed below
+#' \code{example(SEIT2L_stochastic)}. This executes the code listed below
 #' under "Examples".
-#' @usage example(SEIT2L_sto)
+#' @usage example(SEIT2L_stochastic)
 #' @seealso \code{\link{fitmodel}}
 #' @example inst/examples/example-SEIT2L-sto.r
-SEIT2L_sto <- function() {
-        cat ("To load the stochastic SEIT2L model, type example(SEIT2L_sto)\n")
+SEIT2L_stochastic <- function() {
+        cat ("To load the stochastic SEIT2L model, type example(SEIT2L_stochastic)\n")
 }
 
 

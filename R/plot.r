@@ -260,6 +260,8 @@ plotPosteriorFit <- function(trace, fitmodel, init.state, data, posterior.summar
 
     if(class(trace)=="mcmc"){
         trace <- as.data.frame(trace)
+    } else if (class(trace)=="mcmc.list"){
+        trace <- ldply(trace)
     }
 
     # names of estimated theta
