@@ -212,13 +212,18 @@ plotTrace <- function(trace, estimated.only = FALSE){
 #'Plot MCMC posterior densities
 #'
 #'Plot the posterior density.
-#' @inheritParams burnAndThin
+#' @param trace either a \code{data.frame} or a \code{list} of \code{data.frame} with all variables in column, as outputed by \code{\link{mcmcMH}}. Accept also an \code{mcmc}, a \code{mcmc.list} object or a \code{list} of \code{mcmc.list}.
 #' @export
 #' @import ggplot2 reshape2
 #' @seealso burnAndThin
 plotPosteriorDensity <- function(trace){
 
     if(class(trace)%in%c("mcmc.list","list")){
+
+        if(all(sapply(trace,function(x) {class(x)=="mcmc.list"}))){
+            trace <- llply(trace,ldply)
+        }
+
         if(is.null(names(trace))){
             names(trace) <- seq_along(trace)            
         }
@@ -231,7 +236,7 @@ plotPosteriorDensity <- function(trace){
 
     # density
     p <- ggplot(df,aes(x=value,colour=chain))+facet_wrap(~variable,scales="free")
-    p <- p+geom_density(aes(y=..scaled..))
+    p <- p+geom_density(aes(y=..density..))
     # p <- p+geom_histogram(aes(y=..density..),colour=NA,alpha=0.5,position="identity")
     p <- p+theme_bw()
     print(p)
