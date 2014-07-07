@@ -6,7 +6,7 @@
 plotPosteriorDensity(trace)
 }
 \arguments{
-\item{trace}{either a \code{data.frame} or a \code{list} of \code{data.frame} with all variables in column, as outputed by \code{\link{mcmcMH}}. Accept also an \code{mcmc}, a \code{mcmc.list} object or a \code{list} of \code{mcmc.list}.}
+\item{trace}{either a \code{data.frame} or a \code{list} of \code{data.frame} with all variables in column, as outputed by \code{\link{mcmcMH}}. Accept also an \code{mcmc}, a \code{mcmc.list} object or a \code{list} of \code{mcmc.list} .}
 }
 \description{
 Plot the posterior density.
