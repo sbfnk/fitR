@@ -252,6 +252,7 @@ plotPosteriorDensity <- function(trace){
 #' @inheritParams testFitmodel
 #' @inheritParams plotTrace
 #' @inheritParams plotTraj
+#' @inheritParams plotFit
 #' @export
 #' @import ggplot2 plyr
 #' @return If \code{plot==FALSE}, a list of 2 elements is returned:

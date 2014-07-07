@@ -37,25 +37,21 @@ SEITL_distanceOscillation <- function(simu.traj.obs, data) {
 
 #'Compute the distance to the data for ABC
 #'
-#'Compute the distance (using \code{fitmodel$distance.ABC}) between the observed time series and a simulated time series obtained by running the model with parameters \code{theta}.
+#'Compute the distance (using \code{distance.ABC}) between the observed time series and a simulated time series obtained by running the model with parameters \code{theta}.
+#' @param distance.ABC a function that take two arguments: \code{data} and \code{simu.traj.obs}
 #' @inheritParams testFitmodel
 #' @export
 #' @return numeric value of the log-likelihood
-computeDistanceABC <- function(theta, fitmodel) {
-
-	data <- fitmodel$data
+computeDistanceABC <- function(fitmodel, theta, init.state, data, distance.ABC) {
 
 	# time sequence (must include initial time)
 	times <- c(0,data$time)
 
-	# simulate model at successive observation times of data
-	traj <- fitmodel$simulate(theta,fitmodel$initialise.state(theta),times)
-
 	# generate simulated observation
-	traj.obs <- genObsTraj(model = fitmodel, simu.traj=traj,theta=theta)
+	traj.obs <- genObsTraj(model = fitmodel, theta=theta, init.state=init.state, times=times)
 
 	# compute distance
-	dist.ABC <- fitmodel$distance.ABC(data=data,simu.traj.obs=traj.obs)
+	dist.ABC <- distance.ABC(data=data,simu.traj.obs=traj.obs)
 
 	return(dist.ABC)
 }

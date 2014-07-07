@@ -26,6 +26,8 @@ plotPosteriorFit(trace, fitmodel, init.state, data,
 \item{alpha}{transparency of the trajectories (between 0 and 1).}
 
 \item{plot}{if \code{TRUE} the plot is displayed, and returned otherwise.}
+
+\item{all.vars}{logical, if \code{FALSE} only the observations are plotted. Otherwise, all state variables are plotted.}
 }
 \value{
 If \code{plot==FALSE}, a list of 2 elements is returned:

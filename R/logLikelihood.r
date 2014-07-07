@@ -5,6 +5,7 @@
 #' summing the point log-likelihoods.
 #' @inheritParams testFitmodel
 #' @export
+#' @import deSolve
 #' @seealso \code{\link{genObsTraj}}
 #' @return numeric value of the log-likelihood
 trajLogLike <- function(fitmodel, theta, init.state, data) {

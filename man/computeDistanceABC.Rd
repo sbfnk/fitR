@@ -3,17 +3,23 @@
 \alias{computeDistanceABC}
 \title{Compute the distance to the data for ABC}
 \usage{
-computeDistanceABC(theta, fitmodel)
+computeDistanceABC(fitmodel, theta, init.state, data, distance.ABC)
 }
 \arguments{
-\item{theta}{named numeric vector. Values of the parameters. Names should match \code{fitmodel$theta.names}.}
+\item{distance.ABC}{a function that take two arguments: \code{data} and \code{simu.traj.obs}}
 
 \item{fitmodel}{a \code{\link{fitmodel}} object}
+
+\item{theta}{named numeric vector. Values of the parameters. Names should match \code{fitmodel$theta.names}.}
+
+\item{init.state}{named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.}
+
+\item{data}{data frame. Observation times and observed data. The time column must be named \code{"time"} and the observation column must be named \code{"obs"}.}
 }
 \value{
 numeric value of the log-likelihood
 }
 \description{
-Compute the distance (using \code{fitmodel$distance.ABC}) between the observed time series and a simulated time series obtained by running the model with parameters \code{theta}.
+Compute the distance (using \code{distance.ABC}) between the observed time series and a simulated time series obtained by running the model with parameters \code{theta}.
 }
 
