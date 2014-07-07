@@ -7,7 +7,7 @@
 example(SIR)
 
 SIR_reporting_name <- "SIR with constant population size and incomplete reporting"
-SIR_reporting_theta.names <- SIR_theta.names <- c("R0","D", "RR")
+SIR_reporting_theta.names <- SIR_theta.names <- c("R0","D.inf", "RR")
 
 ## function to compute log-prior
 SIR_logPrior <- function(theta) {
@@ -49,10 +49,10 @@ SIR_reporting <- fitmodel(
 	pointLogLike=SIR_reporting_pointLogLike)
 
 ## test it
-theta <- c(R0=3, D=4, RR=0.7)
-init.state <- c(S=99,I=1,R=0)
+## theta <- c(R0=3, D.inf=4, RR=0.7)
+## init.state <- c(S = 99,I=1,R=0)
 
-data(epi)
+## data(epi)
 
 ## SIR_reporting
 ## testFitmodel(fitmodel=SIR_reporting, theta=theta, init.state=init.state, data= epi2, verbose=TRUE)
