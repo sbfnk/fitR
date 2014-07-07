@@ -3,8 +3,8 @@
 \alias{plotESSBurn}
 \title{Plot Effective Sample Size (ESS) against burn-in}
 \usage{
-plotESSBurn(trace, longest.burn.in = nrow(trace)/2,
-  step.size = round(longest.burn.in/50))
+plotESSBurn(trace, longest.burn.in = ifelse(length(trace) > 1,
+  nrow(trace[[1]]), nrow(trace))/2, step.size = round(longest.burn.in/50))
 }
 \arguments{
 \item{trace}{A data frame of an MCMC chain with one column per parameter}

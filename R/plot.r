@@ -212,7 +212,7 @@ plotTrace <- function(trace, estimated.only = FALSE){
 #'Plot MCMC posterior densities
 #'
 #'Plot the posterior density.
-#' @param trace either a \code{data.frame} or a \code{list} of \code{data.frame} with all variables in column, as outputed by \code{\link{mcmcMH}}. Accept also an \code{mcmc}, a \code{mcmc.list} object or a \code{list} of \code{mcmc.list}.
+#' @param trace either a \code{data.frame} or a \code{list} of \code{data.frame} with all variables in column, as outputed by \code{\link{mcmcMH}}. Accept also an \code{mcmc}, a \code{mcmc.list} object or a \code{list} of \code{mcmc.list} .
 #' @export
 #' @import ggplot2 reshape2
 #' @seealso burnAndThin
@@ -221,7 +221,7 @@ plotPosteriorDensity <- function(trace){
     if(class(trace)%in%c("mcmc.list","list")){
 
         if(all(sapply(trace,function(x) {class(x)=="mcmc.list"}))){
-            trace <- llply(trace,ldply)
+            trace <- llply(trace,function(x) {names(x) <- NULL;ldply(x)})
         }
 
         if(is.null(names(trace))){
@@ -333,31 +333,44 @@ plotPosteriorFit <- function(trace, fitmodel, init.state, data, posterior.summar
 ##' Plot Effective Sample Size (ESS) against burn-in
 ##'
 ##' Takes an mcmc trace and tests the ESS at different values of burn-in
-##' @param trace A data frame of an MCMC chain with one column per parameter
+##' @param trace either a \code{data.frame} or a \code{list} of \code{data.frame} with all variables in column, as outputed by \code{\link{mcmcMH}}. Accept also \code{mcmc} or \code{mcmc.list} objects.
 ##' @param longest.burn.in The longest burn in to test. Defaults to half the length of the trace
 ##' @param step.size The size of the steps of burn-in to test. Defaults to 1/50th of \code{longest.burn.in}
 ##' @return a plot of the ESS against burn.in
 ##' @export
-##' @import coda ggplot2 reshape2
-plotESSBurn <- function(trace, longest.burn.in = nrow(trace) / 2, step.size = round(longest.burn.in / 50)) {
-
+##' @import coda ggplot2 reshape2 plyr
+plotESSBurn <- function(trace, longest.burn.in = ifelse(length(trace)>1,nrow(trace[[1]]),nrow(trace)) / 2, step.size = round(longest.burn.in / 50)) {
 
     test.burn.in <- seq(0, longest.burn.in, step.size) # test values
 
-    # initialise data.frame of ess estimates
-    ess.burn.in <- data.frame(t(effectiveSize(trace)))
-    for (burn.in in test.burn.in[-1]) { 
+    if(!class(trace)%in%c("mcmc.list","list")){
+        trace <- list("chain1"=trace)
+    }
+
+    if(is.null(names(trace))){
+        names(trace) <- seq_along(trace)            
+    }
+
+    df_ess.burn.in <- ldply(trace, function(one.trace){
+
+# initialise data.frame of ess estimates
+        ess.burn.in <- data.frame(t(effectiveSize(one.trace)))
+        for (burn.in in test.burn.in[-1]) { 
     # loop over all test values after 0
         # test burn-in
-        test.trace <- burnAndThin(trace, burn = burn.in)
+            test.trace <- burnAndThin(one.trace, burn = burn.in)
         # estimate ESS and at to vector of ess estimates
-        ess.burn.in <- rbind(ess.burn.in, t(effectiveSize(mcmc(test.trace))))
-    }
-    ess.burn.in$burn.in <- test.burn.in
+            ess.burn.in <- rbind(ess.burn.in, t(effectiveSize(as.mcmc(test.trace))))
+        }
+        ess.burn.in$burn.in <- test.burn.in
 
-    ess.long <- melt(ess.burn.in, id.vars = c("burn.in"),value.name = "ESS", variable.name = "parameter")
+        return(ess.burn.in)
 
-    p <- ggplot(ess.long, aes(x = burn.in, y = ESS))
+    }, .id="chain")
+
+    ess.long <- melt(df_ess.burn.in, id.vars = c("chain","burn.in"),value.name = "ESS", variable.name = "parameter")
+
+    p <- ggplot(ess.long, aes(x = burn.in, y = ESS, colour=chain))
     p <- p + facet_wrap(~ parameter)
     p <- p + geom_line()
     p <- p + theme_bw()
