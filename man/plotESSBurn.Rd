@@ -7,7 +7,7 @@ plotESSBurn(trace, longest.burn.in = ifelse(length(trace) > 1,
   nrow(trace[[1]]), nrow(trace))/2, step.size = round(longest.burn.in/50))
 }
 \arguments{
-\item{trace}{A data frame of an MCMC chain with one column per parameter}
+\item{trace}{either a \code{data.frame} or a \code{list} of \code{data.frame} with all variables in column, as outputed by \code{\link{mcmcMH}}. Accept also \code{mcmc} or \code{mcmc.list} objects.}
 
 \item{longest.burn.in}{The longest burn in to test. Defaults to half the length of the trace}
 
