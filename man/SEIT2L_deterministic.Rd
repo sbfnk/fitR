@@ -11,7 +11,7 @@ To get the deterministic SEIT2L model, type
 under "Examples".
 }
 \examples{
-example(SEITL_deter)
+example(SEITL_deterministic)
 
 
 SEIT2L_deter_name <- "deterministic SEIT2L model with daily incidence and constant population size"

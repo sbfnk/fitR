@@ -11,7 +11,7 @@ To get the stochastic SEITL model, type
 under "Examples".
 }
 \examples{
-example(SEITL_deter)
+example(SEITL_deterministic)
 
 
 SEITL_sto_name <- "stochastic SEITL model with daily incidence and constant population size"
