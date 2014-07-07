@@ -1,10 +1,10 @@
 # Create a simple stochastic SIR model with constant population size
 #
 # This is based on the determinsitc SIR model, which can be created
-# using example(SIR)
+# using data(SIR)
 #
 
-example(SIR)
+data(SIR)
 
 SIR_reporting_name <- "SIR with constant population size and incomplete reporting"
 SIR_reporting_theta.names <- SIR_theta.names <- c("R0","D.inf", "RR")

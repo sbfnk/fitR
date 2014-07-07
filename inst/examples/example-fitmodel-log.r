@@ -2,10 +2,10 @@
 # and parameters on the exponential scale
 #
 # This is based on the determinstic SIR model, which can be created
-# using example(SIR)
+# using data(SIR)
 #
 
-example(SIR)
+data(SIR)
 
 SIR_exp_name <- "SIR with constant population size, parameters transformed to the exponential scale"
 

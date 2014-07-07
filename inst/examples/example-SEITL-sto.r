@@ -1,4 +1,4 @@
-example(SEITL_deterministic)
+data(SEITL_deter)
 
 
 SEITL_sto_name <- "stochastic SEITL model with daily incidence and constant population size"
@@ -57,7 +57,7 @@ SEITL_simulateStochastic <- function(theta,init.state,times) {
 }
 
 
-SEITL_sto <- fitmodel(
+SEITL_stoch <- fitmodel(
 		name=SEITL_sto_name,
 		state.names=SEITL_state.names,
 		theta.names=SEITL_theta.names,

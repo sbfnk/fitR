@@ -1,9 +1,9 @@
 # Create a simple stochastic SIR model with constant population size
 #
 # This is based on the determinsitc SIR model, which can be created
-# using example(SIR)
+# using data(SIR)
 
-example(SIR)
+data(SIR)
 
 SIR_stochastic_name <- "stochastic SIR with constant population size"
 
