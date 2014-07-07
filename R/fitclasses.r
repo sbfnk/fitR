@@ -324,6 +324,18 @@ SIR_reporting <- function() {
         cat ("To load the SIR model with incomplete reporting, type example(SIR_reporting)\n")
 }
 
+#'The SIR model with parameters on the log-scale
+#'
+#' To get the SIR model with parameters on the log-scale, type
+#' \code{example(SIR_exp)}. This executes the code listed below
+#' under "Examples".
+#' @usage example(SIR_exp)
+#' @seealso \code{\link{fitmodel}}
+#' @example inst/examples/example-fitmodel-log.r
+SIR_exp <- function() {
+        cat ("To load the SIR model with parameters on the log scale, type example(SIR_exp)\n")
+}
+
 
 #'The deterministic SEITL model
 #'
