@@ -35,7 +35,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <div id="TOC">
 <ul>
 <li><a href="#objectives">Objectives</a></li>
-<li><a href="#using-the-metropolis-hastings-algorithm-with-more-than-one-parameter">Using the Metropolis-Hastings algorithm with more than one parameter</a></li>
+<li><a href="#using-the-metropolis-hastings-algorithm-with-more-than-one-parameter">Using the Metropolis-Hastings algorithm with one parameter</a></li>
 <li><a href="#sampling-from-a-simple-distribution">Sampling from a simple distribution</a></li>
 <li><a href="#sampling-from-a-posterior-distribution">Sampling from a posterior distribution</a></li>
 <li><a href="#going-further">Going further</a></li>
@@ -44,11 +44,11 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <h1 id="objectives">Objectives</h1>
 <p>The aim of this session is to learn how to fit a deterministic model to data using MCMC with the Metropolis-Hastings algorithm. More specifically, in this session you will</p>
 <ol style="list-style-type: decimal">
-<li>use MCMC to fit a model with more than one free parameter to a data set</li>
+<li>use MCMC to fit a model with one free parameter to a data set</li>
 <li>learn to assess the output of MCMC runs using the <code>coda</code> package</li>
 <li>explore ways to improve the performance of the MCMC sampler</li>
 </ol>
-<h1 id="using-the-metropolis-hastings-algorithm-with-more-than-one-parameter">Using the Metropolis-Hastings algorithm with more than one parameter</h1>
+<h1 id="using-the-metropolis-hastings-algorithm-with-more-than-one-parameter">Using the Metropolis-Hastings algorithm with one parameter</h1>
 <p><strong>Code it yourself</strong>: Let us write a function that samples from an arbitrary <em>target distribution</em> using MCMC. For now, let us focus on sampling from a distribution that has a single parameter and uses a standard Gaussian proposal distribution <span class="math">\(q(\theta&#39;|\theta)\)</span>. The function we want to write should take four arguments:</p>
 <ol style="list-style-type: decimal">
 <li>a function that can evaluate the target distribution at any value of its parameter</li>
