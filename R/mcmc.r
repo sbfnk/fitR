@@ -154,7 +154,7 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
         }
 
         # print info
-        if (i.iteration %% round(print.info.every) == 0) {
+        if (i.iteration %% ceiling(print.info.every) == 0) {
             ## end_iteration_time <- Sys.time()
             state.mcmc <- trace[nrow(trace),]
             ## suppressMessages(time.estimation <- round(as.period((end_iteration_time-start_iteration_time)*10000/round(print.info.every))))
