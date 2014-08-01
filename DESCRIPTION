@@ -11,3 +11,5 @@ Depends:
 License: GPL-2
 LazyData: true
 Roxygen: list(wrap = FALSE)
+Imports:
+    deSolve,adaptivetau,ggplot2,reshape2,plyr,tmvtnorm,parallel,doParallel,lubridate,coda,stringr
