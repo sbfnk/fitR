@@ -40,7 +40,8 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
                    limits=list(lower = NULL, upper = NULL),
                    adapt.size.start = NULL, adapt.size.cooling = 0.99,
                    adapt.shape.start = NULL,
-                   print.info.every = n.iterations/100) {
+                   print.info.every = n.iterations/100,
+                   verbose = FALSE) {
 
 
     # initialise theta
@@ -95,6 +96,12 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
 
     # evaluate target at theta init
     target.theta.current <- target(theta.current)
+
+    if (verbose) {
+        message("Init: ", theta.current[theta.estimated.names],
+                ", target: ", target.theta.current[["log.density"]])
+    }
+
 
     # if return value is a vector, set log.density and trace
     if (class(target.theta.current) == "numeric") {
@@ -231,10 +238,22 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
 
         }
 
+        if (verbose) {
+            message("Propose: ", theta.propose[theta.estimated.names],
+                    ", target: ", target.theta.propose[["log.density"]],
+                    ", acc prob: ", exp(log.acceptance), ", ",
+                    appendLF = FALSE)
+        }
+
         if (is.accepted <- (log(runif (1)) < log.acceptance)) {
             # accept proposed parameter set
             theta.current <- theta.propose
             target.theta.current <- target.theta.propose
+            if (verbose) {
+                message("accepted")
+            }
+        } else if (verbose) {
+            message("rejected")
         }
         trace <- rbind(trace,c(target.theta.current$trace))
 
