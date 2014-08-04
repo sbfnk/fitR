@@ -1,6 +1,6 @@
-#' fitcourseR
+#' fitR
 #'
-#' @name fitcourseR
+#' @name fitR
 #' @docType package
 NULL
 
