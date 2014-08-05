@@ -88,7 +88,7 @@ plotTraj <- function(traj=NULL, state.names=NULL, data=NULL, summary=TRUE, p.ext
     }
 
     if(!is.null(data)){
-        obs_names <- grep("obs",data,value=TRUE)
+        obs_names <- grep("obs",names(data),value=TRUE)
         data <- melt(data, measure.vars=obs_names,variable.name="state")
         p <- p + geom_point(data=data,aes(x=time,y=value),colour="black")
 
