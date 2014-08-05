@@ -88,8 +88,8 @@ plotTraj <- function(traj=NULL, state.names=NULL, data=NULL, summary=TRUE, p.ext
     }
 
     if(!is.null(data)){
-
-        data <- melt(data, measure.vars="obs",variable.name="state")
+        obs_names <- grep("obs",data,value=TRUE)
+        data <- melt(data, measure.vars=obs_names,variable.name="state")
         p <- p + geom_point(data=data,aes(x=time,y=value),colour="black")
 
     }
@@ -319,7 +319,7 @@ plotPosteriorFit <- function(trace, fitmodel, init.state, data, posterior.summar
     if(all.vars){
         state.names <- NULL
     } else {
-        state.names <- c("obs")
+        state.names <- grep("obs",names(traj),value=TRUE)
     }
 
     p <- plotTraj(traj=traj, state.names=state.names, data=data, summary=summary, alpha=alpha, plot=FALSE)
