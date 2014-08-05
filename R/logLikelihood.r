@@ -81,6 +81,22 @@ logPosterior <- function(fitmodel, theta, init.state, data, margLogLike = trajLo
 
 }
 
+
+#'A wrapper for \code{logPosterior}
+#'
+#'A wrapper for \code{\link{logPosterior}} that returns a function that can be used as a \code{target} for \code{\link{mcmcMH}}
+#' @inheritParams logPosterior
+#' @export
+#' @return a \R-function with one argument called \code{theta}.
+logPosteriorWrapper <- function(fitmodel, init.state, data, margLogLike, ...) {
+
+	function(theta) {
+		logPosterior(fitmodel, theta, init.state, data, margLogLike, ...)	
+	} 
+
+}
+
+
 #' Generate an observation trajectory for a fitmodel
 #'
 #' This function simulates a model defined in a \code{\link{fitmodel}}
