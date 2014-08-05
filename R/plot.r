@@ -132,7 +132,7 @@ plotFit <- function(fitmodel, theta, init.state, data, n.replicates=1, summary=T
     if(all.vars){
         state.names <- NULL
     } else {
-        state.names <- c("obs")
+        state.names <- grep("obs",names(traj),value=TRUE)
     }
 
     p <- plotTraj(traj=traj, state.names=state.names, data=data, summary=summary, alpha=alpha, p.extinction=p.extinction, plot=FALSE)
@@ -162,15 +162,18 @@ plotSMC <- function(smc, fitmodel, theta, data=NULL, summary=TRUE, alpha=1, all.
 
     traj <- ldply(traj,function(df) {
 
-        df$obs <- apply(X = traj, MARGIN = 1, FUN = fitmodel$genObsPoint, theta = theta)
-        return(df)
+
+        obs <- ddply(df, "time" , fitmodel$genObsPoint, theta = theta)
+        traj_obs <- join(df,obs, by="time")
+
+        return(traj_obs)
 
     },.id="replicate")
 
     if(all.vars){
         state.names <- NULL
     } else {
-        state.names <- c("obs")
+        state.names <- grep("obs",names(traj),value=TRUE)
     }
 
     p <- plotTraj(traj=traj, state.names=state.names, data=data, summary=summary, alpha=alpha, plot=FALSE)

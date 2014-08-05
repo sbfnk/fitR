@@ -99,7 +99,15 @@ genObsTraj <- function(fitmodel, theta, init.state, times) {
         ## generate observations by applying fitmodel$genObsPoint to
         ## each row of traj. The parameter value theta as passed as
         ## extra argument to fitmodel$genObsPoint
-	traj$obs <- apply(X = traj, MARGIN = 1, FUN = fitmodel$genObsPoint,
-		theta = theta)
-	return(traj)
+	
+	obs <- ddply(traj, "time" , fitmodel$genObsPoint, theta = theta)
+	traj_obs <- join(traj,obs, by="time")
+
+	return(traj_obs)
+
+
 }
+
+
+
+

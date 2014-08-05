@@ -56,7 +56,7 @@ SEITL_genObsPoint <- function(model.point, theta){
 
 	obs.point <- rpois(n=1, lambda=theta[["rho"]]*model.point[["Inc"]])
 
-	return(obs.point)
+	return(c(obs=obs.point))
 }
 
 # Evaluate the log of the prior density distribution of the parameter values.
