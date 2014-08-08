@@ -137,7 +137,7 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
 
         # adaptive step
         if (!is.null(adapt.size.start) && i.iteration >= adapt.size.start &&
-                acceptance.rate*i.iteration < adapt.shape.start) {
+                (is.null(adapt.shape.start) || acceptance.rate*i.iteration < adapt.shape.start)) {
             if (!adapting.size) {
                 message("\n---> Start adapting size of covariance matrix")
                 adapting.size <- TRUE
