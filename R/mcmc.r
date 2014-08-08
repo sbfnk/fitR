@@ -20,6 +20,8 @@
 #' @param adapt.size.cooling cooling factor for the scaling factor of the covariance matrix during size adaptation (see note below).
 #' @param adapt.shape.start number of accepted jumps before adapting the shape of the proposal covariance matrix (see note below). Set to 0 (default) if shape is not to be adapted
 #' @param print.info.every frequency of information on the chain: acceptance rate and state of the chain. Default value to \code{n.iterations/100}. Set to \code{NULL} to avoid any info.
+#' @param verbose logical. If \code{TRUE}, information are printed.
+#' @param max.scaling.sd numeric. Maximum value for the scaling factor of the covariance matrix. Avoid too high values for the scaling factor, which might happen due to the exponential update scheme. In this case, the covariance matrix becomes too wide and the sampling from the truncated proposal kernel becomes highly inefficient
 #' @note The size of the proposal covariance matrix is adapted using the following formulae: \deqn{\Sigma_{n+1}=\sigma_n * \Sigma_n} with \eqn{\sigma_n=\sigma_{n-1}*exp(\alpha^n*(acc - 0.234))},
 #' where \eqn{\alpha} is equal to \code{adapt.size.cooling} and \eqn{acc} is the acceptance rate of the chain.
 #'
@@ -41,7 +43,7 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
    adapt.size.start = NULL, adapt.size.cooling = 0.99,
    adapt.shape.start = NULL,
    print.info.every = n.iterations/100,
-   verbose = FALSE) {
+   verbose = FALSE, max.scaling.sd = 50) {
 
 
     # initialise theta
@@ -148,7 +150,7 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
             # adapt size of covmat until we get enough accepted jumps
             scaling.multiplier <- exp(adapt.size.cooling^(i.iteration-adapt.size.start) * (acceptance.rate - 0.234))
             scaling.sd <- scaling.sd * scaling.multiplier
-
+            scaling.sd <- min(c(scaling.sd,max.scaling.sd))
             covmat.proposal <- scaling.sd^2*covmat.proposal.init
 
         } else if (!is.null(adapt.shape.start) &&

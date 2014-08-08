@@ -6,7 +6,8 @@
 mcmcMH(target, init.theta, proposal.sd = NULL, n.iterations, covmat = NULL,
   limits = list(lower = NULL, upper = NULL), adapt.size.start = NULL,
   adapt.size.cooling = 0.99, adapt.shape.start = NULL,
-  print.info.every = n.iterations/100, verbose = FALSE)
+  print.info.every = n.iterations/100, verbose = FALSE,
+  max.scaling.sd = 50)
 }
 \arguments{
 \item{target}{\R-function that takes a single argument: \code{theta} (named numeric vector of parameter values) and returns a list of 2 elements:
@@ -36,6 +37,10 @@ mcmcMH(target, init.theta, proposal.sd = NULL, n.iterations, covmat = NULL,
 \item{adapt.shape.start}{number of accepted jumps before adapting the shape of the proposal covariance matrix (see note below). Set to 0 (default) if shape is not to be adapted}
 
 \item{print.info.every}{frequency of information on the chain: acceptance rate and state of the chain. Default value to \code{n.iterations/100}. Set to \code{NULL} to avoid any info.}
+
+\item{verbose}{logical. If \code{TRUE}, information are printed.}
+
+\item{max.scaling.sd}{numeric. Maximum value for the scaling factor of the covariance matrix. Avoid too high values for the scaling factor, which might happen due to the exponential update scheme. In this case, the covariance matrix becomes too wide and the sampling from the truncated proposal kernel becomes highly inefficient}
 }
 \value{
 a list with 3 elements:
