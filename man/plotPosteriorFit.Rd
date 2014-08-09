@@ -32,7 +32,8 @@ plotPosteriorFit(trace, fitmodel, init.state, data,
 \value{
 If \code{plot==FALSE}, a list of 2 elements is returned:
 \itemize{
-   \item \code{posterior.traj} a \code{data.frame} with the trajectories (and observations) sampled from the posterior distribution.
+   \item \code{theta} the \code{theta}(s) used for plotting (either a \code{vector} or a \code{data.frame})
+   \item \code{traj} a \code{data.frame} with the trajectories (and observations) sampled from the posterior distribution.
    \item \code{plot} the plot of the fit displayed.
 }
 }
