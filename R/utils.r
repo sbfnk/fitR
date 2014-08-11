@@ -10,8 +10,8 @@
 #' @return a data.frame of dimension \code{length(times)x(length(init.state)+1)} with column names equal to \code{c("time",names(init.state))}.
 simulateModelStochastic <- function(theta,init.state,times,transitions,rateFunc) {
 
-
-    stoch <- as.data.frame(ssa.adaptivetau(init.state,transitions,rateFunc,theta,tf=diff(range(times))))
+    # stoch <- as.data.frame(ssa.adaptivetau(init.state,transitions,rateFunc,theta,tf=diff(range(times))))
+    stoch <- as.data.frame(ssa.exact(init.state,transitions,rateFunc,theta,tf=diff(range(times))))
 
     # rescale time as absolute value
     stoch$time <- stoch$time + min(times)
