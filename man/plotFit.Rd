@@ -24,8 +24,6 @@ plotFit(fitmodel, theta, init.state, data, n.replicates = 1, summary = TRUE,
 
 \item{alpha}{transparency of the trajectories (between 0 and 1).}
 
-\item{p.extinction}{logical. If \code{TRUE}, the time-series of the proportion of faded-out epidemics is plotted (default to \code{FALSE}). This is only relevant for stochastic models.}
-
 \item{plot}{if \code{TRUE} the plot is displayed, and returned otherwise.}
 }
 \value{

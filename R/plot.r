@@ -5,13 +5,17 @@
 #' @param state.names character vector. Names of the state variables to plot. Names must match \code{fitmodel$state.names}. If \code{NULL} (default) all state variables are plotted.
 #' @param data data frame. Observation times and observed data. The time column must be named \code{time}, whereas the name of the data column should match one of \code{fitmodel$state.names}.
 #' @param summary logical. If \code{TRUE}, the mean, median as well as the 50th and 95th percentile of the trajectories are plotted (default). If \code{FALSE}, all individual trajectories are plotted (transparency can be set with \code{alpha}).
-#' @param p.extinction logical. If \code{TRUE}, the time-series of the proportion of faded-out epidemics is plotted (default to \code{FALSE}). This is only relevant for stochastic models.
+#' @param non.extinct character vector. Names of the infected states which must be non-zero so the epidemic is still ongoing. 
+#' When the names of these states are provided, the extinction probability is plotted by computing the proportion of faded-out epidemics over time. 
+#' An epidemic has faded-out when all the infected states (whose names are provided) are equal to 0. This is only relevant for stochastic models. 
+#' In addition, if \code{summary==TRUE}, the summaries of the trajectories conditioned on non-extinction are shown. Default to \code{NULL}.
 #' @param alpha transparency of the trajectories (between 0 and 1).
 #' @param plot if \code{TRUE} the plot is displayed, and returned otherwise.
 #' @export
 #' @import reshape2 ggplot2 stringr
 #' @seealso \code{\link{simulateModelReplicates}}
-plotTraj <- function(traj=NULL, state.names=NULL, data=NULL, summary=TRUE, p.extinction=FALSE, alpha=1, plot=TRUE) {
+plotTraj <- function(traj=NULL, state.names=NULL, data=NULL, summary=TRUE, non.extinct=NULL, alpha=1, plot=TRUE) {
+
 
     if(is.null(traj) && is.null(data)){
         stop("Nothing to plot")
@@ -33,18 +37,25 @@ plotTraj <- function(traj=NULL, state.names=NULL, data=NULL, summary=TRUE, p.ext
 
     if (!is.null(traj)) {
 
-        df.traj <- melt(traj,measure.vars=state.names,variable.name="state")
 
-        if(p.extinction){
-            infected.names <- unlist(sapply(c("E","I"),grep,x=names(traj),value=TRUE))
-            df.infected <- mutate(traj,infected=eval(parse(text=paste(infected.names,collapse="+"))))
-            df.infected <- melt(df.infected,measure.vars="infected",variable.name="state")
+
+        if(!is.null(non.extinct)){
+            traj <- mutate(traj,infected=eval(parse(text=paste(non.extinct,collapse="+")),traj))
+            df.infected <- melt(traj,measure.vars="infected",variable.name="state")
             df.p.ext <- ddply(df.infected,"time",function(df){
                 return(data.frame(value=sum(df$value==0)/nrow(df)))
             })
             df.p.ext$state <- "p. extinction"
             df.p.ext$replicate <- 0
+
+            if(summary){
+                traj <- subset(traj, infected>0)
+                traj$infected <- NULL
+            }
         }
+        
+        df.traj <- melt(traj,measure.vars=state.names,variable.name="state")
+
 
         if (summary){
 
@@ -79,7 +90,7 @@ plotTraj <- function(traj=NULL, state.names=NULL, data=NULL, summary=TRUE, p.ext
 
         }
 
-        if(p.extinction){
+        if(!is.null(non.extinct)){
             p <- p+geom_line(data=df.p.ext,aes(x=time,y=value),color="black",alpha=1)
         }
 
@@ -104,7 +115,7 @@ plotTraj <- function(traj=NULL, state.names=NULL, data=NULL, summary=TRUE, p.ext
 
 }
 
-
+# TODO: transform all p.extinction into extinction
 
 #'Plot fit of model to data
 #'

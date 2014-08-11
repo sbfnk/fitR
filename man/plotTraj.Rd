@@ -4,7 +4,7 @@
 \title{Plot model trajectories}
 \usage{
 plotTraj(traj = NULL, state.names = NULL, data = NULL, summary = TRUE,
-  p.extinction = FALSE, alpha = 1, plot = TRUE)
+  non.extinct = NULL, alpha = 1, plot = TRUE)
 }
 \arguments{
 \item{traj}{data.frame, output of \code{fitmodel$simulate} or \code{simulateModelReplicates}.}
@@ -15,7 +15,10 @@ plotTraj(traj = NULL, state.names = NULL, data = NULL, summary = TRUE,
 
 \item{summary}{logical. If \code{TRUE}, the mean, median as well as the 50th and 95th percentile of the trajectories are plotted (default). If \code{FALSE}, all individual trajectories are plotted (transparency can be set with \code{alpha}).}
 
-\item{p.extinction}{logical. If \code{TRUE}, the time-series of the proportion of faded-out epidemics is plotted (default to \code{FALSE}). This is only relevant for stochastic models.}
+\item{non.extinct}{character vector. Names of the infected states which must be non-zero so the epidemic is still ongoing.
+When the names of these states are provided, the extinction probability is plotted by computing the proportion of faded-out epidemics over time.
+An epidemic has faded-out when all the infected states (whose names are provided) are equal to 0. This is only relevant for stochastic models.
+In addition, if \code{summary==TRUE}, the summaries of the trajectories conditioned on non-extinction are shown. Default to \code{NULL}.}
 
 \item{alpha}{transparency of the trajectories (between 0 and 1).}
 
