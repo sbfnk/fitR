@@ -88,8 +88,8 @@ plotTraj <- function(traj=NULL, state.names=NULL, data=NULL, summary=TRUE, p.ext
     }
 
     if(!is.null(data)){
-
-        data <- melt(data, measure.vars="obs",variable.name="state")
+        obs_names <- grep("obs",names(data),value=TRUE)
+        data <- melt(data, measure.vars=obs_names,variable.name="state")
         p <- p + geom_point(data=data,aes(x=time,y=value),colour="black")
 
     }
@@ -132,7 +132,7 @@ plotFit <- function(fitmodel, theta, init.state, data, n.replicates=1, summary=T
     if(all.vars){
         state.names <- NULL
     } else {
-        state.names <- c("obs")
+        state.names <- grep("obs",names(traj),value=TRUE)
     }
 
     p <- plotTraj(traj=traj, state.names=state.names, data=data, summary=summary, alpha=alpha, p.extinction=p.extinction, plot=FALSE)
@@ -162,15 +162,18 @@ plotSMC <- function(smc, fitmodel, theta, data=NULL, summary=TRUE, alpha=1, all.
 
     traj <- ldply(traj,function(df) {
 
-        df$obs <- apply(X = traj, MARGIN = 1, FUN = fitmodel$genObsPoint, theta = theta)
-        return(df)
+
+        obs <- ddply(df, "time" , fitmodel$genObsPoint, theta = theta)
+        traj_obs <- join(df,obs, by="time")
+
+        return(traj_obs)
 
     },.id="replicate")
 
     if(all.vars){
         state.names <- NULL
     } else {
-        state.names <- c("obs")
+        state.names <- grep("obs",names(traj),value=TRUE)
     }
 
     p <- plotTraj(traj=traj, state.names=state.names, data=data, summary=summary, alpha=alpha, plot=FALSE)
@@ -257,7 +260,8 @@ plotPosteriorDensity <- function(trace){
 #' @import ggplot2 plyr
 #' @return If \code{plot==FALSE}, a list of 2 elements is returned:
 #'\itemize{
-#'    \item \code{posterior.traj} a \code{data.frame} with the trajectories (and observations) sampled from the posterior distribution.
+#'    \item \code{theta} the \code{theta}(s) used for plotting (either a \code{vector} or a \code{data.frame})
+#'    \item \code{traj} a \code{data.frame} with the trajectories (and observations) sampled from the posterior distribution.
 #'    \item \code{plot} the plot of the fit displayed.
 #'}
 plotPosteriorFit <- function(trace, fitmodel, init.state, data, posterior.summary=c("sample","median","mean","max"), summary=TRUE, sample.size = 100, alpha=min(1,10/sample.size), plot=TRUE, all.vars = FALSE) {
@@ -280,18 +284,18 @@ plotPosteriorFit <- function(trace, fitmodel, init.state, data, posterior.summar
 
     if(posterior.summary=="median"){
 
-        theta.median <- apply(trace[theta.names],2,median)
-        traj <- simulateModelReplicates(fitmodel=fitmodel,init.state=init.state, theta=theta.median,times=times,n=sample.size,observation=TRUE)
+        theta <- apply(trace[theta.names],2,median)
+        traj <- simulateModelReplicates(fitmodel=fitmodel,init.state=init.state, theta=theta,times=times,n=sample.size,observation=TRUE)
 
     } else if(posterior.summary=="mean"){
 
-        theta.mean <- apply(trace[theta.names],2,mean)
-        traj <- simulateModelReplicates(fitmodel=fitmodel,init.state=init.state, theta=theta.mean,times=times,n=sample.size,observation=TRUE)
+        theta <- apply(trace[theta.names],2,mean)
+        traj <- simulateModelReplicates(fitmodel=fitmodel,init.state=init.state, theta=theta,times=times,n=sample.size,observation=TRUE)
 
     } else if(posterior.summary=="max"){
         ind <- which.max(trace$log.posterior)
-        theta.max <- trace[ind,theta.names]
-        traj <- simulateModelReplicates(fitmodel=fitmodel,init.state=init.state, theta=theta.max,times=times,n=sample.size,observation=TRUE)
+        theta <- trace[ind,theta.names]
+        traj <- simulateModelReplicates(fitmodel=fitmodel,init.state=init.state, theta=theta,times=times,n=sample.size,observation=TRUE)
 
     } else {
 
@@ -300,7 +304,7 @@ plotPosteriorFit <- function(trace, fitmodel, init.state, data, posterior.summar
         index <- sample(1:nrow(trace), sample.size, replace=TRUE)
         names(index) <- index
 
-        traj <- ldply(index,function(ind) {
+        simu <- llply(index,function(ind) {
 
             # extract posterior parameter set
             theta <- trace[ind,theta.names]
@@ -308,15 +312,18 @@ plotPosteriorFit <- function(trace, fitmodel, init.state, data, posterior.summar
             # simulate model at successive observation times of data
             traj <- genObsTraj(fitmodel, theta, init.state, times)
 
-            return(traj)
+            return(list(traj=traj,theta=theta))
         },.progress="text",.id="replicate")
+
+        traj <- ldply(simu,function(x) {x$traj})
+        theta <- ldply(simu,function(x) {x$theta})
     }
 
 
     if(all.vars){
         state.names <- NULL
     } else {
-        state.names <- c("obs")
+        state.names <- grep("obs",names(traj),value=TRUE)
     }
 
     p <- plotTraj(traj=traj, state.names=state.names, data=data, summary=summary, alpha=alpha, plot=FALSE)
@@ -325,7 +332,7 @@ plotPosteriorFit <- function(trace, fitmodel, init.state, data, posterior.summar
     if(plot){
         print(p)
     } else {
-        return(list(posterior.traj=fit,plot=p))
+        return(list(theta=theta,traj=traj,plot=p))
     }
 
 

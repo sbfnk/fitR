@@ -81,6 +81,22 @@ logPosterior <- function(fitmodel, theta, init.state, data, margLogLike = trajLo
 
 }
 
+
+#'A wrapper for \code{logPosterior}
+#'
+#'A wrapper for \code{\link{logPosterior}} that returns a function that can be used as a \code{target} for \code{\link{mcmcMH}}
+#' @inheritParams logPosterior
+#' @export
+#' @return a \R-function with one argument called \code{theta}.
+logPosteriorWrapper <- function(fitmodel, init.state, data, margLogLike, ...) {
+
+	function(theta) {
+		logPosterior(fitmodel, theta, init.state, data, margLogLike, ...)	
+	} 
+
+}
+
+
 #' Generate an observation trajectory for a fitmodel
 #'
 #' This function simulates a model defined in a \code{\link{fitmodel}}
@@ -99,7 +115,15 @@ genObsTraj <- function(fitmodel, theta, init.state, times) {
         ## generate observations by applying fitmodel$genObsPoint to
         ## each row of traj. The parameter value theta as passed as
         ## extra argument to fitmodel$genObsPoint
-	traj$obs <- apply(X = traj, MARGIN = 1, FUN = fitmodel$genObsPoint,
-		theta = theta)
-	return(traj)
+	
+	obs <- ddply(traj, "time" , fitmodel$genObsPoint, theta = theta)
+	traj_obs <- join(traj,obs, by="time")
+
+	return(traj_obs)
+
+
 }
+
+
+
+

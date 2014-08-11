@@ -20,6 +20,8 @@
 #' @param adapt.size.cooling cooling factor for the scaling factor of the covariance matrix during size adaptation (see note below).
 #' @param adapt.shape.start number of accepted jumps before adapting the shape of the proposal covariance matrix (see note below). Set to 0 (default) if shape is not to be adapted
 #' @param print.info.every frequency of information on the chain: acceptance rate and state of the chain. Default value to \code{n.iterations/100}. Set to \code{NULL} to avoid any info.
+#' @param verbose logical. If \code{TRUE}, information are printed.
+#' @param max.scaling.sd numeric. Maximum value for the scaling factor of the covariance matrix. Avoid too high values for the scaling factor, which might happen due to the exponential update scheme. In this case, the covariance matrix becomes too wide and the sampling from the truncated proposal kernel becomes highly inefficient
 #' @note The size of the proposal covariance matrix is adapted using the following formulae: \deqn{\Sigma_{n+1}=\sigma_n * \Sigma_n} with \eqn{\sigma_n=\sigma_{n-1}*exp(\alpha^n*(acc - 0.234))},
 #' where \eqn{\alpha} is equal to \code{adapt.size.cooling} and \eqn{acc} is the acceptance rate of the chain.
 #'
@@ -36,12 +38,12 @@
 #'      \item \code{covmat.empirical} empirical covariance matrix of the target sample.
 #' }
 mcmcMH <- function(target, init.theta, proposal.sd = NULL,
-                   n.iterations, covmat = NULL,
-                   limits=list(lower = NULL, upper = NULL),
-                   adapt.size.start = NULL, adapt.size.cooling = 0.99,
-                   adapt.shape.start = NULL,
-                   print.info.every = n.iterations/100,
-                   verbose = FALSE) {
+   n.iterations, covmat = NULL,
+   limits=list(lower = NULL, upper = NULL),
+   adapt.size.start = NULL, adapt.size.cooling = 0.99,
+   adapt.shape.start = NULL,
+   print.info.every = n.iterations/100,
+   verbose = FALSE, max.scaling.sd = 50) {
 
 
     # initialise theta
@@ -61,9 +63,9 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
             proposal.sd <- init.theta/10
         }
         covmat.proposal <-
-            matrix(diag(proposal.sd^2, nrow = length(theta.names)),
-                   nrow = length(theta.names),
-                   dimnames = list(theta.names, theta.names))
+        matrix(diag(proposal.sd[theta.names]^2, nrow = length(theta.names)),
+           nrow = length(theta.names),
+           dimnames = list(theta.names, theta.names))
     } else {
         covmat.proposal <- covmat.proposal[theta.names,theta.names]
     }
@@ -99,7 +101,7 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
 
     if (verbose) {
         message("Init: ", theta.current[theta.estimated.names],
-                ", target: ", target.theta.current[["log.density"]])
+            ", target: ", target.theta.current[["log.density"]])
     }
 
 
@@ -119,6 +121,9 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
     # scaling factor for covmat size
     scaling.sd  <- 1
 
+    # scaling multiplier
+    scaling.multiplier <- 1
+
     # empirical covariance matrix (0 everywhere initially)
     covmat.empirical <- covmat.proposal
     covmat.empirical[,] <- 0
@@ -137,27 +142,27 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
 
         # adaptive step
         if (!is.null(adapt.size.start) && i.iteration >= adapt.size.start &&
-                acceptance.rate*i.iteration < adapt.shape.start) {
+            (is.null(adapt.shape.start) || acceptance.rate*i.iteration < adapt.shape.start)) {
             if (!adapting.size) {
                 message("\n---> Start adapting size of covariance matrix")
                 adapting.size <- TRUE
             }
             # adapt size of covmat until we get enough accepted jumps
-            scaling.sd <- scaling.sd *
-                exp(adapt.size.cooling^(i.iteration-adapt.size.start) *
-                      (acceptance.rate - 0.234))
+            scaling.multiplier <- exp(adapt.size.cooling^(i.iteration-adapt.size.start) * (acceptance.rate - 0.234))
+            scaling.sd <- scaling.sd * scaling.multiplier
+            scaling.sd <- min(c(scaling.sd,max.scaling.sd))
             covmat.proposal <- scaling.sd^2*covmat.proposal.init
 
         } else if (!is.null(adapt.shape.start) &&
-                       acceptance.rate*i.iteration >= adapt.shape.start) {
+           acceptance.rate*i.iteration >= adapt.shape.start) {
             if (!adapting.shape) {
                 message("\n---> Start adapting shape of covariance matrix")
                 # flush.console()
                 adapting.shape <- TRUE
             }
-            # adapt shape of covmat using optimal scaling factor for multivariate traget distributions
-            covmat.proposal <- 2.38^2/length(theta.estimated.names) *
-                covmat.empirical
+            # adapt shape of covmat using optimal scaling factor for multivariate target distributions
+            scaling.sd <- 2.38/sqrt(length(theta.estimated.names))
+            covmat.proposal <-  scaling.sd^2 * covmat.empirical
         }
 
         # print info
@@ -167,11 +172,12 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
             ## suppressMessages(time.estimation <- round(as.period((end_iteration_time-start_iteration_time)*10000/round(print.info.every))))
             ## message("Iteration: ",i.iteration,"/",n.iterations,", ETA: ",time.estimation,", acceptance rate: ",sprintf("%.3f",acceptance.rate),appendLF=FALSE)
             message("Iteration: ",i.iteration,"/", n.iterations,
-                    ", acceptance rate: ",
-                    sprintf("%.3f",acceptance.rate), appendLF=FALSE)
+                ", acceptance rate: ",
+                sprintf("%.3f",acceptance.rate), appendLF=FALSE)
             if (!is.null(adapt.size.start) || !is.null(adapt.shape.start)) {
                 message(", scaling.sd: ", sprintf("%.3f", scaling.sd),
-                        appendLF=FALSE)
+                    ", scaling.multiplier: ", sprintf("%.3f", scaling.multiplier),
+                    appendLF=FALSE)
             }
             message(", state: ",printNamedVector(state.mcmc))
             ## start_iteration_time <- end_iteration_time
@@ -179,7 +185,7 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
 
         # propose another parameter set
         if (any(diag(covmat.proposal)[theta.estimated.names] <
-                    .Machine$double.eps)) {
+            .Machine$double.eps)) {
             print(covmat.proposal[theta.estimated.names,theta.estimated.names])
             stop("non-positive definite covmat",call.=FALSE)
         }
@@ -213,38 +219,38 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
 
             # compute Metropolis-Hastings ratio (acceptance probability)
             log.acceptance <- target.theta.propose$log.density -
-                target.theta.current$log.density
+            target.theta.current$log.density
             log.acceptance <- log.acceptance +
-                dtmvnorm(x = theta.current[theta.estimated.names],
-                         mean =
-                             theta.propose[theta.estimated.names],
-                         sigma =
-                             covmat.proposal[theta.estimated.names,
-                                             theta.estimated.names],
-                         lower =
-                             lower.proposal[theta.estimated.names],
-                         upper =
-                             upper.proposal[theta.estimated.names],
-                         log = TRUE)
+            dtmvnorm(x = theta.current[theta.estimated.names],
+             mean =
+             theta.propose[theta.estimated.names],
+             sigma =
+             covmat.proposal[theta.estimated.names,
+             theta.estimated.names],
+             lower =
+             lower.proposal[theta.estimated.names],
+             upper =
+             upper.proposal[theta.estimated.names],
+             log = TRUE)
             log.acceptance <- log.acceptance -
-                dtmvnorm(x = theta.propose[theta.estimated.names],
-                         mean = theta.current[theta.estimated.names],
-                         sigma =
-                             covmat.proposal[theta.estimated.names,
-                                             theta.estimated.names],
-                         lower =
-                             lower.proposal[theta.estimated.names],
-                         upper =
-                             upper.proposal[theta.estimated.names],
-                         log = TRUE)
+            dtmvnorm(x = theta.propose[theta.estimated.names],
+             mean = theta.current[theta.estimated.names],
+             sigma =
+             covmat.proposal[theta.estimated.names,
+             theta.estimated.names],
+             lower =
+             lower.proposal[theta.estimated.names],
+             upper =
+             upper.proposal[theta.estimated.names],
+             log = TRUE)
 
         }
 
         if (verbose) {
             message("Propose: ", theta.propose[theta.estimated.names],
-                    ", target: ", target.theta.propose[["log.density"]],
-                    ", acc prob: ", exp(log.acceptance), ", ",
-                    appendLF = FALSE)
+                ", target: ", target.theta.propose[["log.density"]],
+                ", acc prob: ", exp(log.acceptance), ", ",
+                appendLF = FALSE)
         }
 
         if (is.accepted <- (log(runif (1)) < log.acceptance)) {
@@ -261,17 +267,17 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
 
         # update acceptance rate
         acceptance.rate <- acceptance.rate +
-            (is.accepted - acceptance.rate) / i.iteration
+        (is.accepted - acceptance.rate) / i.iteration
 
         # update empirical covariance matrix
         tmp <- updateCovmat(covmat.empirical, theta.mean,
-                            theta.current, i.iteration)
+            theta.current, i.iteration)
         covmat.empirical <- tmp$covmat
-        theta.mean <- tmp$theta.mean
+        theta.mean <- tmp$theta.mean            
 
     }
 
     return(list(trace = trace,
-                acceptance.rate = acceptance.rate,
-                covmat.empirical = covmat.empirical))
+        acceptance.rate = acceptance.rate,
+        covmat.empirical = covmat.empirical))
 }
