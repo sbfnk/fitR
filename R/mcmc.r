@@ -183,16 +183,18 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
             print(covmat.proposal[theta.estimated.names,theta.estimated.names])
             stop("non-positive definite covmat",call.=FALSE)
         }
-        theta.propose[theta.estimated.names] <-
-            as.vector(rtmvnorm(1,
-                               mean =
-                                   theta.current[theta.estimated.names],
-                               sigma =
-                                   covmat.proposal[theta.estimated.names,theta.estimated.names],
-                               lower =
-                                   lower.proposal[theta.estimated.names],
-                               upper = upper.proposal[theta.estimated.names]))
-
+        if (length(theta.estimated.names) > 0) {
+            theta.propose[theta.estimated.names] <-
+                as.vector(rtmvnorm(1,
+                                   mean =
+                                       theta.current[theta.estimated.names],
+                                   sigma =
+                                       covmat.proposal[theta.estimated.names,theta.estimated.names],
+                                   lower =
+                                       lower.proposal[theta.estimated.names],
+                                   upper = upper.proposal[theta.estimated.names]))
+        }
+        
         # evaluate posterior of proposed parameter
         target.theta.propose <- target(theta.propose)
         # if return value is a vector, set log.density and trace
