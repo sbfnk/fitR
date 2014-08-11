@@ -5,8 +5,8 @@
 \usage{
 plotPosteriorFit(trace, fitmodel, init.state, data,
   posterior.summary = c("sample", "median", "mean", "max"), summary = TRUE,
-  sample.size = 100, alpha = min(1, 10/sample.size), plot = TRUE,
-  all.vars = FALSE)
+  sample.size = 100, non.extinct = NULL, alpha = min(1, 10/sample.size),
+  plot = TRUE, all.vars = FALSE)
 }
 \arguments{
 \item{posterior.summary}{character. Set to \code{"sample"} to plot trajectories from a sample of the posterior (default). Set to \code{"median"}, \code{"mean"} or \code{"max"} to plot trajectories corresponding to the median, mean and maximum of the posterior density.}
@@ -22,6 +22,11 @@ plotPosteriorFit(trace, fitmodel, init.state, data,
 \item{data}{data frame. Observation times and observed data. The time column must be named \code{"time"} and the observation column must be named \code{"obs"}.}
 
 \item{trace}{a \code{data.frame} with one column per estimated parameter, as returned by \code{\link{burnAndThin}}}
+
+\item{non.extinct}{character vector. Names of the infected states which must be non-zero so the epidemic is still ongoing.
+When the names of these states are provided, the extinction probability is plotted by computing the proportion of faded-out epidemics over time.
+An epidemic has faded-out when all the infected states (whose names are provided) are equal to 0. This is only relevant for stochastic models.
+In addition, if \code{summary==TRUE}, the summaries of the trajectories conditioned on non-extinction are shown. Default to \code{NULL}.}
 
 \item{alpha}{transparency of the trajectories (between 0 and 1).}
 

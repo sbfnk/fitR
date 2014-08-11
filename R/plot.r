@@ -115,8 +115,6 @@ plotTraj <- function(traj=NULL, state.names=NULL, data=NULL, summary=TRUE, non.e
 
 }
 
-# TODO: transform all p.extinction into extinction
-
 #'Plot fit of model to data
 #'
 #'This function simulates the model under \code{theta}, generates observation and plot them against the data. Since simulation and observation processes can be stochastic, \code{n.replicates} can be plotted.
@@ -131,7 +129,7 @@ plotTraj <- function(traj=NULL, state.names=NULL, data=NULL, summary=TRUE, non.e
 #'     \item \code{simulations} \code{data.frame} of \code{n.replicates} simulated observations.
 #'     \item \code{plot} the plot of the fit.
 #' }
-plotFit <- function(fitmodel, theta, init.state, data, n.replicates=1, summary=TRUE, alpha=min(1,10/n.replicates), all.vars=FALSE, p.extinction=FALSE, plot=TRUE) {
+plotFit <- function(fitmodel, theta, init.state, data, n.replicates=1, summary=TRUE, alpha=min(1,10/n.replicates), all.vars=FALSE, non.extinct=NULL, plot=TRUE) {
 
     times <- c(0, data$time)
 
@@ -146,7 +144,7 @@ plotFit <- function(fitmodel, theta, init.state, data, n.replicates=1, summary=T
         state.names <- grep("obs",names(traj),value=TRUE)
     }
 
-    p <- plotTraj(traj=traj, state.names=state.names, data=data, summary=summary, alpha=alpha, p.extinction=p.extinction, plot=FALSE)
+    p <- plotTraj(traj=traj, state.names=state.names, data=data, summary=summary, alpha=alpha, non.extinct=non.extinct, plot=FALSE)
 
     if(plot){
         print(p)
@@ -275,7 +273,7 @@ plotPosteriorDensity <- function(trace){
 #'    \item \code{traj} a \code{data.frame} with the trajectories (and observations) sampled from the posterior distribution.
 #'    \item \code{plot} the plot of the fit displayed.
 #'}
-plotPosteriorFit <- function(trace, fitmodel, init.state, data, posterior.summary=c("sample","median","mean","max"), summary=TRUE, sample.size = 100, alpha=min(1,10/sample.size), plot=TRUE, all.vars = FALSE) {
+plotPosteriorFit <- function(trace, fitmodel, init.state, data, posterior.summary=c("sample","median","mean","max"), summary=TRUE, sample.size = 100, non.extinct=NULL, alpha=min(1,10/sample.size), plot=TRUE, all.vars = FALSE) {
 
     posterior.summary <- match.arg(posterior.summary)
 
@@ -337,7 +335,7 @@ plotPosteriorFit <- function(trace, fitmodel, init.state, data, posterior.summar
         state.names <- grep("obs",names(traj),value=TRUE)
     }
 
-    p <- plotTraj(traj=traj, state.names=state.names, data=data, summary=summary, alpha=alpha, plot=FALSE)
+    p <- plotTraj(traj=traj, state.names=state.names, data=data, summary=summary, alpha=alpha, non.extinct=non.extinct, plot=FALSE)
 
 
     if(plot){

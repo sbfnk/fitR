@@ -4,7 +4,7 @@
 \title{Plot fit of model to data}
 \usage{
 plotFit(fitmodel, theta, init.state, data, n.replicates = 1, summary = TRUE,
-  alpha = min(1, 10/n.replicates), all.vars = FALSE, p.extinction = FALSE,
+  alpha = min(1, 10/n.replicates), all.vars = FALSE, non.extinct = NULL,
   plot = TRUE)
 }
 \arguments{
@@ -23,6 +23,11 @@ plotFit(fitmodel, theta, init.state, data, n.replicates = 1, summary = TRUE,
 \item{summary}{logical. If \code{TRUE}, the mean, median as well as the 50th and 95th percentile of the trajectories are plotted (default). If \code{FALSE}, all individual trajectories are plotted (transparency can be set with \code{alpha}).}
 
 \item{alpha}{transparency of the trajectories (between 0 and 1).}
+
+\item{non.extinct}{character vector. Names of the infected states which must be non-zero so the epidemic is still ongoing.
+When the names of these states are provided, the extinction probability is plotted by computing the proportion of faded-out epidemics over time.
+An epidemic has faded-out when all the infected states (whose names are provided) are equal to 0. This is only relevant for stochastic models.
+In addition, if \code{summary==TRUE}, the summaries of the trajectories conditioned on non-extinction are shown. Default to \code{NULL}.}
 
 \item{plot}{if \code{TRUE} the plot is displayed, and returned otherwise.}
 }
