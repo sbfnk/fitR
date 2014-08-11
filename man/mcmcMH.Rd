@@ -7,7 +7,7 @@ mcmcMH(target, init.theta, proposal.sd = NULL, n.iterations, covmat = NULL,
   limits = list(lower = NULL, upper = NULL), adapt.size.start = NULL,
   adapt.size.cooling = 0.99, adapt.shape.start = NULL,
   print.info.every = n.iterations/100, verbose = FALSE,
-  max.scaling.sd = 50)
+  max.scaling.sd = 50, acceptance.rate.weight = NULL)
 }
 \arguments{
 \item{target}{\R-function that takes a single argument: \code{theta} (named numeric vector of parameter values) and returns a list of 2 elements:
@@ -20,9 +20,9 @@ mcmcMH(target, init.theta, proposal.sd = NULL, n.iterations, covmat = NULL,
 
 \item{proposal.sd}{vector of standard deviations. If this is given and covmat is not, a diagonal matrix will be built from this to use as covariance matrix of the multivariate Gaussian proposal distribution. By default, this is set to \code{init.theta/10}.}
 
-\item{covmat}{named numeric covariance matrix of the multivariate Gaussian proposal distribution. Must have named rows and columns with at least all estimated theta. If \code{proposal.sd} is given, this is ignored.}
-
 \item{n.iterations}{number of iterations to run the MCMC chain.}
+
+\item{covmat}{named numeric covariance matrix of the multivariate Gaussian proposal distribution. Must have named rows and columns with at least all estimated theta. If \code{proposal.sd} is given, this is ignored.}
 
 \item{limits}{limits for the - potentially truncated - multi-variate normal proposal distribution of the MCMC. Contains 2 elements:
 \itemize{
@@ -41,6 +41,8 @@ mcmcMH(target, init.theta, proposal.sd = NULL, n.iterations, covmat = NULL,
 \item{verbose}{logical. If \code{TRUE}, information are printed.}
 
 \item{max.scaling.sd}{numeric. Maximum value for the scaling factor of the covariance matrix. Avoid too high values for the scaling factor, which might happen due to the exponential update scheme. In this case, the covariance matrix becomes too wide and the sampling from the truncated proposal kernel becomes highly inefficient}
+
+\item{acceptance.rate.weight}{if this is non-\code{NULL}, the acceptance rate is calculated as a moving average. This makes sure the acceptance rate is a reflection of recent proposals, and is useful for adaptive MCMC to prevent overshoot. If this is set to a value between 0 and 1, the acceptance rate will be calculated as \eqn{a = a_\mathrm{old} (1 - w) + a_\mathrm{new} w}, where \eqn{a_\mathrm{old}} is the (moving) average of the acceptance rate at the previous iteration, \eqn{a_\mathrm{new}} is 1 if the current proposal is accepted and 0 if it is rejected, and \eqn{w} is the value of \code{acceptance.rate.weight}. Values of \eqn{w} close to 1 give a lot of weight to recent proposals, while values closer to 0 give more weight to older proposals. A reasonable starting value is in the order of 1e-3.}
 }
 \value{
 a list with 3 elements:
