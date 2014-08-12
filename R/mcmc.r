@@ -152,7 +152,12 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
             scaling.multiplier <- exp(adapt.size.cooling^(i.iteration-adapt.size.start) * (acceptance.rate - 0.234))
             scaling.sd <- scaling.sd * scaling.multiplier
             scaling.sd <- min(c(scaling.sd,max.scaling.sd))
-            covmat.proposal <- scaling.sd^2*covmat.proposal.init
+            # only scale if it doesn't reduce the covariance matrix to 0
+            covmat.proposal.new <- scaling.sd^2*covmat.proposal.init
+            if (!(any(diag(covmat.proposal.new)[theta.estimated.names] <
+                .Machine$double.eps))) {
+                covmat.proposal <- covmat.proposal.new
+            }
 
         } else if (!is.null(adapt.shape.start) &&
            acceptance.rate*i.iteration >= adapt.shape.start) {
@@ -163,7 +168,8 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
             }
             # adapt shape of covmat using optimal scaling factor for multivariate target distributions
             scaling.sd <- 2.38/sqrt(length(theta.estimated.names))
-            covmat.proposal <-  scaling.sd^2 * covmat.empirical
+
+            covmat.proposal <- scaling.sd^2 * covmat.empirical
         }
 
         # print info
