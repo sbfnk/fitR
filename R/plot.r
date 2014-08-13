@@ -11,11 +11,15 @@
 #' In addition, if \code{summary==TRUE}, the summaries of the trajectories conditioned on non-extinction are shown. Default to \code{NULL}.
 #' @param alpha transparency of the trajectories (between 0 and 1).
 #' @param plot if \code{TRUE} the plot is displayed, and returned otherwise.
+#' @param init_date character. Date of the first point of the time series (default to \code{NULL}). If provided, the x-axis will be in calendar format. NB: currently only works if the unit of time is the day.
 #' @export
 #' @import reshape2 ggplot2 stringr
 #' @seealso \code{\link{simulateModelReplicates}}
-plotTraj <- function(traj=NULL, state.names=NULL, data=NULL, summary=TRUE, non.extinct=NULL, alpha=1, plot=TRUE) {
+plotTraj <- function(traj=NULL, state.names=NULL, data=NULL, summary=TRUE, non.extinct=NULL, alpha=1, plot=TRUE, init_date=NULL) {
 
+    if(!is.null(init_date)){
+        init_date <- as.Date(init_date)
+    }
 
     if(is.null(traj) && is.null(data)){
         stop("Nothing to plot")
@@ -33,6 +37,13 @@ plotTraj <- function(traj=NULL, state.names=NULL, data=NULL, summary=TRUE, non.e
 
     if(is.null(state.names)){
         state.names <- setdiff(names(traj),c("time","replicate"))
+    }
+
+    if(!is.null(init_date)){
+        traj <- mutate(traj, time = init_date + time)
+        if(!is.null(data)){
+            data <- mutate(data, time = init_date + time)            
+        }    
     }
 
     if (!is.null(traj)) {
@@ -225,10 +236,22 @@ plotTrace <- function(trace, estimated.only = FALSE){
 #'
 #'Plot the posterior density.
 #' @param trace either a \code{data.frame} or a \code{list} of \code{data.frame} with all variables in column, as outputed by \code{\link{mcmcMH}}. Accept also an \code{mcmc}, a \code{mcmc.list} object or a \code{list} of \code{mcmc.list} .
+#' @param prior a \code{data.frame} containing the prior density. It must have the three following columns: 
+#' \itemize{
+#'     \item \code{theta} names of the parameters
+#'     \item \code{x} value of the parameters
+#'     \item \code{density} density of the prior at \code{x} 
+#' }
+#' @param colour named vector of two characters and containing colour names for posterior and prior distributions. Vector names must be \code{posterior} and \code{prior}.
+#' @inheritParams plotTraj
 #' @export
 #' @import ggplot2 reshape2
 #' @seealso burnAndThin
-plotPosteriorDensity <- function(trace){
+plotPosteriorDensity <- function(trace, prior=NULL, colour=NULL, plot=TRUE){
+
+    if(is.null(colour)){
+        colour <- c(posterior="#7570b3",prior="#d95f02")
+    }
 
     if(class(trace)%in%c("mcmc.list","list")){
 
@@ -244,14 +267,28 @@ plotPosteriorDensity <- function(trace){
         trace$chain <- 1
     }
 
-    df <- melt(trace,id.vars="chain")
+    df_posterior <- melt(trace,id.vars="chain", value.name="x", variable.name="theta") 
 
-    # density
-    p <- ggplot(df,aes(x=value,colour=chain))+facet_wrap(~variable,scales="free")
-    p <- p+geom_density(aes(y=..density..))
-    # p <- p+geom_histogram(aes(y=..density..),colour=NA,alpha=0.5,position="identity")
-    p <- p+theme_bw()
-    print(p)
+    p <- ggplot(df_posterior,aes(x=x))+facet_wrap(~theta,scales="free")
+
+    if(n_distinct(df_posterior$chain)>1){
+        p <- p + geom_density(data=df_posterior,aes(y=..density.., colour=chain))
+    } else {
+        p <- p + geom_histogram(data=df_posterior,aes(y=..density..), fill=colour[["posterior"]], colour=colour[["posterior"]],alpha=0.5)
+        # p <- p + geom_density(aes(y=..density..),fill="black",alpha=0.5)
+    }
+
+    if(!is.null(prior)){
+        p <- p + geom_area(data=prior,aes(x=x,y=density),fill=colour[["prior"]],alpha=0.5)
+    }
+
+    p <- p + theme_bw() + xlab("value")
+    
+    if(plot){
+        print(p)        
+    } else {
+        return(p)
+    }
 
 }
 
@@ -273,7 +310,7 @@ plotPosteriorDensity <- function(trace){
 #'    \item \code{traj} a \code{data.frame} with the trajectories (and observations) sampled from the posterior distribution.
 #'    \item \code{plot} the plot of the fit displayed.
 #'}
-plotPosteriorFit <- function(trace, fitmodel, init.state, data, posterior.summary=c("sample","median","mean","max"), summary=TRUE, sample.size = 100, non.extinct=NULL, alpha=min(1,10/sample.size), plot=TRUE, all.vars = FALSE) {
+plotPosteriorFit <- function(trace, fitmodel, init.state, data, posterior.summary=c("sample","median","mean","max"), summary=TRUE, sample.size = 100, non.extinct=NULL, alpha=min(1,10/sample.size), plot=TRUE, all.vars = FALSE, init_date=NULL) {
 
     posterior.summary <- match.arg(posterior.summary)
 
@@ -313,7 +350,7 @@ plotPosteriorFit <- function(trace, fitmodel, init.state, data, posterior.summar
         index <- sample(1:nrow(trace), sample.size, replace=TRUE)
         names(index) <- index
 
-        simu <- llply(index,function(ind) {
+        traj <- ldply(index,function(ind) {
 
             # extract posterior parameter set
             theta <- trace[ind,theta.names]
@@ -321,11 +358,10 @@ plotPosteriorFit <- function(trace, fitmodel, init.state, data, posterior.summar
             # simulate model at successive observation times of data
             traj <- genObsTraj(fitmodel, theta, init.state, times)
 
-            return(list(traj=traj,theta=theta))
-        },.progress="text",.id="replicate")
+            return(traj)
+        },.progress="text", .id="replicate")
 
-        traj <- ldply(simu,function(x) {x$traj})
-        theta <- ldply(simu,function(x) {x$theta})
+        theta <- trace[index,theta.names]
     }
 
 
@@ -335,7 +371,9 @@ plotPosteriorFit <- function(trace, fitmodel, init.state, data, posterior.summar
         state.names <- grep("obs",names(traj),value=TRUE)
     }
 
-    p <- plotTraj(traj=traj, state.names=state.names, data=data, summary=summary, alpha=alpha, non.extinct=non.extinct, plot=FALSE)
+    traj <- subset(traj, time>0)
+
+    p <- plotTraj(traj=traj, state.names=state.names, data=data, summary=summary, alpha=alpha, non.extinct=non.extinct, plot=FALSE, init_date=init_date)
 
 
     if(plot){

@@ -6,7 +6,7 @@
 plotPosteriorFit(trace, fitmodel, init.state, data,
   posterior.summary = c("sample", "median", "mean", "max"), summary = TRUE,
   sample.size = 100, non.extinct = NULL, alpha = min(1, 10/sample.size),
-  plot = TRUE, all.vars = FALSE)
+  plot = TRUE, all.vars = FALSE, init_date = NULL)
 }
 \arguments{
 \item{posterior.summary}{character. Set to \code{"sample"} to plot trajectories from a sample of the posterior (default). Set to \code{"median"}, \code{"mean"} or \code{"max"} to plot trajectories corresponding to the median, mean and maximum of the posterior density.}
@@ -31,6 +31,8 @@ In addition, if \code{summary==TRUE}, the summaries of the trajectories conditio
 \item{alpha}{transparency of the trajectories (between 0 and 1).}
 
 \item{plot}{if \code{TRUE} the plot is displayed, and returned otherwise.}
+
+\item{init_date}{character. Date of the first point of the time series (default to \code{NULL}). If provided, the x-axis will be in calendar format. NB: currently only works if the unit of time is the day.}
 
 \item{all.vars}{logical, if \code{FALSE} only the observations are plotted. Otherwise, all state variables are plotted.}
 }

@@ -4,7 +4,7 @@
 \title{Plot model trajectories}
 \usage{
 plotTraj(traj = NULL, state.names = NULL, data = NULL, summary = TRUE,
-  non.extinct = NULL, alpha = 1, plot = TRUE)
+  non.extinct = NULL, alpha = 1, plot = TRUE, init_date = NULL)
 }
 \arguments{
 \item{traj}{data.frame, output of \code{fitmodel$simulate} or \code{simulateModelReplicates}.}
@@ -23,6 +23,8 @@ In addition, if \code{summary==TRUE}, the summaries of the trajectories conditio
 \item{alpha}{transparency of the trajectories (between 0 and 1).}
 
 \item{plot}{if \code{TRUE} the plot is displayed, and returned otherwise.}
+
+\item{init_date}{character. Date of the first point of the time series (default to \code{NULL}). If provided, the x-axis will be in calendar format. NB: currently only works if the unit of time is the day.}
 }
 \description{
 This function use faceting to plot all trajectories in a data frame. Convenient to see results of several simulations, or data. Also, if \code{data} is present, then an additional plot is displayed with data and potentially observation generated.
