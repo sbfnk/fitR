@@ -292,6 +292,47 @@ plotPosteriorDensity <- function(trace, prior=NULL, colour=NULL, plot=TRUE){
 
 }
 
+
+#'2D highest posterior density region
+#'
+#'Given a sample from a multivariate posterior distribution, plot the bivariate region of highest marginal posterior density (HPD) for two variables with defined levels.
+#' @param trace either a \code{data.frame} or \code{mcmc} object.
+#' @inheritParams plotPosteriorDensity
+#' @inheritParams emdbook::HPDregionplot
+#' @note HPD levels are computed using the function \code{\link[emdbook]{HPDregionplot}} from the package \code{emdbook}.
+#' @export
+#' @import ggplot2
+#' @importFrom emdbook HPDregionplot
+plotHPDregion2D <- function(trace, vars, prob=c(0.95,0.75,0.5,0.25,0.1), xlab=NULL, ylab=NULL, plot=TRUE) {
+
+    if(length(vars)!=2){
+        stop(sQuote("vars")," is not a vector of length 2",call.=FALSE)
+    }
+
+    list_HPD <- HPDregionplot(trace,vars=vars,prob=prob,n=100)
+    levels_HPD <- unique(sapply(list_HPD,function(x){x$level}))
+    names(levels_HPD) <- paste0(prob*100,"%")
+
+    p <- ggplot(trace, aes_string(x=vars[1],y=vars[2]))
+    p <- p + stat_density2d(aes(alpha=..level..),fill="red",colour="black", geom="polygon",breaks=levels_HPD) 
+    p <- p + scale_alpha("HPD", breaks=levels_HPD,guide="legend", range=c(0.1,0.45))
+    if(!is.null(xlab)){
+        p <- p + xlab(xlab)         
+    }
+    if(!is.null(ylab)){
+        p <- p + ylab(ylab)     
+    }
+
+    p <- p + theme_bw() + guides(alpha=guide_legend(override.aes=list(colour=NA,alpha=seq(0.1,0.9,length=length(levels_HPD)))))
+    
+    if(plot){
+        print(p)        
+    }
+
+    invisible(p)
+}
+
+
 #'Plot MCMC posterior fit
 #'
 #'Plot posterior distribution of observation generated under model's posterior parameter distribution.
