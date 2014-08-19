@@ -68,6 +68,92 @@ simulateModelReplicates <- function(fitmodel,theta, init.state, times, n, observ
 }
 
 
+#'Simulate model until extinction
+#'
+#'Return final state at extinction
+#' @param extinct character vetor. Simulations stop when all these state are extinct.
+#' @param time.init numeric. Start time of simulation.
+#' @param time.step numeric. Time step at which extinction is checked
+#' @inheritParams testFitmodel
+#' @inheritParams simulateModelReplicates
+#' @inheritParams particleFilter
+#' @export
+#' @import plyr parallel doParallel
+simulateFinalStateAtExtinction <- function(fitmodel, theta, init.state, extinct=NULL ,time.init=0, time.step=100, n=100, observation=FALSE, n.cores = 1) {
+
+    if(0){
+
+        theta <- fit_map$theta 
+        extinct <- c("E_com","E_hosp","I","H","F")
+        n <- 1000
+        fitmodel <- SEIHFRB_stoch
+        init.state <- init_state
+        time.init=0
+        time.step=50
+        observation=FALSE
+        n.cores = 4
+    }
+
+    stopifnot(inherits(fitmodel,"fitmodel"),n>0)
+
+    if(observation && is.null(fitmodel$genObsPoint)){
+        stop("Can't generate observation as ",sQuote("fitmodel")," doesn't have a ",sQuote("genObsPoint")," function.")
+    }
+
+    if(is.null(n.cores)){
+        n.cores <- detectCores()
+    }
+
+    if(n.cores > 1){
+        registerDoParallel(cores=n.cores)
+    }
+
+    rep <- as.list(1:n)
+    names(rep) <- rep
+
+    if (n > 1 && n.cores==1) {
+        progress = "text"
+    } else {
+        progress = "none"
+    }
+
+    times <- c(time.init, time.step)
+
+    system.time(final.state.rep <- ldply(rep,function(x) {
+
+        if(observation){
+            traj <- genObsTraj(fitmodel, theta, init.state, times)
+        } else {
+            traj <- fitmodel$simulate(theta,init.state,times)
+        }
+
+        current.state <- round(unlist(traj[nrow(traj),fitmodel$state.names]))
+        # current.state <- unlist(traj[nrow(traj),fitmodel$state.names])
+        current.time <- last(traj$time)
+        
+        while(any(as.logical(current.state[extinct]))){
+
+            times <- times + current.time
+
+            if(observation){
+                traj <- genObsTraj(fitmodel, theta, current.state, times)
+            } else {
+                traj <- fitmodel$simulate(theta, current.state,times)
+            }
+
+            current.state <- round(unlist(traj[nrow(traj),fitmodel$state.names]))
+            # current.state <- unlist(traj[nrow(traj),fitmodel$state.names])
+            current.time <- last(traj$time)
+        }
+
+        return(data.frame(t(c(time=current.time,current.state))))
+
+    },.progress=progress,.id="replicate",.parallel=(n.cores > 1),.paropts=list(.inorder=FALSE)))
+
+    return(final.state.rep)
+}
+
+
 #'Update covariance matrix
 #'
 #'Update covariance matrix using a stable one-pass algorithm. This is much more efficient than using \code{\link{cov}} on the full data.

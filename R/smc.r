@@ -9,7 +9,7 @@
 #' @note An unbiased state sample \eqn{x(t_{0:T}) ~ p(X(t_{0:T})|\theta,y(t_{0:T}))} can be obtained by sampling the set of trajectories \code{traj} with probability \code{traj.weight}.
 #' @export
 #' @seealso plotSMC
-#' @import parallel doParallel
+#' @import parallel doParallel plyr
 #' @return A list of 3 elements:
 #' \itemize{
 #' \item \code{pointLogLike} the marginal log-likelihood of the theta.
