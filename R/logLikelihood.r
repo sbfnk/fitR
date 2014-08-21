@@ -126,4 +126,46 @@ genObsTraj <- function(fitmodel, theta, init.state, times) {
 
 
 
+#'Compute the DIC
+#'
+#'This function computes the Deviance Information Criterion (DIC) of a \code{\link{fitmodel}} from a MCMC sample.
+#' @param trace either a \code{data.frame} or \code{mcmc} object. Must contain one column with the posterior \code{log.likelihood}.
+#' @inheritParams testFitmodel
+#' @inheritParams logPosterior
+#' @export
+#' @return a list of 5 elements:
+#' \itemize{
+#'     \item \code{DIC} value of the DIC
+#'     \item \code{theta_bar} mean posterior of theta
+#'     \item \code{log_like_theta_bar} log-likelihood of \code{theta_bar}
+#'     \item \code{D_theta_bar} deviance of \code{theta_bar}
+#'     \item \code{p_D} effective number of parameters
+#' }
+computeDIC <- function(trace, fitmodel, init.state, data, margLogLike = trajLogLike, ...) {
+
+    simulation <- match.arg(simulation)
+
+    # compute mean posterior estimate
+    theta_bar <- colMeans(trace[fitmodel$theta.names])
+
+    log_like_theta_bar <- margLogLike(fitmodel, theta_bar, init.state, data = data, ...)
+
+    # and its deviance
+    D_theta_bar <- -2 * log_like_theta_bar
+
+    # the effective number of parameters
+    p_D <- var(-2 * trace$log.likelihood)/2
+
+    # and finally the DIC
+    DIC <- D_theta_bar + 2 * p_D
+
+    ans <- list(DIC=DIC, theta_bar=theta_bar, log_like_theta_bar=log_like_theta_bar, D_theta_bar=D_theta_bar,  p_D=p_D)
+
+    return(ans)
+}
+
+
+
+
+
 

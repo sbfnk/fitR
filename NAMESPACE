@@ -3,6 +3,7 @@
 export(ABCLogPosterior)
 export(SEITL_distanceOscillation)
 export(burnAndThin)
+export(computeDIC)
 export(computeDistanceABC)
 export(distanceOscillation)
 export(export2Tracer)
