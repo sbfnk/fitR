@@ -26,7 +26,7 @@ trajLogLike <- function(fitmodel, theta, init.state, data) {
 
 		# extract model point
 		# we use i+1 since the first row of traj contains the initial state.
-		model.point <- unlist(traj[i+1,fitmodel$state.names])
+		model.point <- unlist(traj[i+1,])
 
 		# update marginal log-likelihood
 		logLike <- logLike + fitmodel$pointLogLike(data.point=data.point, model.point=model.point, theta=theta)
