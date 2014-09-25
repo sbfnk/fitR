@@ -66,6 +66,7 @@ plotTraj <- function(traj=NULL, state.names=NULL, data=NULL, summary=TRUE, non.e
         }
         
         df.traj <- melt(traj,measure.vars=state.names,variable.name="state")
+        df.traj <- subset(df.traj, !is.na(value))
 
 
         if (summary){
