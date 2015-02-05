@@ -23,6 +23,7 @@
 #' @param verbose logical. If \code{TRUE}, information are printed.
 #' @param max.scaling.sd numeric. Maximum value for the scaling factor of the covariance matrix. Avoid too high values for the scaling factor, which might happen due to the exponential update scheme. In this case, the covariance matrix becomes too wide and the sampling from the truncated proposal kernel becomes highly inefficient
 #' @param acceptance.rate.weight if this is non-\code{NULL}, the acceptance rate is calculated as a moving average. This makes sure the acceptance rate is a reflection of recent proposals, and is useful for adaptive MCMC to prevent overshoot. If this is set to a value between 0 and 1, the acceptance rate will be calculated as \eqn{a = a_\mathrm{old} (1 - w) + a_\mathrm{new} w}, where \eqn{a_\mathrm{old}} is the (moving) average of the acceptance rate at the previous iteration, \eqn{a_\mathrm{new}} is 1 if the current proposal is accepted and 0 if it is rejected, and \eqn{w} is the value of \code{acceptance.rate.weight}. Values of \eqn{w} close to 1 give a lot of weight to recent proposals, while values closer to 0 give more weight to older proposals. A reasonable starting value is in the order of 1e-2.
+#' @param acceptance.window if given, how many acceptances to store
 #' @note The size of the proposal covariance matrix is adapted using the following formulae: \deqn{\Sigma_{n+1}=\sigma_n * \Sigma_n} with \eqn{\sigma_n=\sigma_{n-1}*exp(\alpha^n*(acc - 0.234))},
 #' where \eqn{\alpha} is equal to \code{adapt.size.cooling} and \eqn{acc} is the acceptance rate of the chain.
 #'
@@ -45,7 +46,8 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
    adapt.shape.start = NULL,
    print.info.every = n.iterations/100,
    verbose = FALSE, max.scaling.sd = 50,
-   acceptance.rate.weight = NULL) {
+   acceptance.rate.weight = NULL,
+   acceptance.window = NULL) {
 
     # initialise theta
     theta.current <- init.theta
@@ -100,11 +102,10 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
     # evaluate target at theta init
     target.theta.current <- target(theta.current)
 
-    if (verbose) {
-        message("Init: ", theta.current[theta.estimated.names],
+    if (!is.null(print.info.every)) {
+        message("Init: ", printNamedVector(theta.current[theta.estimated.names]),
             ", target: ", target.theta.current[["log.density"]])
     }
-
 
     # if return value is a vector, set log.density and trace
     if (class(target.theta.current) == "numeric") {
@@ -118,6 +119,9 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
 
     # acceptance rate
     acceptance.rate <- 0
+    if (!is.null(acceptance.window)) {
+        acceptance.series <- c()
+    }
 
     # scaling factor for covmat size
     scaling.sd  <- 1
@@ -277,8 +281,16 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
             acceptance.rate <- is.accepted
         } else {
             if (is.null(acceptance.rate.weight)) {
-                acceptance.rate <- acceptance.rate +
-                    (is.accepted - acceptance.rate) / i.iteration
+                if (is.null(acceptance.window)) {
+                    acceptance.rate <- acceptance.rate +
+                        (is.accepted - acceptance.rate) / i.iteration
+                } else {
+                    acceptance.series <- c(is.accepted, acceptance.series)
+                    if (length(acceptance.series) > acceptance.window) {
+                        acceptance.series <- acceptance.series[-length(acceptance.series)]
+                    }
+                    acceptance.rate <- mean(acceptance.series)
+                }
             } else {
                 acceptance.rate <- acceptance.rate * (1 - acceptance.rate.weight) +
                     is.accepted * acceptance.rate.weight
