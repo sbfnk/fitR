@@ -17,12 +17,13 @@
 #' \item \code{theta} named numeric vector. Values of the parameters. Names should match \code{theta.names}. 
 #' }
 #' and returns an observation point
-#' @param logPrior \R-function that evaluates the log-prior density of the parameters at a given \code{theta} (optional). The function should take 1 argument:
+#' @param dprior \R-function that evaluates the prior density of the parameters at a given \code{theta} (optional). The function should take 2 arguments:
 #'\itemize{
 #' 	\item \code{theta} named numeric vector. Values of the parameters. Names should match \code{theta.names}. 
+#' 	\item \code{log} boolean. determines whether the logarithm of the prior density should be returned. 
 #' }
-#' and returns the logged value of the prior density distribution.
-#' @param pointLogLike \R-function that evaluates the log-likelihood of one data point given the state of the model at the same time point. This function takes 3 arguments:
+#' and returns the (logged, if requested) value of the prior density distribution.
+#' @param dPointObs \R-function that evaluates the log-likelihood of one data point given the state of the model at the same time point. This function takes 3 arguments:
 #' \itemize{
 #' \item \code{data.point} named numeric vector. Observation time and observed data point.
 #' \item \code{model.point} named numeric vector containing the state of the model at the observation time point.
@@ -37,12 +38,12 @@
 #' 	\item \code{theta.names} vector, names of the parameters.
 #' 	\item \code{simulate} \R-function to simulate forward the model; usage: \code{simulate(theta,init.state,times)}.
 #' 	\item \code{genObsPoint} \R-function to generate simulated observations; usage: \code{genObsPoint(model.point, theta)}.
-#' 	\item \code{logPrior} \R-function to evaluate the log-prior of the parameter values; usage: \code{logPrior(theta)}.
 #' 	\item \code{pointLogLike} \R-function to evaluate the log-likelihood of one data point; usage: \code{pointLogLike(data.point, model.point, theta)}.
+#' 	\item \code{dprior} \R-function to evaluate the log-prior of the parameter values; usage: \code{dprior(theta)}.
 #' }
 #' @seealso \code{\link{testFitmodel}}
 #' @example inst/examples/example-fitmodel.r
-fitmodel <- function(name=NULL, state.names=NULL, theta.names=NULL, simulate=NULL, genObsPoint=NULL, logPrior=NULL, pointLogLike=NULL){
+fitmodel <- function(name=NULL, state.names=NULL, theta.names=NULL, simulate=NULL, genObsPoint=NULL, dprior=NULL, pointLogLike=NULL){
 
 	# mandatory
 	if(!is.character(name)){
@@ -62,8 +63,8 @@ fitmodel <- function(name=NULL, state.names=NULL, theta.names=NULL, simulate=NUL
 	if(!is.null(genObsPoint) && !is.function(genObsPoint)){
 		stop(sQuote("genObsPoint")," argument is not an R function")
 	}
-	if(!is.null(logPrior) && !is.function(logPrior)){
-		stop(sQuote("logPrior")," argument is not an R function")
+	if(!is.null(dprior) && !is.function(dprior)){
+		stop(sQuote("dprior")," argument is not an R function")
 	}
 	if(!is.null(pointLogLike) && !is.function(pointLogLike)){
 		stop(sQuote("pointLogLike") ," argument is not an R function")
@@ -76,8 +77,8 @@ fitmodel <- function(name=NULL, state.names=NULL, theta.names=NULL, simulate=NUL
 		theta.names=theta.names,
 		simulate=simulate,
 		genObsPoint=genObsPoint,
-		logPrior=logPrior,
 		pointLogLike=pointLogLike), class="fitmodel"))
+		dprior=dprior,
 
 }
 
@@ -212,30 +213,30 @@ testFitmodel <- function(fitmodel, theta, init.state, data = NULL, verbose=TRUE)
 	}
 
 
-	if (!is.null(fitmodel$logPrior)) {
+	if (!is.null(fitmodel$dprior)) {
 		if(verbose){
-			cat("--- checking logPrior\n")
+			cat("--- checking dprior\n")
 		}
 
 		# check arguments
-		fun_args <- c("theta")
-		if(!(all(x <- fun_args%in%names(formals(fitmodel$logPrior))))){
-			stop("arguments ",sQuote(fun_args[!x])," missing in function logPrior, see ?fitmodel.")
+                fun_args <- c("theta", "log")
+		if(!(all(x <- fun_args%in%names(formals(fitmodel$dprior))))){
+			stop("arguments ",sQuote(fun_args[!x])," missing in function dprior, see ?fitmodel.")
 		}
 
 		# test it
-		test.logPrior <- fitmodel$logPrior(theta)
+		test.dprior <- fitmodel$dprior(theta)
 		if(verbose){
-			cat("logPrior(theta) should return a single finite value\nTest:",test.logPrior,"\n")
+			cat("dprior(theta) should return a single finite value\nTest:",test.dprior,"\n")
 		}
-		if(!(!is.na(test.logPrior) && (is.finite(test.logPrior)))){
-			stop("logPrior must return a finite value for test parameter values")
+		if(!(!is.na(test.dprior) && (is.finite(test.dprior)))){
+			stop("dprior must return a finite value for test parameter values")
 		}
 		if(verbose){
-			cat("--> logPrior looks good!\n")
+			cat("--> dprior looks good!\n")
 		}
 	} else {
-		warning("fitmodel does not contain a logPrior method -- not tested\n")
+		warning("fitmodel does not contain a dprior method -- not tested\n")
 	}
 
 	# data must have a column named time, should not start at 0
