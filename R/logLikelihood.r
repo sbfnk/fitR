@@ -8,7 +8,7 @@
 #' @import deSolve
 #' @seealso \code{\link{rObsTraj}}
 #' @return numeric value of the log-likelihood
-dObsTraj <- function(fitmodel, theta, init.state, data) {
+dObsTraj <- function(fitmodel, theta, init.state, data, log = FALSE) {
 
 	# time sequence (must include initial time)
 	times <- c(0,data$time)
@@ -16,7 +16,7 @@ dObsTraj <- function(fitmodel, theta, init.state, data) {
 	# simulate model at successive observation times of data
 	traj <- fitmodel$simulate(theta,init.state,times)
 
-	logLike <- 0
+	dens <- 0
 
         # compute log-likelihood by summing the log-likelihood of each data point
 	for(i in 1:nrow(data)){
@@ -29,10 +29,15 @@ dObsTraj <- function(fitmodel, theta, init.state, data) {
 		model.point <- unlist(traj[i+1,])
 
 		# update marginal log-likelihood
-		logLike <- logLike + fitmodel$dPointObs(data.point=data.point, model.point=model.point, theta=theta)
+                if (log) {
+                    dens <- dens + fitmodel$dPointObs(data.point=data.point, model.point=model.point, theta=theta, log = TRUE)
+                } else
+                {
+                    dens <- dens * fitmodel$dPointObs(data.point=data.point, model.point=model.point, theta=theta, log = FALSE)
+                }
 	}
 
-	return(logLike)
+	return(dens)
 }
 
 #'Marginal log-likelihood for a stochastic model
