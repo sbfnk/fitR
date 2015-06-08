@@ -39,8 +39,8 @@ simulateModelReplicates <- function(fitmodel,theta, init.state, times, n, observ
 
     stopifnot(inherits(fitmodel,"fitmodel"),n>0)
 
-    if(observation && is.null(fitmodel$genObsPoint)){
-        stop("Can't generate observation as ",sQuote("fitmodel")," doesn't have a ",sQuote("genObsPoint")," function.")
+    if(observation && is.null(fitmodel$dPointObs)){
+        stop("Can't generate observation as ",sQuote("fitmodel")," doesn't have a ",sQuote("dPointObs")," function.")
     }
 
     rep <- as.list(1:n)
@@ -83,8 +83,8 @@ simulateFinalStateAtExtinction <- function(fitmodel, theta, init.state, extinct=
 
     stopifnot(inherits(fitmodel,"fitmodel"),n>0)
 
-    if(observation && is.null(fitmodel$genObsPoint)){
-        stop("Can't generate observation as ",sQuote("fitmodel")," doesn't have a ",sQuote("genObsPoint")," function.")
+    if(observation && is.null(fitmodel$dPointObs)){
+        stop("Can't generate observation as ",sQuote("fitmodel")," doesn't have a ",sQuote("dPointObs")," function.")
     }
 
     if(is.null(n.cores)){

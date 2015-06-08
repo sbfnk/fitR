@@ -29,7 +29,7 @@ trajLogLike <- function(fitmodel, theta, init.state, data) {
 		model.point <- unlist(traj[i+1,])
 
 		# update marginal log-likelihood
-		logLike <- logLike + fitmodel$pointLogLike(data.point=data.point, model.point=model.point, theta=theta)
+		logLike <- logLike + fitmodel$dPointObs(data.point=data.point, model.point=model.point, theta=theta)
 	}
 
 	return(logLike)
@@ -116,7 +116,7 @@ genObsTraj <- function(fitmodel, theta, init.state, times) {
         ## each row of traj. The parameter value theta as passed as
         ## extra argument to fitmodel$genObsPoint
 	
-	obs <- ddply(traj, "time" , fitmodel$genObsPoint, theta = theta)
+	obs <- ddply(traj, "time" , fitmodel$rPointObs, theta = theta)
 	traj_obs <- join(traj,obs, by="time")
 
 	return(traj_obs)
