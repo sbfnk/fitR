@@ -44,7 +44,7 @@ NULL
 #'   \item \code{theta.names} character vector.
 #'   \item \code{simulate} \R-function.
 #'   \item \code{genObsPoint} \R-function.
-#'   \item \code{logPrior} \R-function.
+#'   \item \code{dprior} \R-function.
 #'   \item \code{pointLogLike} \R-function.
 #' }
 #' 

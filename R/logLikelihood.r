@@ -66,7 +66,7 @@ margLogLikeSto <- function(fitmodel, theta, init.state, data, n.particles, n.cor
 #' }
 logPosterior <- function(fitmodel, theta, init.state, data, margLogLike = trajLogLike, ...) {
 
-	log.prior <- fitmodel$logPrior(theta=theta)
+	log.prior <- fitmodel$dprior(theta=theta)
 
 	if(is.finite(log.prior)){
 		log.likelihood <- margLogLike(fitmodel=fitmodel, theta=theta, init.state=init.state, data=data, ...)

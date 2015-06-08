@@ -32,14 +32,14 @@ SIR_simulateDeterministic <- function(theta,init.state,times) {
 }
 
 ## function to compute log-prior
-SIR_logPrior <- function(theta) {
+SIR_Prior <- function(theta, log = FALSE) {
 
-        ## uniform prior on R0: U[1,100]
-        log.prior.R0 <- dunif(theta[["R0"]], min = 1, max = 100, log = TRUE)
-        ## uniform prior on infectious period: U[0,30]
-        log.prior.D <- dunif(theta[["D.inf"]], min = 0, max = 30, log = TRUE)
+    ## uniform prior on R0: U[1,100]
+    log.prior.R0 <- dunif(theta[["R0"]], min = 1, max = 100, log = log)
+    ## uniform prior on infectious period: U[0,30]
+    log.prior.D <- dunif(theta[["D.inf"]], min = 0, max = 30, log = log)
 
-	return(log.prior.R0 + log.prior.D)
+    return(ifelse(log, log.prior.R0 + log.prior.D, log.prior.R0 * log.prior.D))
 }
 
 ## function to compute the log-likelihood of one data point
@@ -67,6 +67,7 @@ SIR <- fitmodel(
 	genObsPoint=SIR_genObsPoint,
 	logPrior=SIR_logPrior,
 	pointLogLike=SIR_pointLogLike)
+    dprior = SIR_Prior,
 
 ## test them
 theta <- c(R0 = 3, D.inf = 2)
