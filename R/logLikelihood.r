@@ -6,9 +6,9 @@
 #' @inheritParams testFitmodel
 #' @export
 #' @import deSolve
-#' @seealso \code{\link{genObsTraj}}
+#' @seealso \code{\link{rObsTraj}}
 #' @return numeric value of the log-likelihood
-trajLogLike <- function(fitmodel, theta, init.state, data) {
+dObsTraj <- function(fitmodel, theta, init.state, data) {
 
 	# time sequence (must include initial time)
 	times <- c(0,data$time)
@@ -58,13 +58,13 @@ margLogLikeSto <- function(fitmodel, theta, init.state, data, n.particles, n.cor
 #' @param ... further arguments to be passed to \code{margLogLike}
 #' @inheritParams testFitmodel
 #' @export
-#' @seealso \code{\link{trajLogLike}}, \code{\link{margLogLikeSto}}
+#' @seealso \code{\link{dObsTraj}}, \code{\link{margLogLikeSto}}
 #' @return a list of two elements
 #' \itemize{
 #' 	\item \code{log.density} numeric, logged value of the posterior density evaluated at \code{theta}
 #' 	\item \code{trace} named vector with trace information (theta, log.prior, marg.log.like, log.posterior)
 #' }
-logPosterior <- function(fitmodel, theta, init.state, data, margLogLike = trajLogLike, ...) {
+logPosterior <- function(fitmodel, theta, init.state, data, margLogLike = dObsTraj, ...) {
 
 	log.prior <- fitmodel$dprior(theta=theta)
 
@@ -105,9 +105,9 @@ logPosteriorWrapper <- function(fitmodel, init.state, data, margLogLike, ...) {
 #' @inheritParams testFitmodel
 #' @param times the times at which to generate observations
 #' @export
-#' @seealso \code{\link{trajLogLike}}
+#' @seealso \code{\link{dObsTraj}}
 #' @return numeric value of the log-likelihood
-genObsTraj <- function(fitmodel, theta, init.state, times) {
+rObsTraj <- function(fitmodel, theta, init.state, times) {
 
         ## simulate model at successive observation times of data
 	traj <- fitmodel$simulate(theta, init.state, times)
@@ -141,7 +141,7 @@ genObsTraj <- function(fitmodel, theta, init.state, times) {
 #'     \item \code{D_theta_bar} deviance of \code{theta_bar}
 #'     \item \code{p_D} effective number of parameters
 #' }
-computeDIC <- function(trace, fitmodel, init.state, data, margLogLike = trajLogLike, ...) {
+computeDIC <- function(trace, fitmodel, init.state, data, margLogLike = dObsTraj, ...) {
 
     simulation <- match.arg(simulation)
 
