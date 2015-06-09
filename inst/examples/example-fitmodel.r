@@ -46,8 +46,8 @@ SIR_Prior <- function(theta, log = FALSE) {
     return(ifelse(log, log.prior.R0 + log.prior.D, log.prior.R0 * log.prior.D))
 }
 
-## function to compute the log-likelihood of one data point
-SIR_pointLogLike <- function(data.point, model.point, theta, log = FALSE){
+## function to compute the likelihood of one data point
+SIR_pointLike <- function(data.point, model.point, theta, log = FALSE){
 
     ## the prevalence is observed through a Poisson process
     return(dpois(x = data.point[["obs"]],
@@ -72,7 +72,7 @@ SIR <- fitmodel(
     simulate = SIR_simulateDeterministic,
     dprior = SIR_Prior,
     rPointObs = SIR_genObsPoint,
-    dPointObs = SIR_pointLogLike)
+    dPointObs = SIR_pointLike)
 
 save(SIR, file = "SIR.rdata")
 
