@@ -74,9 +74,7 @@ SIR <- fitmodel(
     rPointObs = SIR_genObsPoint,
     dPointObs = SIR_pointLike)
 
-save(SIR, file = "SIR.rdata")
-
-## test them
-theta <- c(R0 = 3, D.inf = 2)
-init.state <- c(S = 999, I = 1, R = 0)
-data(epi)
+## test
+## theta <- c(R0 = 3, D.inf = 2)
+## init.state <- c(S = 999, I = 1, R = 0)
+## data(epi)

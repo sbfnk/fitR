@@ -49,13 +49,13 @@ SIR_exp_logPrior <- function(theta) {
 
 ## create deterministic SIR fitmodel
 SIR_exp <- fitmodel(
-	name=SIR_name,
-        state.names=SIR_state.names,
-	theta.names=SIR_theta.names,
+	name=SIR_exp_name,
+        state.names=SIR$state.names,
+	theta.names=SIR$theta.names,
         simulate=SIR_exp_simulateDeterministic,
-	genObsPoint=SIR_genObsPoint,
-	logPrior=SIR_exp_logPrior,
-	pointLogLike=SIR_pointLogLike)
+	dprior=SIR_exp_logPrior,
+	rPointObs=SIR$rPointObs,
+	dPointObs=SIR$dPointObs)
 
 ## test them
 theta <- c(R0 = log(3), D.inf = log(2))
