@@ -236,7 +236,7 @@ plotTrace <- function(trace, estimated.only = FALSE){
 #'Plot MCMC posterior densities
 #'
 #'Plot the posterior density.
-#' @param trace either a \code{data.frame} or a \code{list} of \code{data.frame} with all variables in column, as outputed by \code{\link{mcmcMH}}. Accept also an \code{mcmc}, a \code{mcmc.list} object or a \code{list} of \code{mcmc.list} .
+#' @param trace either a \code{data.frame} or a \code{list} of \code{data.frame} with all variables in column, as outputed by \code{\link{rmcmcMH}}. Accept also an \code{mcmc}, a \code{mcmc.list} object or a \code{list} of \code{mcmc.list} .
 #' @param prior a \code{data.frame} containing the prior density. It must have the three following columns: 
 #' \itemize{
 #'     \item \code{theta} names of the parameters
@@ -430,7 +430,7 @@ plotPosteriorFit <- function(trace, fitmodel, init.state, data, posterior.summar
 ##' Plot Effective Sample Size (ESS) against burn-in
 ##'
 ##' Takes an mcmc trace and tests the ESS at different values of burn-in
-##' @param trace either a \code{data.frame} or a \code{list} of \code{data.frame} with all variables in column, as outputed by \code{\link{mcmcMH}}. Accept also \code{mcmc} or \code{mcmc.list} objects.
+##' @param trace either a \code{data.frame} or a \code{list} of \code{data.frame} with all variables in column, as outputed by \code{\link{rmcmcMH}}. Accept also \code{mcmc} or \code{mcmc.list} objects.
 ##' @param longest.burn.in The longest burn-in to test. Defaults to half the length of the trace
 ##' @param step.size The size of the steps of burn-in to test. Defaults to 1/50th of \code{longest.burn.in}
 ##' @return a plot of the ESS against burn.in

@@ -58,7 +58,7 @@ margLogLikeSto <- function(fitmodel, theta, init.state, data, n.particles, n.cor
 
 #'Posterior distribution for a fitmodel
 #'
-#'This function evaluates the posterior distribution at \code{theta} and returns the result in a suitable format for \code{\link{mcmcMH}}.
+#'This function evaluates the posterior distribution at \code{theta} and returns the result in a suitable format for \code{\link{rmcmcMH}}.
 #' @param margLogLike \R-function to compute the marginal log-likelihood of \code{theta}.
 #' @param ... further arguments to be passed to \code{margLogLike}
 #' @inheritParams testFitmodel
@@ -89,7 +89,7 @@ logPosterior <- function(fitmodel, theta, init.state, data, margLogLike = dObsTr
 
 #'A wrapper for \code{logPosterior}
 #'
-#'A wrapper for \code{\link{logPosterior}} that returns a function that can be used as a \code{target} for \code{\link{mcmcMH}}
+#'A wrapper for \code{\link{logPosterior}} that returns a function that can be used as a \code{target} for \code{\link{rmcmcMH}}
 #' @inheritParams logPosterior
 #' @export
 #' @return a \R-function with one argument called \code{theta}.
