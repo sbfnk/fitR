@@ -62,6 +62,6 @@ SEITL_stoch <- fitmodel(
 		state.names=SEITL_state.names,
 		theta.names=SEITL_theta.names,
 		simulate=SEITL_simulateStochastic,
-		genObsPoint=SEITL_genObsPoint,
-		logPrior=SEITL_logPrior,
-		pointLogLike=SEITL_pointLogLike)
+		dprior=SEITL_logPrior,
+		rPointObs=SEITL_genObsPoint,
+		dPointObs=SEITL_pointLogLike)
