@@ -37,12 +37,12 @@ SIR_exp_simulateDeterministic <- function(theta,init.state,times) {
 }
 
 ## function to compute log-prior
-SIR_exp_logPrior <- function(theta) {
+SIR_exp_logPrior <- function(theta, log = FALSE) {
 
         ## uniform prior on R0: U[1,100]
-        log.prior.R0 <- dunif(exp(theta[["R0"]]), min = 1, max = 100, log = TRUE)
+        log.prior.R0 <- dunif(exp(theta[["R0"]]), min = 1, max = 100, log = log)
         ## uniform prior on infectious period: U[0,30]
-        log.prior.D <- dunif(exp(theta[["D.inf"]]), min = 0, max = 30, log = TRUE)
+        log.prior.D <- dunif(exp(theta[["D.inf"]]), min = 0, max = 30, log = log)
 
 	return(log.prior.R0 + log.prior.D)
 }
