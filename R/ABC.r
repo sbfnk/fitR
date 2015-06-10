@@ -61,7 +61,7 @@ computeDistanceABC <- function(sum.stats, distanceABC, fitmodel, theta, init.sta
 
 #'ABC logged posterior distribution
 #'
-#'This function evaluates the ABC posterior distribution at \code{theta} (using a single simulation trajectory) and returns the result in a suitable format for \code{\link{rmcmcMH}}.
+#'This function evaluates the ABC posterior distribution at \code{theta} (using a single simulation trajectory) and returns the result in a suitable format for \code{\link{mcmcMH}}.
 #' @param epsilon numeric vector, ABC tolerances for distances between data and simulations. If a vector of length 1 and the distance function returns a vector of distances, this will be expanded to be same tolerance for all the parameters.
 #' @inheritParams computeDistanceABC
 #' @export

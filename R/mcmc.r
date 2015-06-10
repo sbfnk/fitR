@@ -5,7 +5,7 @@
 #' @param target \R-function that takes a single argument: \code{theta} (named numeric vector of parameter values) and returns a list of 2 elements:
 #' \itemize{
 #' \item \code{log.density} the logged value of the target density, evaluated at \code{theta}.
-#' \item \code{trace} a named numeric vector of values to be printed in the \code{trace} data.frame returned by \code{rmcmcMH}.
+#' \item \code{trace} a named numeric vector of values to be printed in the \code{trace} data.frame returned by \code{mcmcMH}.
 #' }
 #' @param init.theta named vector of initial parameter values to start the chain.
 #' @param proposal.sd vector of standard deviations. If this is given and covmat is not, a diagonal matrix will be built from this to use as covariance matrix of the multivariate Gaussian proposal distribution. By default, this is set to \code{init.theta/10}.
@@ -39,7 +39,7 @@
 #'      \item \code{acceptance.rate} acceptance rate of the MCMC chain.
 #'      \item \code{covmat.empirical} empirical covariance matrix of the target sample.
 #' }
-rmcmcMH <- function(target, init.theta, proposal.sd = NULL,
+mcmcMH <- function(target, init.theta, proposal.sd = NULL,
    n.iterations, covmat = NULL,
    limits=list(lower = NULL, upper = NULL),
    adapt.size.start = NULL, adapt.size.cooling = 0.99,
