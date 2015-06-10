@@ -56,7 +56,7 @@ plotTraj <- function(traj=NULL, state.names=NULL, data=NULL, summary=TRUE, non.e
             df.p.ext <- ddply(df.infected,"time",function(df){
                 return(data.frame(value=sum(df$value==0)/nrow(df)))
             })
-            df.p.ext$state <- "p. extinction"
+            df.p.ext$state <- "p.extinction"
             df.p.ext$replicate <- 0
 
             if(summary){
