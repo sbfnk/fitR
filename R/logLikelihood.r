@@ -6,7 +6,7 @@
 #' @inheritParams testFitmodel
 #' @export
 #' @import deSolve
-#' @seealso \code{\link{rObsTraj}}
+#' @seealso \code{\link{rTrajObs}}
 #' @return numeric value of the log-likelihood
 dObsTraj <- function(fitmodel, theta, init.state, data, log = FALSE) {
 
@@ -112,7 +112,7 @@ logPosteriorWrapper <- function(fitmodel, init.state, data, margLogLike, ...) {
 #' @export
 #' @seealso \code{\link{dObsTraj}}
 #' @return numeric value of the log-likelihood
-rObsTraj <- function(fitmodel, theta, init.state, times) {
+rTrajObs <- function(fitmodel, theta, init.state, times) {
 
         ## simulate model at successive observation times of data
 	traj <- fitmodel$simulate(theta, init.state, times)

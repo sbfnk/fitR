@@ -398,7 +398,7 @@ plotPosteriorFit <- function(trace, fitmodel, init.state, data, posterior.summar
             theta <- trace[ind,theta.names]
 
             # simulate model at successive observation times of data
-            traj <- rObsTraj(fitmodel, theta, init.state, times)
+            traj <- rTrajObs(fitmodel, theta, init.state, times)
 
             return(traj)
         },.progress="text", .id="replicate")
