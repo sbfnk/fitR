@@ -60,6 +60,9 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
 
     # reorder vector and matrix by names, set to default if necessary
     theta.names <- names(init.theta)
+    if (is.null(names(proposal.sd))) {
+        names(proposal.sd) <- theta.names
+    }
 
     if (is.null(covmat.proposal)) {
         if (is.null(proposal.sd)) {
