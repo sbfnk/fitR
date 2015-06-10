@@ -102,17 +102,17 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
     # evaluate target at theta init
     target.theta.current <- target(theta.current)
 
-    if (!is.null(print.info.every)) {
-        message("Init: ", printNamedVector(theta.current[theta.estimated.names]),
-            ", target: ", target.theta.current[["log.density"]])
-    }
-
     # if return value is a vector, set log.density and trace
     if (class(target.theta.current) == "numeric") {
         suppressWarnings(target.theta.current$log.density <-
             target.theta.current)
         suppressWarnings(target.theta.current$trace <-
             theta.current)
+    }
+
+    if (!is.null(print.info.every)) {
+        message("Init: ", printNamedVector(theta.current[theta.estimated.names]),
+            ", target: ", target.theta.current[["log.density"]])
     }
 
     trace <- data.frame(t(target.theta.current[["trace"]]))
