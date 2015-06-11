@@ -20,11 +20,11 @@ SEIT2L_simulateStochastic <- function(theta,init.state,times) {
 	SEIT2L_rateFunc <- function(state,theta,t) {
 
 		# param
-		beta <- theta[["R0"]]/theta[["D.inf"]]
-		epsilon <- 1/theta[["D.lat"]]
-		nu <- 1/theta[["D.inf"]]
+		beta <- theta[["R0"]]/theta[["D_inf"]]
+		epsilon <- 1/theta[["D_lat"]]
+		nu <- 1/theta[["D_inf"]]
 		alpha <- theta[["alpha"]]
-		tau <- 1/theta[["D.imm"]]
+		tau <- 1/theta[["D_imm"]]
 
 		# states
 		S <- state[["S"]]
@@ -66,6 +66,6 @@ SEIT2L_stoch <- fitmodel(
 	state.names=SEIT2L_state.names,
 	theta.names=SEITL_theta.names,
 	simulate=SEIT2L_simulateStochastic,
-	dprior=SEITL_logPrior,
+	dprior=SEITL_prior,
 	rPointObs=SEITL_genObsPoint,
-	dPointObs=SEITL_pointLogLike)
+	dPointObs=SEITL_pointLike)

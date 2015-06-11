@@ -14,8 +14,8 @@ SIR_exp_simulateDeterministic <- function(theta,init.state,times) {
         SIR_ode <- function(time, state, parameters) {
 
                 ## parameters
-                beta <- exp(parameters[["R0"]]) / exp(parameters[["D.inf"]])
-                nu <- 1 / exp(parameters[["D.inf"]])
+                beta <- exp(parameters[["R0"]]) / exp(parameters[["D_inf"]])
+                nu <- 1 / exp(parameters[["D_inf"]])
 
                 ## states
                 S <- state[["S"]]
@@ -42,7 +42,7 @@ SIR_exp_logPrior <- function(theta, log = FALSE) {
         ## uniform prior on R0: U[1,100]
         log.prior.R0 <- dunif(exp(theta[["R0"]]), min = 1, max = 100, log = log)
         ## uniform prior on infectious period: U[0,30]
-        log.prior.D <- dunif(exp(theta[["D.inf"]]), min = 0, max = 30, log = log)
+        log.prior.D <- dunif(exp(theta[["D_inf"]]), min = 0, max = 30, log = log)
 
 	return(log.prior.R0 + log.prior.D)
 }
@@ -58,6 +58,6 @@ SIR_exp <- fitmodel(
 	dPointObs=SIR$dPointObs)
 
 ## test them
-theta <- c(R0 = log(3), D.inf = log(2))
+theta <- c(R0 = log(3), D_inf = log(2))
 init.state <- c(S = 999, I = 1, R = 0)
 data(epi)

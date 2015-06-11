@@ -2,15 +2,15 @@
 
 SIR_name <- "SIR with constant population size"
 SIR_state.names <- c("S","I","R")
-SIR_theta.names <- c("R0","D.inf")
+SIR_theta.names <- c("R0","D_inf")
 
 SIR_simulateDeterministic <- function(theta,init.state,times) {
 
     SIR_ode <- function(time, state, parameters) {
 
         ## parameters
-        beta <- parameters[["R0"]] / parameters[["D.inf"]]
-        nu <- 1 / parameters[["D.inf"]]
+        beta <- parameters[["R0"]] / parameters[["D_inf"]]
+        nu <- 1 / parameters[["D_inf"]]
 
         ## states
         S <- state[["S"]]
@@ -36,12 +36,12 @@ SIR_simulateDeterministic <- function(theta,init.state,times) {
 }
 
 ## function to compute log-prior
-SIR_Prior <- function(theta, log = FALSE) {
+SIR_prior <- function(theta, log = FALSE) {
 
     ## uniform prior on R0: U[1,100]
     log.prior.R0 <- dunif(theta[["R0"]], min = 1, max = 100, log = log)
     ## uniform prior on infectious period: U[0,30]
-    log.prior.D <- dunif(theta[["D.inf"]], min = 0, max = 30, log = log)
+    log.prior.D <- dunif(theta[["D_inf"]], min = 0, max = 30, log = log)
 
     return(ifelse(log, log.prior.R0 + log.prior.D, log.prior.R0 * log.prior.D))
 }
@@ -70,11 +70,11 @@ SIR <- fitmodel(
     state.names = SIR_state.names,
     theta.names = SIR_theta.names,
     simulate = SIR_simulateDeterministic,
-    dprior = SIR_Prior,
+    dprior = SIR_prior,
     rPointObs = SIR_genObsPoint,
     dPointObs = SIR_pointLike)
 
 ## test
-## theta <- c(R0 = 3, D.inf = 2)
+## theta <- c(R0 = 3, D_inf = 2)
 ## init.state <- c(S = 999, I = 1, R = 0)
 ## data(epi)

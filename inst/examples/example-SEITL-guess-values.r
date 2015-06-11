@@ -9,17 +9,17 @@
 # Additional assumptions for guess 1
 # R0 as in large populations
 # probability to develop long-term protection equal to seroconversion rate (80%)
-theta.guess1 <- c("R0"=2, "D.lat"=2 , "D.inf"=2, "alpha"=0.8, "D.imm"=13, "rho"=0.7)
+theta.guess1 <- c("R0"=2, "D_lat"=2 , "D_inf"=2, "alpha"=0.8, "D_imm"=13, "rho"=0.7)
 init.state.guess1 <- c("S"=279,"E"=0,"I"=2,"T"=3,"L"=0,"Inc"=0)
 
 # Additional assumptions for guess 2
 # R0 as in close knit communities (=> larger 1rst wave)
 # probability to develop long-term protection equal to seroconversion rate (80%)
-theta.guess2 <- c("R0"=10, "D.lat"=2 , "D.inf"=2, "alpha"=0.8, "D.imm"=13, "rho"=0.7)
+theta.guess2 <- c("R0"=10, "D_lat"=2 , "D_inf"=2, "alpha"=0.8, "D_imm"=13, "rho"=0.7)
 init.state.guess2 <- c("S"=279,"E"=0,"I"=2,"T"=3,"L"=0,"Inc"=0)
 
 # Additional assumptions for guess 3
 # R0 as in close knit communities (=> larger 1rst wave)
 # probability to develop long-term protection (50%) lower than the seroconversion rate (80%) (=> larger 2nd wave)
-theta.guess3 <- c("R0"=10, "D.lat"=2 , "D.inf"=2, "alpha"=0.5, "D.imm"=13, "rho"=0.7)
+theta.guess3 <- c("R0"=10, "D_lat"=2 , "D_inf"=2, "alpha"=0.5, "D_imm"=13, "rho"=0.7)
 init.state.guess3 <- c("S"=279,"E"=0,"I"=2,"T"=3,"L"=0,"Inc"=0)

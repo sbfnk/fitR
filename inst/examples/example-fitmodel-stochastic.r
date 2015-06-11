@@ -18,8 +18,8 @@ SIR_simulateStochastic <- function(theta,init.state,times) {
         ## rates
         SIR_rateFunc <- function(x, parameters, t) {
 
-                beta <- parameters[["R0"]]/parameters[["D"]]
-                nu <- 1/parameters[["D"]]
+                beta <- parameters[["R0"]]/parameters[["D_inf"]]
+                nu <- 1/parameters[["D_inf"]]
 
                 S <- x[["S"]]
                 I <- x[["I"]]
@@ -45,12 +45,12 @@ SIR_stoch <- fitmodel(
         state.names=SIR_state.names,
         theta.names=SIR_theta.names,
         simulate=SIR_simulateStochastic,
-        genObsPoint=SIR_genObsPoint,
-        logPrior=SIR_logPrior,
-        pointLogLike=SIR_pointLogLike)
+        dprior=SIR_prior,
+        rPointObs=SIR_genObsPoint,
+        dPointObs=SIR_pointLike)
 
 # test it
-theta <- c(R0=3, D=4)
+theta <- c(R0=3, D_inf=4)
 init.state <- c(S=99,I=1,R=0)
 
 # SIR_stoch
