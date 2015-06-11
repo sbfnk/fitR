@@ -184,7 +184,7 @@ plotSMC <- function(smc, fitmodel, theta, data = NULL, summary = TRUE, alpha = 1
     traj <- ldply(traj, function(df) {
 
 
-        obs <- ddply(df, "time" , fitmodel$genObsPoint, theta = theta)
+        obs <- ddply(df, "time" , fitmodel$rPointObs, theta = theta)
         traj_obs <- join(df, obs, by = "time")
 
         return(traj_obs)
