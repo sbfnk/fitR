@@ -1,7 +1,7 @@
 #'ABC distance with oscillations
 #'
 #'This positive distance is the mean squared differences between the simulation and the observation, divided by the square of the number of times the simulation oscillates around the observation.
-#' @param simu.traj.obs \code{data.frame} of simulated trajectory with observation, as returned by \code{\link{genObsTraj}}.
+#' @param simu.traj.obs \code{data.frame} of simulated trajectory with observation, as returned by \code{\link{rTrajObs}}.
 #' @param data \code{data.frame} of times and observations. Must have two columns: \code{time} and \code{Inc}.
 #' @export
 #' @seealso distanceOscillation
@@ -49,7 +49,7 @@ computeDistanceABC <- function(sum.stats, distanceABC, fitmodel, theta, init.sta
     times <- c(0,data$time)
 
     # generate simulated observation
-    model.obs <- genObsTraj(fitmodel = fitmodel, theta=theta, init.state=init.state, times=times)
+    model.obs <- rTrajObs(fitmodel = fitmodel, theta=theta, init.state=init.state, times=times)
 
     # compute distance
     dist.ABC <- distanceABC(sum.stats = sum.stats,
@@ -77,7 +77,7 @@ ABCLogPosterior <- function(epsilon, sum.stats, distanceABC, fitmodel, theta, in
         computeDistanceABC(sum.stats, distanceABC, fitmodel, theta, init.state, data)
 
     if (all(distance < epsilon)) {
-        log.density <- fitmodel$logPrior(theta)
+        log.density <- fitmodel$dprior(theta, log = TRUE)
     } else {
         log.density <- -Inf
     }
