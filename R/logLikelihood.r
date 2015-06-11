@@ -8,7 +8,7 @@
 #' @import deSolve
 #' @seealso \code{\link{rTrajObs}}
 #' @return numeric value of the log-likelihood
-dObsTraj <- function(fitmodel, theta, init.state, data, log = FALSE) {
+dTrajObs <- function(fitmodel, theta, init.state, data, log = FALSE) {
 
 	# time sequence (must include initial time)
 	times <- c(0,data$time)
@@ -63,13 +63,13 @@ margLogLikeSto <- function(fitmodel, theta, init.state, data, n.particles, n.cor
 #' @param ... further arguments to be passed to \code{margLogLike}
 #' @inheritParams testFitmodel
 #' @export
-#' @seealso \code{\link{dObsTraj}}, \code{\link{margLogLikeSto}}
+#' @seealso \code{\link{dTrajObs}}, \code{\link{margLogLikeSto}}
 #' @return a list of two elements
 #' \itemize{
 #' 	\item \code{log.density} numeric, logged value of the posterior density evaluated at \code{theta}
 #' 	\item \code{trace} named vector with trace information (theta, log.prior, marg.log.like, log.posterior)
 #' }
-logPosterior <- function(fitmodel, theta, init.state, data, margLogLike = dObsTraj, ...) {
+logPosterior <- function(fitmodel, theta, init.state, data, margLogLike = dTrajObs, ...) {
 
 	log.prior <- fitmodel$dprior(theta=theta)
 
@@ -110,7 +110,7 @@ logPosteriorWrapper <- function(fitmodel, init.state, data, margLogLike, ...) {
 #' @inheritParams testFitmodel
 #' @param times the times at which to generate observations
 #' @export
-#' @seealso \code{\link{dObsTraj}}
+#' @seealso \code{\link{dTrajObs}}
 #' @return numeric value of the log-likelihood
 rTrajObs <- function(fitmodel, theta, init.state, times) {
 
@@ -146,7 +146,7 @@ rTrajObs <- function(fitmodel, theta, init.state, times) {
 #'     \item \code{D_theta_bar} deviance of \code{theta_bar}
 #'     \item \code{p_D} effective number of parameters
 #' }
-computeDIC <- function(trace, fitmodel, init.state, data, margLogLike = dObsTraj, ...) {
+computeDIC <- function(trace, fitmodel, init.state, data, margLogLike = dTrajObs, ...) {
 
     simulation <- match.arg(simulation)
 
