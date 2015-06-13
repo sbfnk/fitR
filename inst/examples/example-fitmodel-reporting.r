@@ -13,13 +13,15 @@ SIR_reporting_theta.names <- SIR_theta.names <- c("R0","D_inf", "RR")
 SIR_logPrior <- function(theta, log = FALSE) {
 
     ## uniform prior on R0: U[1,100]
-    log.prior.R0 <- dunif(theta[["R0"]], min = 1, max = 100, log = log)
+    log.prior.R0 <- dunif(theta[["R0"]], min = 1, max = 100, log = TRUE)
     ## uniform prior on infectious period: U[0,30]
-    log.prior.D_inf <- dunif(theta[["D_inf"]], min = 0, max = 30, log = log)
+    log.prior.D_inf <- dunif(theta[["D_inf"]], min = 0, max = 30, log = TRUE)
     ## uniform prior on the reporting rate: U[0,1]
-    log.prior.RR <- dunif(theta[["RR"]], min = 0, max = 1, log = log)
+    log.prior.RR <- dunif(theta[["RR"]], min = 0, max = 1, log = TRUE)
 
-    return(log.prior.R0 + log.prior.D_inf + log.prior.RR)
+    log.sum <- log.prior.R0 + log.prior.D_inf + log.prior.RR
+
+    return(ifelse(log, log.sum, exp(log.sum)))
 }
 
 ## function to compute the log-likelihood of one data point

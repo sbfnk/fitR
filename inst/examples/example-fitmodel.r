@@ -39,11 +39,13 @@ SIR_simulateDeterministic <- function(theta,init.state,times) {
 SIR_prior <- function(theta, log = FALSE) {
 
     ## uniform prior on R0: U[1,100]
-    log.prior.R0 <- dunif(theta[["R0"]], min = 1, max = 100, log = log)
+    log.prior.R0 <- dunif(theta[["R0"]], min = 1, max = 100, log = TRUE)
     ## uniform prior on infectious period: U[0,30]
-    log.prior.D <- dunif(theta[["D_inf"]], min = 0, max = 30, log = log)
+    log.prior.D <- dunif(theta[["D_inf"]], min = 0, max = 30, log = TRUE)
 
-    return(ifelse(log, log.prior.R0 + log.prior.D, log.prior.R0 * log.prior.D))
+    log.sum <- log.prior.R0 + log.prior.D
+
+    return(ifelse(log, log.sum, exp(log.sum)))
 }
 
 ## function to compute the likelihood of one data point
