@@ -63,9 +63,12 @@ SEITL.dmeas.c <- '
 '
 
 SEITL.dprior.c <- '
-  lik = dunif(r,0,5,1)+dunif(K,100,800,1)+dunif(phi,0,2,1)+
-    dunif(sigma,0,2,1);
-  lik = (give_log) ? lik : exp(lik);    
+  lik = dunif(R0, 1, 50, 1) +
+          dunif(D_lat, 0, 10, 1) +
+          dunif(D_inf, 0, 15, 1) +
+          dunif(D_imm, 0, 50, 1) +
+          dunif(alpha, 0, 1, 1) +
+          dunif(rho, 0, 1, 1);
 '
 
 SEITL_pomp <- pomp(data = FluTdC1971[, c("time", "obs")],
