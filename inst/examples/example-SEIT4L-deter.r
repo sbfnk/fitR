@@ -9,11 +9,11 @@ SEIT4L_simulateDeterministic <- function(theta,init.state,times) {
 	SEIT4L_ode <- function(time, state, theta) {
 
 		# param
-		beta <- theta[["R0"]]/theta[["D.inf"]]
-		epsilon <- 1/theta[["D.lat"]]
-		nu <- 1/theta[["D.inf"]]
+		beta <- theta[["R0"]]/theta[["D_inf"]]
+		epsilon <- 1/theta[["D_lat"]]
+		nu <- 1/theta[["D_inf"]]
 		alpha <- theta[["alpha"]]
-		tau <- 1/theta[["D.imm"]]
+		tau <- 1/theta[["D_imm"]]
 
 		# states
 		S <- state[["S"]]
