@@ -210,9 +210,26 @@ NULL
 #' @name SEIT2L_stoch 
 NULL
 
+#' The SEITL model for pomp
+#'
+#' The SEITL model with constant population size, uniform prior and Poisson observation with reporting rate, as a \code{\link{pomp}} object.
+#'
+#' Look at the documentation of \code{\link{pomp}} for more details about each of these elements.
+#' 
+#' @format A \code{\link{pomp}} object.
+#' @import pomp
+#' @name SEITL_pomp 
+#' @example inst/examples/example-SEITL-pomp.r
+NULL
 
-
-
-
-
-
+#' The SEIT2L model for pomp
+#'
+#' The SEIT2L model with constant population size, uniform prior and Poisson observation with reporting rate, as a \code{\link{pomp}} object.
+#'
+#' Look at the documentation of \code{\link{pomp}} for more details about each of these elements.
+#' 
+#' @format A \code{\link{pomp}} object.
+#' @name SEIT2L_pomp
+#' @import pomp
+#' @example inst/examples/example-SEIT2L-pomp.r
+NULL
