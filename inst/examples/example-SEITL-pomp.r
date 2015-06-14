@@ -67,10 +67,10 @@ SEITL.rmeas.c <- '
 
 ## define point observation probability density
 SEITL.dmeas.c <- '
-    lik = dpois(obs, rho * Inc > 0 ? rho * Inc : 0, give_log);
+    lik = dpois(obs, rho * Inc, give_log);
 '
 
-## definte prior density
+## define prior density
 SEITL.dprior.c <- '
   lik = dunif(R0, 1, 50, 1) +
           dunif(D_lat, 0, 10, 1) +
@@ -78,6 +78,8 @@ SEITL.dprior.c <- '
           dunif(D_imm, 0, 50, 1) +
           dunif(alpha, 0, 1, 1) +
           dunif(rho, 0, 1, 1);
+
+  lik = give_log ? lik : exp(lik);
 '
 
 ## construct pomp object
