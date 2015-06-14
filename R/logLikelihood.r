@@ -111,7 +111,7 @@ logPosteriorWrapper <- function(fitmodel, init.state, data, margLogLike, ...) {
 #' @param times the times at which to generate observations
 #' @export
 #' @seealso \code{\link{dTrajObs}}
-#' @return numeric value of the log-likelihood
+#' @return data.frame
 rTrajObs <- function(fitmodel, theta, init.state, times) {
 
         ## simulate model at successive observation times of data
