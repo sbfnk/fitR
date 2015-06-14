@@ -60,11 +60,7 @@ SEIT4L_deter <- fitmodel(
 	state.names=SEIT4L_state.names,
 	theta.names=SEITL_theta.names,
 	simulate=SEIT4L_simulateDeterministic,
-	genObsPoint=SEITL_genObsPoint,
-	logPrior=SEITL_logPrior,
-	pointLogLike=SEITL_pointLogLike)
-
-
-dir_pkg <- "/Users/Tonton/edu/Fit_course/fitR"
-save(SEIT4L_deter,file=file.path(dir_pkg,"data","SEIT4L_deter.rdata"))
+	dprior=SEITL_prior,
+	rPointObs=SEITL_genObsPoint,
+	dPointObs=SEITL_pointLike)
 
