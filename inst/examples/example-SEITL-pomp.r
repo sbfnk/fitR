@@ -1,5 +1,35 @@
+## load pomp package
+require('pomp')
+
+## load Tristan da Cunha data
 data(FluTdC1971)
 
+## define deterministic skeleton
+SEITL.skel.c <- '
+    double trans[5];
+
+    double beta = R0 / D_inf;
+    double epsilon = 1 / D_lat;
+    double nu = 1 / D_inf;
+    double tau = 1 / D_imm;
+
+    double N = S + E + I + T + L;
+
+    trans[0] = beta * I / N * S;
+    trans[1] = epsilon * E;
+    trans[2] = nu * I;
+    trans[3] = alpha * tau * T;
+    trans[4] = (1 - alpha) * tau * T;
+
+    DS = -trans[0] + trans[4];
+    DE = trans[0] - trans[1];
+    DI = trans[1] - trans[2];
+    DT = trans[2] - trans[3] - trans[4];
+    DL = trans[3];
+    DInc = trans[1];
+'
+
+## define stochastic model, for use with euler.sim, see ?euler.sim
 SEITL.sim.c <- '
     double rate[5];
     double dN[5];
@@ -30,38 +60,17 @@ SEITL.sim.c <- '
     Inc += dN[1];
 '
 
-SEITL.skel.c <- '
-    double trans[5];
-
-    double beta = R0 / D_inf;
-    double epsilon = 1 / D_lat;
-    double nu = 1 / D_inf;
-    double tau = 1 / D_imm;
-
-    double N = S + E + I + T + L;
-
-    trans[0] = beta * I / N * S;
-    trans[1] = epsilon * E;
-    trans[2] = nu * I;
-    trans[3] = alpha * tau * T;
-    trans[4] = (1 - alpha) * tau * T;
-
-    DS = -trans[0] + trans[4];
-    DE = trans[0] - trans[1];
-    DI = trans[1] - trans[2];
-    DT = trans[2] - trans[3] - trans[4];
-    DL = trans[3];
-    DInc = trans[1];
-'
-
+## define sampling random point observations
 SEITL.rmeas.c <- '
     obs = rpois(rho * Inc);
 '
 
+## define point observation probability density
 SEITL.dmeas.c <- '
-    lik = dpois(obs, rho * Inc, give_log);
+    lik = dpois(obs, rho * Inc > 0 ? rho * Inc : 0, give_log);
 '
 
+## definte prior density
 SEITL.dprior.c <- '
   lik = dunif(R0, 1, 50, 1) +
           dunif(D_lat, 0, 10, 1) +
@@ -71,12 +80,14 @@ SEITL.dprior.c <- '
           dunif(rho, 0, 1, 1);
 '
 
+## construct pomp object
 SEITL_pomp <- pomp(data = FluTdC1971[, c("time", "obs")],
-                   rprocess = euler.sim(step.fun = Csnippet(SEITL.sim.c), delta.t = 0.1),
+                   rprocess = euler.sim(step.fun = Csnippet(SEITL.sim.c),
+                                        delta.t = 0.1),
                    rmeasure = Csnippet(SEITL.rmeas.c),
                    dmeasure = Csnippet(SEITL.dmeas.c),
                    skeleton = Csnippet(SEITL.skel.c),
-                   skeleton.type = "vectorfield", 
+                   skeleton.type = "vectorfield",
                    times = "time",
                    t0 = 1,
                    zeronames = "Inc", 

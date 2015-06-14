@@ -1,6 +1,40 @@
+## load pomp package
+require('pomp')
+
+## load Tristan da Cunha data
 data(FluTdC1971)
+
+## load SEITL_pomp object
 data(SEITL_pomp)
 
+## define deterministic skeleton
+SEIT2L.skel.c <- '
+    double trans[6];
+
+    double beta = R0 / D_inf;
+    double epsilon = 1 / D_lat;
+    double nu = 1 / D_inf;
+    double tau = 1 / D_imm;
+
+    double N = S + E + I + T1 + T2 + L;
+
+    trans[0] = beta * I / N * S;
+    trans[1] = epsilon * E;
+    trans[2] = nu * I;
+    trans[3] = 2 * tau * T1;
+    trans[4] = 2 * alpha * tau * T2;
+    trans[5] = 2 * (1 - alpha) * tau * T2;
+
+    DS = -trans[0] + trans[5];
+    DE = trans[0] - trans[1];
+    DI = trans[1] - trans[2];
+    DT1 = trans[2] - trans[3];
+    DT2 = trans[3] - trans[4] - trans[5];
+    DL = trans[4];
+    DInc = trans[1];
+'
+
+## define stochastic model, for use with euler.sim, see ?euler.sim
 SEIT2L.sim.c <- '
     double rate[6];
     double dN[6];
@@ -34,32 +68,7 @@ SEIT2L.sim.c <- '
     Inc += dN[1];
 '
 
-SEIT2L.skel.c <- '
-    double trans[6];
-
-    double beta = R0 / D_inf;
-    double epsilon = 1 / D_lat;
-    double nu = 1 / D_inf;
-    double tau = 1 / D_imm;
-
-    double N = S + E + I + T1 + T2 + L;
-
-    trans[0] = beta * I / N * S;
-    trans[1] = epsilon * E;
-    trans[2] = nu * I;
-    trans[3] = 2 * tau * T1;
-    trans[4] = 2 * alpha * tau * T2;
-    trans[5] = 2 * (1 - alpha) * tau * T2;
-
-    DS = -trans[0] + trans[5];
-    DE = trans[0] - trans[1];
-    DI = trans[1] - trans[2];
-    DT1 = trans[2] - trans[3];
-    DT2 = trans[3] - trans[4] - trans[5];
-    DL = trans[4];
-    DInc = trans[1];
-'
-
+## construct pomp object
 SEIT2L_pomp <- pomp(SEITL_pomp,
                     rprocess = euler.sim(step.fun = Csnippet(SEIT2L.sim.c),
                                          delta.t = 0.1),
