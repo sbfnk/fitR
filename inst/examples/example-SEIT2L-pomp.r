@@ -64,5 +64,6 @@ SEIT2L_pomp <- pomp(SEITL_pomp,
                     rprocess = euler.sim(step.fun = Csnippet(SEIT2L.sim.c),
                                          delta.t = 0.1),
                     skeleton = Csnippet(SEIT2L.skel.c),
+                    paramnames = c("R0", "D_inf", "D_lat", "D_imm", "alpha", "rho"),
                     statenames = c("S", "E", "I", "T1", "T2", "L", "Inc"))
                    
