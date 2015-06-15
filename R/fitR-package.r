@@ -210,6 +210,52 @@ NULL
 #' @name SEIT2L_stoch 
 NULL
 
+
+
+#' The deterministic SEIT4L model with constant population size
+#'
+#' The deterministic SEIT4L model with constant population size, uniform prior and Poisson observation with reporting rate.
+#'
+#' \itemize{
+#'   \item \code{name} character.
+#'   \item \code{state.names} character vector.
+#'   \item \code{theta.names} character vector.
+#'   \item \code{simulate} \R-function.
+#'   \item \code{genObsPoint} \R-function.
+#'   \item \code{logPrior} \R-function.
+#'   \item \code{pointLogLike} \R-function.
+#' }
+#' 
+#' Look at the documentation of \code{\link{fitmodel}} for more details about each of these elements.
+#' You can look at the code of the \R-functions by typing \code{SEIT4L_deter$simulate} for instance. There are some comments included.
+#'
+#' @format A \code{\link{fitmodel}} object, that is a list with the following elements:
+#' @name SEIT4L_deter 
+NULL
+
+
+#' The stochastic SEIT4L model with constant population size
+#'
+#' The stochastic SEIT4L model with constant population size, uniform prior and Poisson observation with reporting rate.
+#'
+#' \itemize{
+#'   \item \code{name} character.
+#'   \item \code{state.names} character vector.
+#'   \item \code{theta.names} character vector.
+#'   \item \code{simulate} \R-function.
+#'   \item \code{genObsPoint} \R-function.
+#'   \item \code{logPrior} \R-function.
+#'   \item \code{pointLogLike} \R-function.
+#' }
+#' 
+#' Look at the documentation of \code{\link{fitmodel}} for more details about each of these elements.
+#' You can look at the code of the \R-functions by typing \code{SEIT4L_stoch$simulate} for instance. There are some comments included.
+#'
+#' @format A \code{\link{fitmodel}} object, that is a list with the following elements:
+#' @name SEIT4L_stoch 
+NULL
+
+
 #' The SEITL model for pomp
 #'
 #' The SEITL model with constant population size, uniform prior and Poisson observation with reporting rate, as a \code{\link{pomp}} object.
