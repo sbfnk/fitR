@@ -32,7 +32,7 @@ dTrajObs <- function(fitmodel, theta, init.state, data, log = FALSE) {
                 dens <- dens + fitmodel$dPointObs(data.point=data.point, model.point=model.point, theta=theta, log = TRUE)
 	}
 
-	return(ifelse(log, dens, exp(dens))
+	return(ifelse(log, dens, exp(dens)))
 }
 
 #'Marginal log-likelihood for a stochastic model
