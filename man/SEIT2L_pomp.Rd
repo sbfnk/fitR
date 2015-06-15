@@ -71,7 +71,7 @@ SEIT2L.sim.c <- '
     reulermultinom(1, I, &rate[2], dt, &dN[2]);
     reulermultinom(1, T1, &rate[3], dt, &dN[3]);
     reulermultinom(2, T2, &rate[4], dt, &dN[4]);
-    
+
     S += -dN[0] + dN[5];
     E += dN[0] - dN[1];
     I += dN[1] - dN[2];
@@ -82,12 +82,18 @@ SEIT2L.sim.c <- '
 '
 
 ## construct pomp object
-SEIT2L_pomp <- pomp(SEITL_pomp,
-                    rprocess = euler.sim(step.fun = Csnippet(SEIT2L.sim.c),
-                                         delta.t = 0.1),
+SEIT2L_pomp <- pomp(data = FluTdC1971[, c("time", "obs")],
                     skeleton = Csnippet(SEIT2L.skel.c),
+                    skeleton.type = "vectorfield",
+                    rprocess = euler.sim(step.fun = Csnippet(SEIT2L.sim.c),
+                    delta.t = 0.1),
+                    rmeasure = Csnippet(SEITL.rmeas.c),
+                    dmeasure = Csnippet(SEITL.dmeas.c),
+                    times = "time",
+                    t0 = 1,
+                    zeronames = "Inc",
                     paramnames = c("R0", "D_inf", "D_lat", "D_imm", "alpha", "rho"),
-                    statenames = c("S", "E", "I", "T1", "T2", "L", "Inc"))
-                   
+                    statenames = c("S", "E", "I", "T1", "T2", "L", "Inc"),
+                    obsnames = c("obs"))
 }
 
