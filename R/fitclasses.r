@@ -23,13 +23,14 @@
 #' 	\item \code{log} boolean. determines whether the logarithm of the prior density should be returned. 
 #' }
 #' and returns the (logged, if requested) value of the prior density distribution.
-#' @param dPointObs \R-function that evaluates the log-likelihood of one data point given the state of the model at the same time point. This function takes 3 arguments:
+#' @param dPointObs \R-function that evaluates the likelihood of one data point given the state of the model at the same time point. This function takes 4 arguments:
 #' \itemize{
 #' \item \code{data.point} named numeric vector. Observation time and observed data point.
 #' \item \code{model.point} named numeric vector containing the state of the model at the observation time point.
 #' \item \code{theta} named numeric vector. Parameter values. Useful since parameters are usually needed to compute the likelihood (i.e. reporting rate).
+#' \item \code{log} boolean. determines whether the logarithm of the likelihood should be returned. 
 #' }
-#' and returns the log-likelihood. (optional)
+#' and returns the (log-)likelihood. (optional)
 #' @export
 #' @return a \code{fitmodel} object that is a \code{list} of 7 elements:
 #' \itemize{
@@ -39,7 +40,7 @@
 #' 	\item \code{simulate} \R-function to simulate forward the model; usage: \code{simulate(theta,init.state,times)}.
 #' 	\item \code{rPointObs} \R-function to generate simulated observations; usage: \code{rPointObs(model.point, theta)}.
 #' 	\item \code{dprior} \R-function to evaluate the log-prior of the parameter values; usage: \code{dprior(theta)}.
-#' 	\item \code{dPointObs} \R-function to evaluate the log-likelihood of one data point; usage: \code{dPointObs(data.point, model.point, theta)}.
+#' 	\item \code{dPointObs} \R-function to evaluate the log-likelihood of one data point; usage: \code{dPointObs(data.point, model.point, theta, log)}.
 #' }
 #' @seealso \code{\link{testFitmodel}}
 #' @example inst/examples/example-fitmodel.r
@@ -267,7 +268,7 @@ testFitmodel <- function(fitmodel, theta, init.state, data = NULL, verbose=TRUE)
                 ## test it, first data point corresponds to second simulation step (first row contain initial state)
 				data.point <- unlist(data[1,])
 				model.point <- unlist(test.traj[2,])
-				test.dPointObs <- fitmodel$dPointObs(data.point=data.point, model.point=model.point ,theta=theta)
+				test.dPointObs <- fitmodel$dPointObs(data.point=data.point, model.point=model.point ,theta=theta, log=TRUE)
 
 				if(verbose){
 					cat("dPointObs(data.point,model.point,theta) should return a single value\nTest:",test.dPointObs,"\n")

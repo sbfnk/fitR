@@ -43,9 +43,9 @@ NULL
 #'   \item \code{state.names} character vector.
 #'   \item \code{theta.names} character vector.
 #'   \item \code{simulate} \R-function.
-#'   \item \code{genObsPoint} \R-function.
+#'   \item \code{rPointObs} \R-function.
 #'   \item \code{dprior} \R-function.
-#'   \item \code{pointLogLike} \R-function.
+#'   \item \code{dPointObs} \R-function.
 #' }
 #' 
 #' Look at the documentation of \code{\link{fitmodel}} for more details about each of these elements.
@@ -64,9 +64,9 @@ NULL
 #'   \item \code{state.names} character vector.
 #'   \item \code{theta.names} character vector.
 #'   \item \code{simulate} \R-function.
-#'   \item \code{genObsPoint} \R-function.
-#'   \item \code{logPrior} \R-function.
-#'   \item \code{pointLogLike} \R-function.
+#'   \item \code{rPointObs} \R-function.
+#'   \item \code{dprior} \R-function.
+#'   \item \code{dPointObs} \R-function.
 #' }
 #' 
 #' Look at the documentation of \code{\link{fitmodel}} for more details about each of these elements.
@@ -87,9 +87,9 @@ NULL
 #'   \item \code{state.names} character vector.
 #'   \item \code{theta.names} character vector.
 #'   \item \code{simulate} \R-function.
-#'   \item \code{genObsPoint} \R-function.
-#'   \item \code{logPrior} \R-function.
-#'   \item \code{pointLogLike} \R-function.
+#'   \item \code{rPointObs} \R-function.
+#'   \item \code{dprior} \R-function.
+#'   \item \code{dPointObs} \R-function.
 #' }
 #' 
 #' Look at the documentation of \code{\link{fitmodel}} for more details about each of these elements.
@@ -110,9 +110,9 @@ NULL
 #'   \item \code{state.names} character vector.
 #'   \item \code{theta.names} character vector.
 #'   \item \code{simulate} \R-function.
-#'   \item \code{genObsPoint} \R-function.
-#'   \item \code{logPrior} \R-function.
-#'   \item \code{pointLogLike} \R-function.
+#'   \item \code{rPointObs} \R-function.
+#'   \item \code{dprior} \R-function.
+#'   \item \code{dPointObs} \R-function.
 #' }
 #' 
 #' Look at the documentation of \code{\link{fitmodel}} for more details about each of these elements.
@@ -132,9 +132,9 @@ NULL
 #'   \item \code{state.names} character vector.
 #'   \item \code{theta.names} character vector.
 #'   \item \code{simulate} \R-function.
-#'   \item \code{genObsPoint} \R-function.
-#'   \item \code{logPrior} \R-function.
-#'   \item \code{pointLogLike} \R-function.
+#'   \item \code{rPointObs} \R-function.
+#'   \item \code{dprior} \R-function.
+#'   \item \code{dPointObs} \R-function.
 #' }
 #' 
 #' Look at the documentation of \code{\link{fitmodel}} for more details about each of these elements.
@@ -154,9 +154,9 @@ NULL
 #'   \item \code{state.names} character vector.
 #'   \item \code{theta.names} character vector.
 #'   \item \code{simulate} \R-function.
-#'   \item \code{genObsPoint} \R-function.
-#'   \item \code{logPrior} \R-function.
-#'   \item \code{pointLogLike} \R-function.
+#'   \item \code{rPointObs} \R-function.
+#'   \item \code{dprior} \R-function.
+#'   \item \code{dPointObs} \R-function.
 #' }
 #' 
 #' Look at the documentation of \code{\link{fitmodel}} for more details about each of these elements.
@@ -176,9 +176,9 @@ NULL
 #'   \item \code{state.names} character vector.
 #'   \item \code{theta.names} character vector.
 #'   \item \code{simulate} \R-function.
-#'   \item \code{genObsPoint} \R-function.
-#'   \item \code{logPrior} \R-function.
-#'   \item \code{pointLogLike} \R-function.
+#'   \item \code{rPointObs} \R-function.
+#'   \item \code{dprior} \R-function.
+#'   \item \code{dPointObs} \R-function.
 #' }
 #' 
 #' Look at the documentation of \code{\link{fitmodel}} for more details about each of these elements.
@@ -198,9 +198,9 @@ NULL
 #'   \item \code{state.names} character vector.
 #'   \item \code{theta.names} character vector.
 #'   \item \code{simulate} \R-function.
-#'   \item \code{genObsPoint} \R-function.
-#'   \item \code{logPrior} \R-function.
-#'   \item \code{pointLogLike} \R-function.
+#'   \item \code{rPointObs} \R-function.
+#'   \item \code{dprior} \R-function.
+#'   \item \code{dPointObs} \R-function.
 #' }
 #' 
 #' Look at the documentation of \code{\link{fitmodel}} for more details about each of these elements.
@@ -221,9 +221,9 @@ NULL
 #'   \item \code{state.names} character vector.
 #'   \item \code{theta.names} character vector.
 #'   \item \code{simulate} \R-function.
-#'   \item \code{genObsPoint} \R-function.
-#'   \item \code{logPrior} \R-function.
-#'   \item \code{pointLogLike} \R-function.
+#'   \item \code{rPointObs} \R-function.
+#'   \item \code{dprior} \R-function.
+#'   \item \code{dPointObs} \R-function.
 #' }
 #' 
 #' Look at the documentation of \code{\link{fitmodel}} for more details about each of these elements.
@@ -243,9 +243,9 @@ NULL
 #'   \item \code{state.names} character vector.
 #'   \item \code{theta.names} character vector.
 #'   \item \code{simulate} \R-function.
-#'   \item \code{genObsPoint} \R-function.
-#'   \item \code{logPrior} \R-function.
-#'   \item \code{pointLogLike} \R-function.
+#'   \item \code{rPointObs} \R-function.
+#'   \item \code{dprior} \R-function.
+#'   \item \code{dPointObs} \R-function.
 #' }
 #' 
 #' Look at the documentation of \code{\link{fitmodel}} for more details about each of these elements.

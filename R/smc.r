@@ -12,7 +12,7 @@
 #' @import parallel doParallel plyr
 #' @return A list of 3 elements:
 #' \itemize{
-#' \item \code{pointLogLike} the marginal log-likelihood of the theta.
+#' \item \code{dPointObs} the marginal log-likelihood of the theta.
 #' \item \code{traj} a list of size \code{n.particles} with all filtered trajectories.
 #' \item \code{traj.weight} a vector of size \code{n.particles} with the normalised weight of the filtered trajectories.
 #' }
@@ -76,7 +76,7 @@ particleFilter <- function(fitmodel, theta, init.state, data, n.particles, progr
 
             # compute particle weight
             model.point <- unlist(traj[2,fitmodel$state.names])
-            weight <- exp(fitmodel$pointLogLike(data.point=data.point, model.point=model.point, theta=theta))
+            weight <- fitmodel$dPointObs(data.point=data.point, model.point=model.point, theta=theta)
 
             return(list(state=model.point,weight=weight))
 

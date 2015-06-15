@@ -117,9 +117,9 @@ rTrajObs <- function(fitmodel, theta, init.state, times) {
         ## simulate model at successive observation times of data
 	traj <- fitmodel$simulate(theta, init.state, times)
 
-        ## generate observations by applying fitmodel$genObsPoint to
+        ## generate observations by applying fitmodel$rPointObs to
         ## each row of traj. The parameter value theta as passed as
-        ## extra argument to fitmodel$genObsPoint
+        ## extra argument to fitmodel$rPointObs
 	
 	obs <- ddply(traj, "time" , fitmodel$rPointObs, theta = theta)
 	traj_obs <- join(traj,obs, by="time")
