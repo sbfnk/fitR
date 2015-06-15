@@ -273,6 +273,14 @@ distanceOscillation <- function(x, y) {
 #' @seealso burnAndThin
 export2Tracer <- function(trace, file) {
 
+    if(is.mcmc(trace)){
+        trace <- as.data.frame(trace)
+    }
+
+    if(!"iteration"%in%names(trace)){
+        trace$iteration <- (1:nrow(trace) - 1)
+    }
+
     trace <- trace[c("iteration",setdiff(names(trace),c("iteration","weight")))]
     write.table(trace,file=file,quote=FALSE,row.names=FALSE,sep="\t")
 
