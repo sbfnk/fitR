@@ -29,15 +29,10 @@ dTrajObs <- function(fitmodel, theta, init.state, data, log = FALSE) {
 		model.point <- unlist(traj[i+1,])
 
 		# update marginal log-likelihood
-                if (log) {
-                    dens <- dens + fitmodel$dPointObs(data.point=data.point, model.point=model.point, theta=theta, log = TRUE)
-                } else
-                {
-                    dens <- dens * fitmodel$dPointObs(data.point=data.point, model.point=model.point, theta=theta, log = FALSE)
-                }
+                dens <- dens + fitmodel$dPointObs(data.point=data.point, model.point=model.point, theta=theta, log = TRUE)
 	}
 
-	return(dens)
+	return(ifelse(log, dens, exp(dens))
 }
 
 #'Marginal log-likelihood for a stochastic model
