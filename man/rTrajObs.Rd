@@ -16,7 +16,7 @@ rTrajObs(fitmodel, theta, init.state, times)
 \item{times}{the times at which to generate observations}
 }
 \value{
-numeric value of the log-likelihood
+data.frame
 }
 \description{
 This function simulates a model defined in a \code{\link{fitmodel}}
