@@ -75,12 +75,12 @@ SEITL.sim.c <- '
 
 ## define sampling random point observations
 SEITL.rmeas.c <- '
-    obs = rpois(rho * Inc);
+    obs = rpois(Inc > 0 ? rho * Inc : 0);
 '
 
 ## define point observation probability density
 SEITL.dmeas.c <- '
-    lik = dpois(obs, rho * Inc, give_log);
+    lik = dpois(obs, Inc > 0 ? rho * Inc : 0, give_log);
 '
 
 ## define prior density

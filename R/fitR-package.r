@@ -279,3 +279,15 @@ NULL
 #' @import pomp
 #' @example inst/examples/example-SEIT2L-pomp.r
 NULL
+
+#' The SEIT4L model for pomp
+#'
+#' The SEIT4L model with constant population size, uniform prior and Poisson observation with reporting rate, as a \code{\link{pomp}} object.
+#'
+#' Look at the documentation of \code{\link{pomp}} for more details about each of these elements.
+#' 
+#' @format A \code{\link{pomp}} object.
+#' @name SEIT4L_pomp
+#' @import pomp
+#' @example inst/examples/example-SEIT4L-pomp.r
+NULL
