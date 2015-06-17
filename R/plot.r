@@ -37,7 +37,7 @@ plotTraj <- function(traj = NULL, state.names = NULL, data = NULL, summary = TRU
 
     if(is.null(state.names)) {
         numeric.names <- names(traj)[sapply(names(traj), function(x) {
-                                                class(traj[, x]) %in% c("numeric", "Integer")
+                                                class(traj[, x]) %in% c("numeric", "integer")
                                             })]
         state.names <- setdiff(numeric.names, c("time", "replicate"))
     }
