@@ -1,5 +1,3 @@
-## data(FluTdC1971)
-
 SEI2R.sim.c <- '
     double rate[5];
     double dN[5];
@@ -37,25 +35,31 @@ SEI2R.sim.c <- '
 SEI2R.skel.c <- '
     double trans[5];
 
-    double beta = R0 / D_inf;
-    double epsilon = 1 / D_lat;
-    double nu = 1 / D_inf;
-    double tau = 1 / D_imm;
+    double nu = 1 / D_lat;
+    double tau = 1 / D_not;
+    double gamma = 1 / D_inf;
 
-    double N = S + E + I + T + L;
+    double N = S + E1 + I2 + Ic + Ih + R;
 
-    trans[0] = beta * I / N * S;
-    trans[1] = epsilon * E;
-    trans[2] = nu * I;
-    trans[3] = alpha * tau * T;
-    trans[4] = (1 - alpha) * tau * T;
+    Dbeta = 0;
 
-    DS = -trans[0] + trans[4];
-    DE = trans[0] - trans[1];
-    DI = trans[1] - trans[2];
-    DT = trans[2] - trans[3] - trans[4];
-    DL = trans[3];
-    DInc = trans[1];
+    trans[0] = beta * (Ic + Ih) / N * S;
+    trans[1] = 2 * nu * E1;
+    trans[2] = 2 * nu * E2;
+    trans[3] = tau * Ic;
+    trans[4] = gamma * Ih;
+
+    DS = -trans[0];
+    DE1 = trans[0] - trans[1];
+    DE2 = trans[1] - trans[2];
+    DIc = trans[2] - trans[3];
+    DIh = trans[3] - trans[4];
+    DR = trans[4];
+    DInc = trans[3];
+'
+
+SEI2R.initializer.c <- '
+    beta = init_R0 / D_inf;
 '
 
 SEI2R.rmeas.c <- '
@@ -63,7 +67,7 @@ SEI2R.rmeas.c <- '
 '
 
 SEI2R.dmeas.c <- '
-    lik = dnegbin_mu(obs, rho * Inc, sqrt(rho * Inc + phi ^ 2 * rho ^ 2 * Inc ^ 2, give_log);
+    lik = dnegbin_mu(obs, rho * Inc, sqrt(rho * Inc + phi ^ 2 * rho ^ 2 * Inc ^ 2), give_log);
 '
 
 SEI2R.dprior.c <- '
@@ -86,7 +90,7 @@ SEI2R_pomp <- pomp(data = FluTdC1971[, c("time", "obs")],
                    times = "time",
                    t0 = 1,
                    zeronames = "Inc", 
-                   paramnames = c("R0", "D_inf", "D_lat", "D_imm", "alpha", "rho"),
-                   statenames = c("S", "E", "I", "T", "L", "Inc"),
+                   paramnames = c("init_R0", "D_lat", "D_not", "D_inf", "rho"),
+                   statenames = c("S", "E1", "E2", "Ic", "Ih", "R", "Inc", "beta"),
                    obsnames = c("obs"))
                    
