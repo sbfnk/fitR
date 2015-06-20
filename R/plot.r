@@ -29,7 +29,7 @@ plotTraj <- function(traj = NULL, state.names = NULL, data = NULL, time.column =
         stop("Nothing to plot")
     }
 
-    if(!is.null(traj) & !any(duplicated(traj[time.column]))) {
+    if(!is.null(traj) & !any(duplicated(traj[[time.column]]))) {
         traj[replicate.column] <- 1
 
         if(summary) {
