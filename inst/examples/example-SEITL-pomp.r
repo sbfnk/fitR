@@ -82,6 +82,24 @@ SEITL.dprior.c <- '
   lik = give_log ? lik : exp(lik);
 '
 
+SEITL.logtrans.c <- '
+    TR0 = log(R0);
+    TD_inf = log(D_inf);
+    TD_lat = log(D_lat);
+    TD_imm = log(D_imm);
+    Talpha = log(alpha);
+    Trho = log(rho);
+'
+
+SEITL.exptrans.c <- '
+    TR0 = exp(R0);
+    TD_inf = exp(D_inf);
+    TD_lat = exp(D_lat);
+    TD_imm = exp(D_imm);
+    Talpha = exp(alpha);
+    Trho = exp(rho);
+'
+
 ## construct pomp object
 SEITL_pomp <- pomp(data = FluTdC1971[, c("time", "obs")],
                    skeleton = Csnippet(SEITL.skel.c),
@@ -90,6 +108,9 @@ SEITL_pomp <- pomp(data = FluTdC1971[, c("time", "obs")],
                                         delta.t = 0.1),
                    rmeasure = Csnippet(SEITL.rmeas.c),
                    dmeasure = Csnippet(SEITL.dmeas.c),
+                   dprior = Csnippet(SEITL.dprior.c), 
+                   toEstimationScale = Csnippet(SEITL.logtrans.c),
+                   fromEstimationScale = Csnippet(SEITL.exptrans.c), 
                    times = "time",
                    t0 = 1,
                    zeronames = "Inc", 
