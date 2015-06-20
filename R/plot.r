@@ -29,8 +29,8 @@ plotTraj <- function(traj = NULL, state.names = NULL, data = NULL, time.column =
         stop("Nothing to plot")
     }
 
-    if(!is.null(traj) & !any(duplicated(traj[time.column]))) {
-        traj[replicate.column] <- 1
+    if(!is.null(traj) & !any(duplicated(traj[[time.column]]))) {
+        traj[[replicate.column]] <- 1
 
         if(summary) {
             # Only 1 replicate to summarise: mean, median and CI of
@@ -41,7 +41,7 @@ plotTraj <- function(traj = NULL, state.names = NULL, data = NULL, time.column =
 
     if(is.null(state.names)) {
         numeric.names <- names(traj)[sapply(names(traj), function(x) {
-                                                class(traj[, x]) %in% c("numeric", "integer")
+                                                class(traj[[x]]) %in% c("numeric", "integer")
                                             })]
         state.names <- setdiff(numeric.names, c(time.column, replicate.column))
     } else if (!is.character(state.names))
