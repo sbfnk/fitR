@@ -14,7 +14,7 @@ plotSMC(smc, fitmodel, theta, data = NULL, summary = TRUE, alpha = 1,
 
 \item{theta}{named numeric vector. Values of the parameters. Names should match \code{fitmodel$theta.names}.}
 
-\item{data}{data frame. Observation times and observed data. The time column must be named \code{time}, whereas the name of the data column should match one of \code{fitmodel$state.names}.}
+\item{data}{data frame. Observation times and observed data. The time column must be named as given by \code{time.column}, whereas the name of the data column should match one of \code{fitmodel$state.names}.}
 
 \item{summary}{logical. If \code{TRUE}, the mean, median as well as the 50th and 95th percentile of the trajectories are plotted (default). If \code{FALSE}, all individual trajectories are plotted (transparency can be set with \code{alpha}).}
 

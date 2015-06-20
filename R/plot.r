@@ -3,30 +3,34 @@
 #'This function use faceting to plot all trajectories in a data frame. Convenient to see results of several simulations, or data. Also, if \code{data} is present, then an additional plot is displayed with data and potentially observation generated.
 #' @param traj data.frame, output of \code{fitmodel$simulate} or \code{simulateModelReplicates}.
 #' @param state.names character vector. Names of the state variables to plot. Names must match \code{fitmodel$state.names}. If \code{NULL} (default) all state variables are plotted.
-#' @param data data frame. Observation times and observed data. The time column must be named \code{time}, whereas the name of the data column should match one of \code{fitmodel$state.names}.
+#' @param data data frame. Observation times and observed data. The time column must be named as given by \code{time.column}, whereas the name of the data column should match one of \code{fitmodel$state.names}.
+#' @param time.column character vector. The column in the data that indicates time
+#' @param lines.data logical. If \code{TRUE}, the data will be plotted as lines
 #' @param summary logical. If \code{TRUE}, the mean, median as well as the 50th and 95th percentile of the trajectories are plotted (default). If \code{FALSE}, all individual trajectories are plotted (transparency can be set with \code{alpha}).
+#' @param replicate.column character Vector. The column in the data that indicates the replicate (if muliple replicates are to be plotted, i.e. if \code{summary} is \code{FALSE}
+#' @param colour character vector. If a character, will use that colour to plot trajectories. If "all", use all available colous. If \code{NULL}, don't set the colour. 
 #' @param non.extinct character vector. Names of the infected states which must be non-zero so the epidemic is still ongoing. 
 #' When the names of these states are provided, the extinction probability is plotted by computing the proportion of faded-out epidemics over time. 
 #' An epidemic has faded-out when all the infected states (whose names are provided) are equal to 0. This is only relevant for stochastic models. 
 #' In addition, if \code{summary == TRUE}, the summaries of the trajectories conditioned on non-extinction are shown. Default to \code{NULL}.
 #' @param alpha transparency of the trajectories (between 0 and 1).
 #' @param plot if \code{TRUE} the plot is displayed, and returned otherwise.
-#' @param init_date character. Date of the first point of the time series (default to \code{NULL}). If provided, the x-axis will be in calendar format. NB: currently only works if the unit of time is the day.
+#' @param init.date character. Date of the first point of the time series (default to \code{NULL}). If provided, the x-axis will be in calendar format. NB: currently only works if the unit of time is the day.
 #' @export
 #' @import reshape2 ggplot2 stringr
 #' @seealso \code{\link{simulateModelReplicates}}
-plotTraj <- function(traj = NULL, state.names = NULL, data = NULL, summary = TRUE, non.extinct = NULL, alpha = 1, plot = TRUE, init_date = NULL) {
+plotTraj <- function(traj = NULL, state.names = NULL, data = NULL, time.column = "time", lines.data = FALSE, summary = TRUE, replicate.column = "replicate", non.extinct = NULL, alpha = 1, plot = TRUE, colour = "red", init.date = NULL) {
 
-    if(!is.null(init_date)) {
-        init_date <- as.Date(init_date)
+    if(!is.null(init.date)) {
+        init.date <- as.Date(init.date)
     }
 
     if(is.null(traj) && is.null(data)) {
         stop("Nothing to plot")
     }
 
-    if(!is.null(traj) & !any(duplicated(traj$time))) {
-        traj$replicate <- 1
+    if(!is.null(traj) & !any(duplicated(traj[time.column]))) {
+        traj[replicate.column] <- 1
 
         if(summary) {
             # Only 1 replicate to summarise: mean, median and CI of
@@ -39,28 +43,33 @@ plotTraj <- function(traj = NULL, state.names = NULL, data = NULL, summary = TRU
         numeric.names <- names(traj)[sapply(names(traj), function(x) {
                                                 class(traj[, x]) %in% c("numeric", "integer")
                                             })]
-        state.names <- setdiff(numeric.names, c("time", "replicate"))
+        state.names <- setdiff(numeric.names, c(time.column, replicate.column))
+    } else if (!is.character(state.names))
+        stop(sQuote("state.names"), ", if given, must be a numeric vector")
+
+    if(!is.null(init.date)) {
+        traj[[time.column]] <- traj[[time.column]] + init.date
+        if(!is.null(data)) {
+            data[[time.column]] <- data[[time.column]] + init.date
+        }    
     }
 
-    if(!is.null(init_date)) {
-        traj <- mutate(traj, time = init_date + time)
-        if(!is.null(data)) {
-            data <- mutate(data, time = init_date + time)            
-        }    
+    if (colour == "all" && summary == TRUE)
+    {
+        warning("Ignoring ", sQuote("colour = \"all\""), " which doesn't make sense if ", sQuote("summary == TRUE"))
+        colour <- NULL
     }
 
     if (!is.null(traj)) {
 
-
-
         if(!is.null(non.extinct)) {
             traj <- mutate(traj, infected = eval(parse(text = paste(non.extinct, collapse = "+")), traj))
             df.infected <- melt(traj, measure.vars = "infected", variable.name = "state")
-            df.p.ext <- ddply(df.infected, "time", function(df) {
+            df.p.ext <- ddply(df.infected, time.column, function(df) {
                 return(data.frame(value = sum(df$value == 0)/nrow(df)))
             })
             df.p.ext$state <- "p.extinction"
-            df.p.ext$replicate <- 0
+            df.p.ext[replicate.column] <- 0
 
             if(summary) {
                 traj <- subset(traj, infected>0)
@@ -76,7 +85,7 @@ plotTraj <- function(traj = NULL, state.names = NULL, data = NULL, summary = TRU
 
             message("Compute confidence intervals")
 
-            traj.CI <- ddply(df.traj, c("time", "state"), function(df) {
+            traj.CI <- ddply(df.traj, c(time.column, "state"), function(df) {
 
                 tmp <- as.data.frame(t(quantile(df$value, prob = c(0.025, 0.25, 0.5, 0.75, 0.975))))
                 names(tmp) <- c("low_95", "low_50", "median", "up_50", "up_95")
@@ -85,28 +94,38 @@ plotTraj <- function(traj = NULL, state.names = NULL, data = NULL, summary = TRU
 
             }, .progress = "text")
 
-            traj.CI.line <- melt(traj.CI[c("time", "state", "mean", "median")], id.vars = c("time", "state"))
-            traj.CI.area <- melt(traj.CI[c("time", "state", "low_95", "low_50", "up_50", "up_95")], id.vars = c("time", "state"))
+            traj.CI.line <- melt(traj.CI[c(time.column, "state", "mean", "median")], id.vars = c(time.column, "state"))
+            traj.CI.area <- melt(traj.CI[c(time.column, "state", "low_95", "low_50", "up_50", "up_95")], id.vars = c(time.column, "state"))
             traj.CI.area$type <- sapply(traj.CI.area$variable, function(x) {str_split(x, "_")[[1]][1]})
             traj.CI.area$CI <- sapply(traj.CI.area$variable, function(x) {str_split(x, "_")[[1]][2]})
             traj.CI.area$variable <- NULL
-            traj.CI.area <- dcast(traj.CI.area, "time+state+CI~type")
+            traj.CI.area <- dcast(traj.CI.area, paste0(time.column,"+state+CI~type"))
 
             p <- ggplot(traj.CI.area)+facet_wrap(~state, scales = "free_y")
-            p <- p + geom_ribbon(data = traj.CI.area, aes(x = time, ymin = low, ymax = up, alpha = CI), fill = "red")
-            p <- p + geom_line(data = traj.CI.line, aes(x = time, y = value, linetype = variable), colour = "red")
+            if (is.null(colour)) {
+                p <- p + geom_ribbon(data = traj.CI.area, aes_string(x = time.column, ymin = "low", ymax = "up", alpha = "CI"))
+                p <- p + geom_line(data = traj.CI.line, aes_string(x = time.column, y = "value", linetype = "variable"))
+            } else {
+                p <- p + geom_ribbon(data = traj.CI.area, aes_string(x = time.column, ymin = "low", ymax = "up", alpha = "CI"), fill = colour)
+                p <- p + geom_line(data = traj.CI.line, aes_string(x = time.column, y = "value", linetype = "variable"), colour = colour)
+            }
             p <- p + scale_alpha_manual("Percentile", values = c("95" = 0.25, "50" = 0.45), labels = c("95" = "95th", "50" = "50th"))
             p <- p + scale_linetype("Stats")
             p <- p + guides(linetype = guide_legend(order = 1))
         } else {
 
             p <- ggplot(df.traj)+facet_wrap(~state, scales = "free_y")
-            p <- p + geom_line(data = df.traj, aes(x = time, y = value, group = replicate), alpha = alpha, colour = "red")
-
+            if (is.null(colour)) {
+                p <- p + geom_line(data = df.traj, aes_string(x = time.column, y = "value", group = replicate.column), alpha = alpha)
+            } else if (colour == "all") {
+                p <- p + geom_line(data = df.traj, aes_string(x = time.column, y = "value", group = replicate.column, color = replicate.column), alpha = alpha)
+            } else {
+                p <- p + geom_line(data = df.traj, aes_string(x = time.column, y = "value", group = replicate.column), alpha = alpha, colour = colour)
+            }
         }
 
         if(!is.null(non.extinct)) {
-            p <- p+geom_line(data = df.p.ext, aes(x = time, y = value), color = "black", alpha = 1)
+            p <- p+geom_line(data = df.p.ext, aes_string(x = time.column, y = "value"), color = "black", alpha = 1)
         }
 
     } else {
@@ -115,9 +134,15 @@ plotTraj <- function(traj = NULL, state.names = NULL, data = NULL, summary = TRU
 
     if(!is.null(data)) {
         obs_names <- grep("obs", names(data), value = TRUE)
+        if (length(obs_names) == 0) {
+            obs_names <- setdiff(names(data), time.column)
+        }
         data <- melt(data, measure.vars = obs_names, variable.name = "state")
-        p <- p + geom_point(data = data, aes(x = time, y = value), colour = "black")
-
+        if (lines.data) {
+            p <- p + geom_line(data = data, aes_string(x = time.column, y = "value"), colour = "black")
+        } else {
+            p <- p + geom_point(data = data, aes_string(x = time.column, y = "value"), colour = "black")
+        }
     }
 
     p <- p + theme_bw() + theme(legend.position = "top", legend.box = "horizontal")
@@ -355,7 +380,7 @@ plotHPDregion2D <- function(trace, vars, prob = c(0.95, 0.75, 0.5, 0.25, 0.1), x
 #'    \item \code{traj} a \code{data.frame} with the trajectories (and observations) sampled from the posterior distribution.
 #'    \item \code{plot} the plot of the fit displayed.
 #'}
-plotPosteriorFit <- function(trace, fitmodel, init.state, data, posterior.summary = c("sample", "median", "mean", "max"), summary = TRUE, sample.size = 100, non.extinct = NULL, alpha = min(1, 10/sample.size), plot = TRUE, all.vars = FALSE, init_date = NULL) {
+plotPosteriorFit <- function(trace, fitmodel, init.state, data, posterior.summary = c("sample", "median", "mean", "max"), summary = TRUE, sample.size = 100, non.extinct = NULL, alpha = min(1, 10/sample.size), plot = TRUE, all.vars = FALSE, init.date = NULL) {
 
     posterior.summary <- match.arg(posterior.summary)
 
@@ -418,7 +443,7 @@ plotPosteriorFit <- function(trace, fitmodel, init.state, data, posterior.summar
 
     traj <- subset(traj, time>0)
 
-    p <- plotTraj(traj = traj, state.names = state.names, data = data, summary = summary, alpha = alpha, non.extinct = non.extinct, plot = FALSE, init_date = init_date)
+    p <- plotTraj(traj = traj, state.names = state.names, data = data, summary = summary, alpha = alpha, non.extinct = non.extinct, plot = FALSE, init.date = init.date)
 
 
     if(plot) {

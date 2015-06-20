@@ -7,7 +7,7 @@
 plotPosteriorFit(trace, fitmodel, init.state, data,
   posterior.summary = c("sample", "median", "mean", "max"), summary = TRUE,
   sample.size = 100, non.extinct = NULL, alpha = min(1, 10/sample.size),
-  plot = TRUE, all.vars = FALSE, init_date = NULL)
+  plot = TRUE, all.vars = FALSE, init.date = NULL)
 }
 \arguments{
 \item{trace}{a \code{data.frame} with one column per estimated parameter, as returned by \code{\link{burnAndThin}}}
@@ -35,7 +35,7 @@ In addition, if \code{summary == TRUE}, the summaries of the trajectories condit
 
 \item{all.vars}{logical, if \code{FALSE} only the observations are plotted. Otherwise, all state variables are plotted.}
 
-\item{init_date}{character. Date of the first point of the time series (default to \code{NULL}). If provided, the x-axis will be in calendar format. NB: currently only works if the unit of time is the day.}
+\item{init.date}{character. Date of the first point of the time series (default to \code{NULL}). If provided, the x-axis will be in calendar format. NB: currently only works if the unit of time is the day.}
 }
 \value{
 If \code{plot == FALSE}, a list of 2 elements is returned:

@@ -75,12 +75,12 @@ SEITL.sim.c <- '
 
 ## define sampling random point observations
 SEITL.rmeas.c <- '
-    obs = rpois(rho * Inc);
+    obs = rpois(rho * Inc > 0 ? rho * Inc : 0);
 '
 
 ## define point observation probability density
 SEITL.dmeas.c <- '
-    lik = dpois(obs, rho * Inc, give_log);
+    lik = dpois(obs, rho * Inc > 0 ? rho * Inc : 0, give_log);
 '
 
 ## define prior density
@@ -121,6 +121,7 @@ SEITL_pomp <- pomp(data = FluTdC1971[, c("time", "obs")],
                                         delta.t = 0.1),
                    rmeasure = Csnippet(SEITL.rmeas.c),
                    dmeasure = Csnippet(SEITL.dmeas.c),
+                   dprior = Csnippet(SEITL.dprior.c), 
                    toEstimationScale = Csnippet(SEITL.logtrans.c),
                    fromEstimationScale = Csnippet(SEITL.exptrans.c), 
                    times = "time",
