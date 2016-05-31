@@ -19,7 +19,7 @@
 #' @export
 #' @import reshape2 ggplot2 stringr
 #' @seealso \code{\link{simulateModelReplicates}}
-plotTraj <- function(traj = NULL, state.names = NULL, data = NULL, time.column = "time", lines.data = FALSE, summary = TRUE, replicate.column = "replicate", non.extinct = NULL, alpha = 1, plot = TRUE, colour = "red", init.date = NULL) {
+plotTraj <- function(traj = NULL, state.names = NULL, data = NULL, time.column = "time", lines.data = FALSE, summary = TRUE, replicate.column = "replicate", non.extinct = NULL, alpha = 1, plot = TRUE, colour = "red", init.date = NULL, same = FALSE) {
 
     if(!is.null(init.date)) {
         init.date <- as.Date(init.date)
@@ -101,22 +101,34 @@ plotTraj <- function(traj = NULL, state.names = NULL, data = NULL, time.column =
             traj.CI.area$variable <- NULL
             traj.CI.area <- dcast(traj.CI.area, paste0(time.column,"+state+CI~type"))
 
-            p <- ggplot(traj.CI.area)+facet_wrap(~state, scales = "free_y")
+            p <- ggplot(traj.CI.area)
+            if (!same) {
+                p <- facet_wrap(~state, scales = "free_y")
+            }
+
             if (is.null(colour)) {
                 p <- p + geom_ribbon(data = traj.CI.area, aes_string(x = time.column, ymin = "low", ymax = "up", alpha = "CI"))
                 p <- p + geom_line(data = traj.CI.line, aes_string(x = time.column, y = "value", linetype = "variable"))
-            } else {
-                p <- p + geom_ribbon(data = traj.CI.area, aes_string(x = time.column, ymin = "low", ymax = "up", alpha = "CI"), fill = colour)
-                p <- p + geom_line(data = traj.CI.line, aes_string(x = time.column, y = "value", linetype = "variable"), colour = colour)
+            } else if (colour == "all") {
+                p <- p + geom_ribbon(data = traj.CI.area, aes_string(x = time.column, ymin = "low", ymax = "up", alpha = "CI", fill = "state"))
+                p <- p + geom_line(data = traj.CI.line, aes_string(x = time.column, y = "value", linetype = "variable", colour = "state"))
             }
             p <- p + scale_alpha_manual("Percentile", values = c("95" = 0.25, "50" = 0.45), labels = c("95" = "95th", "50" = "50th"))
             p <- p + scale_linetype("Stats")
             p <- p + guides(linetype = guide_legend(order = 1))
         } else {
 
-            p <- ggplot(df.traj)+facet_wrap(~state, scales = "free_y")
+            p <- ggplot(df.traj)
+            if (!same) {
+                p <- facet_wrap(~state, scales = "free_y")
+            }
+
             if (is.null(colour)) {
-                p <- p + geom_line(data = df.traj, aes_string(x = time.column, y = "value", group = replicate.column), alpha = alpha)
+                if (same) {
+                    p <- p + geom_line(data = df.traj, aes_string(x = time.column, y = "value", group = "state", color = "state"), alpha = alpha)
+                } else {
+                    p <- p + geom_line(data = df.traj, aes_string(x = time.column, y = "value", group = replicate.column), alpha = alpha)
+                }
             } else if (colour == "all") {
                 p <- p + geom_line(data = df.traj, aes_string(x = time.column, y = "value", group = replicate.column, color = replicate.column), alpha = alpha)
             } else {
