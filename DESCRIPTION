@@ -7,9 +7,10 @@ Authors@R: c(person(given="Anton", family="Camacho", email="ntncmch@gmail.com",
 Description: This package contains helper functions for model fitting and
     inference
 Depends:
-    R (>= 3.0.2), deSolve, adaptivetau,ggplot2,reshape2,plyr,tmvtnorm,parallel,doParallel,lubridate,coda,stringr,lattice,dplyr,truncnorm
+    R (>= 3.0.2),
+    deSolve,
+    adaptivetau,ggplot2,reshape2,plyr,tmvtnorm,parallel,doParallel,lubridate,coda,stringr,lattice,dplyr,truncnorm
 License: GPL-2
 LazyData: true
 Roxygen: list(wrap = FALSE)
-
-    
+RoxygenNote: 5.0.1
