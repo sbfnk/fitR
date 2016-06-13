@@ -41,7 +41,7 @@ plotTraj <- function(traj = NULL, state.names = NULL, data = NULL, time.column =
 
     if(is.null(state.names)) {
         numeric.names <- names(traj)[sapply(names(traj), function(x) {
-                                                class(traj[[x]]) %in% c("numeric", "integer")
+          length(intersect(class(traj[[x]]), c("numeric", "integer"))) > 0
                                             })]
         state.names <- setdiff(numeric.names, c(time.column, replicate.column))
     } else if (!is.character(state.names))
@@ -103,7 +103,7 @@ plotTraj <- function(traj = NULL, state.names = NULL, data = NULL, time.column =
 
             p <- ggplot(traj.CI.area)
             if (!same) {
-                p <- facet_wrap(~state, scales = "free_y")
+                p <- p + facet_wrap(~state, scales = "free_y")
             }
 
             if (is.null(colour)) {
@@ -120,7 +120,7 @@ plotTraj <- function(traj = NULL, state.names = NULL, data = NULL, time.column =
 
             p <- ggplot(df.traj)
             if (!same) {
-                p <- facet_wrap(~state, scales = "free_y")
+                p <- p + facet_wrap(~state, scales = "free_y")
             }
 
             if (is.null(colour)) {
