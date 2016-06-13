@@ -40,10 +40,12 @@ plotTraj <- function(traj = NULL, state.names = NULL, data = NULL, time.column =
     }
 
     if(is.null(state.names)) {
+
         numeric.names <- names(traj)[sapply(names(traj), function(x) {
-                                                class(traj[[x]]) %in% c("numeric", "integer")
+                                                any(class(traj[[x]]) %in% c("numeric", "integer"))
                                             })]
         state.names <- setdiff(numeric.names, c(time.column, replicate.column))
+
     } else if (!is.character(state.names))
         stop(sQuote("state.names"), ", if given, must be a numeric vector")
 
@@ -120,7 +122,7 @@ plotTraj <- function(traj = NULL, state.names = NULL, data = NULL, time.column =
 
             p <- ggplot(df.traj)
             if (!same) {
-                p <- facet_wrap(~state, scales = "free_y")
+                p <- p + facet_wrap(~state, scales = "free_y")
             }
 
             if (is.null(colour)) {
