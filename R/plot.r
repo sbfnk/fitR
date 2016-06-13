@@ -105,7 +105,7 @@ plotTraj <- function(traj = NULL, state.names = NULL, data = NULL, time.column =
 
             p <- ggplot(traj.CI.area)
             if (!same) {
-                p <- facet_wrap(~state, scales = "free_y")
+                p <- p + facet_wrap(~state, scales = "free_y")
             }
 
             if (is.null(colour)) {
