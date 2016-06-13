@@ -102,8 +102,7 @@ SEITL.exptrans.c <- '
 
 ## construct pomp object
 SEITL_pomp <- pomp(data = FluTdC1971[, c("time", "obs")],
-                   skeleton = Csnippet(SEITL.skel.c),
-                   skeleton.type = "vectorfield",
+                   skeleton = vectorfield(Csnippet(SEITL.skel.c)),
                    rprocess = euler.sim(step.fun = Csnippet(SEITL.sim.c),
                                         delta.t = 0.1),
                    rmeasure = Csnippet(SEITL.rmeas.c),
