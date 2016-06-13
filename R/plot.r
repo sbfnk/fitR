@@ -40,10 +40,12 @@ plotTraj <- function(traj = NULL, state.names = NULL, data = NULL, time.column =
     }
 
     if(is.null(state.names)) {
+
         numeric.names <- names(traj)[sapply(names(traj), function(x) {
-          length(intersect(class(traj[[x]]), c("numeric", "integer"))) > 0
+                                                any(class(traj[[x]]) %in% c("numeric", "integer"))
                                             })]
         state.names <- setdiff(numeric.names, c(time.column, replicate.column))
+
     } else if (!is.character(state.names))
         stop(sQuote("state.names"), ", if given, must be a numeric vector")
 
@@ -112,6 +114,9 @@ plotTraj <- function(traj = NULL, state.names = NULL, data = NULL, time.column =
             } else if (colour == "all") {
                 p <- p + geom_ribbon(data = traj.CI.area, aes_string(x = time.column, ymin = "low", ymax = "up", alpha = "CI", fill = "state"))
                 p <- p + geom_line(data = traj.CI.line, aes_string(x = time.column, y = "value", linetype = "variable", colour = "state"))
+            } else {
+                p <- p + geom_ribbon(data = traj.CI.area, aes_string(x = time.column, ymin = "low", ymax = "up", alpha = "CI"), fill = colour)
+                p <- p + geom_line(data = traj.CI.line, aes_string(x = time.column, y = "value", linetype = "variable"), colour = colour)                
             }
             p <- p + scale_alpha_manual("Percentile", values = c("95" = 0.25, "50" = 0.45), labels = c("95" = "95th", "50" = "50th"))
             p <- p + scale_linetype("Stats")
