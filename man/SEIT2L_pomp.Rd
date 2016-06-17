@@ -18,7 +18,7 @@ require('pomp')
 data(FluTdC1971)
 
 ## load SEITL_pomp object
-data(SEITL_pomp)
+example(SEITL_pomp)
 
 ## define deterministic skeleton
 SEIT2L.skel.c <- '
@@ -81,21 +81,21 @@ SEIT2L.sim.c <- '
     Inc += dN[1];
 '
 
+
 ## construct pomp object
 SEIT2L_pomp <- pomp(data = FluTdC1971[, c("time", "obs")],
-                    skeleton = Csnippet(SEIT2L.skel.c),
-                    skeleton.type = "vectorfield",
-                    rprocess = euler.sim(step.fun = Csnippet(SEIT2L.sim.c),
-                    delta.t = 0.1),
-                    rmeasure = Csnippet(SEITL.rmeas.c),
-                    dmeasure = Csnippet(SEITL.dmeas.c),
-                    toEstimationScale = Csnippet(SEITL.logtrans.c),
-                    fromEstimationScale = Csnippet(SEITL.exptrans.c), 
-                    times = "time",
-                    t0 = 1,
-                    zeronames = "Inc",
-                    paramnames = c("R0", "D_inf", "D_lat", "D_imm", "alpha", "rho"),
-                    statenames = c("S", "E", "I", "T1", "T2", "L", "Inc"),
-                    obsnames = c("obs"))
+                      skeleton = vectorfield(Csnippet(SEIT2L.skel.c)),
+                      rprocess = euler.sim(step.fun = Csnippet(SEIT2L.sim.c),
+                                           delta.t = 0.1),
+                      rmeasure = Csnippet(SEITL.rmeas.c),
+                      dmeasure = Csnippet(SEITL.dmeas.c),
+                      toEstimationScale = Csnippet(SEITL.logtrans.c),
+                      fromEstimationScale = Csnippet(SEITL.exptrans.c), 
+                      times = "time",
+                      t0 = 1,
+                      zeronames = "Inc",
+                      paramnames = c("R0", "D_inf", "D_lat", "D_imm", "alpha", "rho"),
+                      statenames = c("S", "E", "I", "T1", "T2", "L", "Inc"),
+                      obsnames = c("obs"))
 }
 

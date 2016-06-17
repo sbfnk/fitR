@@ -64,7 +64,7 @@ SEITL.sim.c <- '
     reulermultinom(1, E, &rate[1], dt, &dN[1]);
     reulermultinom(1, I, &rate[2], dt, &dN[2]);
     reulermultinom(2, T, &rate[3], dt, &dN[3]);
-    
+
     S += -dN[0] + dN[4];
     E += dN[0] - dN[1];
     I += dN[1] - dN[2];
@@ -129,6 +129,5 @@ SEITL_pomp <- pomp(data = FluTdC1971[, c("time", "obs")],
                    paramnames = c("R0", "D_inf", "D_lat", "D_imm", "alpha", "rho"),
                    statenames = c("S", "E", "I", "T", "L", "Inc"),
                    obsnames = c("obs"))
-                   
 }
 
