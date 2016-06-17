@@ -82,11 +82,11 @@ SEITL.dprior.r <- function(params, log = FALSE, ...) {
     with(as.list(c(params)),
     {
         lik <- dunif(R0, 1, 50, log = TRUE) + 
-            dunif(D_lat, 0, log = TRUE) +
-            dunif(D_inf, 0, log = TRUE) +
-            dunif(D_imm, 0, 50, log = TRUE) +
-            dunif(alpha, 0, log = TRUE) +
-            dunif(rho, 0, log = TRUE)
+          dunif(D_lat, 0, 10, log = TRUE) +
+          dunif(D_inf, 0, 15, log = TRUE) +
+          dunif(D_imm, 0, 50, log = TRUE) +
+          dunif(alpha, 0, 1, log = TRUE) +
+          dunif(rho, 0, 1, log = TRUE)
 
         ifelse(log, lik, exp(lik))
     })
