@@ -16,7 +16,7 @@ SEIT4L.skel.c <- '
     double nu = 1 / D_inf;
     double tau = 1 / D_imm;
 
-    double N = S + E + I + T1 + T2 + L;
+    double N = S + E + I + T1 + T2 + T3 + T4 + L;
 
     trans[0] = beta * I / N * S;
     trans[1] = epsilon * E;
