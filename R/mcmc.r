@@ -107,10 +107,9 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
 
     # if return value is a vector, set log.density and trace
     if (class(target.theta.current) == "numeric") {
-        suppressWarnings(target.theta.current$log.density <-
-            target.theta.current)
-        suppressWarnings(target.theta.current$trace <-
-            theta.current)
+        target.theta.current <-
+            list(log.density = target.theta.current,
+                 trace = theta.current)
     }
 
     if (!is.null(print.info.every)) {
@@ -118,7 +117,8 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
             ", target: ", target.theta.current[["log.density"]])
     }
 
-    trace <- data.frame(t(target.theta.current[["trace"]]))
+    trace <- data.frame(t(c(target.theta.current[["trace"]],
+                            target.theta.current["log.density"])))
 
     # acceptance rate
     acceptance.rate <- 0
@@ -182,7 +182,7 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
         # print info
         if (i.iteration %% ceiling(print.info.every) == 0) {
             ## end_iteration_time <- Sys.time()
-            state.mcmc <- trace[nrow(trace),]
+            state.mcmc <- target.theta.current$trace
             ## suppressMessages(time.estimation <- round(as.period((end_iteration_time-start_iteration_time)*10000/round(print.info.every))))
             ## message("Iteration: ",i.iteration,"/",n.iterations,", ETA: ",time.estimation,", acceptance rate: ",sprintf("%.3f",acceptance.rate),appendLF=FALSE)
             message("Iteration: ",i.iteration,"/", n.iterations,
@@ -194,6 +194,7 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
                     appendLF=FALSE)
             }
             message(", state: ",printNamedVector(state.mcmc))
+            message(", logdensity: ", target.theta.current$log.density)
             ## start_iteration_time <- end_iteration_time
         }
 
@@ -219,10 +220,9 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
         target.theta.propose <- target(theta.propose)
         # if return value is a vector, set log.density and trace
         if (class(target.theta.propose) == "numeric") {
-            suppressWarnings(target.theta.propose$log.density <-
-                target.theta.propose)
-            suppressWarnings(target.theta.propose$trace <-
-                theta.propose)
+            target.theta.propose <-
+                list(log.density = target.theta.propose,
+                     trace = theta.propose)
         }
 
         if (!is.finite(target.theta.propose$log.density)) {
@@ -277,7 +277,8 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
         } else if (verbose) {
             message("rejected")
         }
-        trace <- rbind(trace,c(target.theta.current$trace))
+        trace <- rbind(trace,c(target.theta.current[["trace"]],
+                               target.theta.current["log.density"]))
 
         # update acceptance rate
         if (i.iteration == 1) {
@@ -304,7 +305,7 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
         tmp <- updateCovmat(covmat.empirical, theta.mean,
             theta.current, i.iteration)
         covmat.empirical <- tmp$covmat
-        theta.mean <- tmp$theta.mean            
+        theta.mean <- tmp$theta.mean
 
     }
 
