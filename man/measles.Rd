@@ -13,4 +13,3 @@ A dataset containing the weekly incidence recorded during a recent outbreak of m
   \item \code{Inc} weekly recorded incidence of measles
 }
 }
-

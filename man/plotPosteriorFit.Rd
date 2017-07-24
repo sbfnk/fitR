@@ -48,4 +48,3 @@ If \code{plot == FALSE}, a list of 2 elements is returned:
 \description{
 Plot posterior distribution of observation generated under model's posterior parameter distribution.
 }
-

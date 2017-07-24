@@ -108,4 +108,3 @@ SIR <- fitmodel(
 \seealso{
 \code{\link{fitmodel}}
 }
-

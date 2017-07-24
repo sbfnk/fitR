@@ -30,4 +30,3 @@ simulateFinalStateAtExtinction(fitmodel, theta, init.state, extinct = NULL,
 \description{
 Return final state at extinction
 }
-

@@ -26,4 +26,3 @@ Plot the posterior density.
 \seealso{
 burnAndThin
 }
-

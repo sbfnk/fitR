@@ -5,6 +5,7 @@
 #' @param data \code{data.frame} of times and observations. Must have two columns: \code{time} and \code{Inc}.
 #' @export
 #' @seealso distanceOscillation
+#' @keywords internal
 #' @examples \dontrun{
 #' # Suppose we observed a time series:
 #' data <- data.frame(time=1:7,Inc=c(1,3,5,7,5,3,1))

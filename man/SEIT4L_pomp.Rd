@@ -107,4 +107,3 @@ SEIT4L_pomp <- pomp(data = FluTdC1971[, c("time", "obs")],
                       statenames = c("S", "E", "I", "T1", "T2", "T3", "T4", "L", "Inc"),
                       obsnames = c("obs"))
 }
-

@@ -1,10 +1,3 @@
-#' fitR
-#'
-#' @name fitR
-#' @docType package
-NULL
-
-
 #' Time-series of the 1971 influenza epidemic in Tristan-da-Cunha
 #'
 #' A dataset containing the daily incidence recorded during the 1971 influenza A/H3N2 two-wave epidemic on the island of Tristan-da-Cunha.
@@ -230,7 +223,7 @@ NULL
 #' You can look at the code of the \R-functions by typing \code{SEIT4L_deter$simulate} for instance. There are some comments included.
 #'
 #' @format A \code{\link{fitmodel}} object, that is a list with the following elements:
-#' @name SEIT4L_deter 
+#' @name SEIT4L_deter
 NULL
 
 

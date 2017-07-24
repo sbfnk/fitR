@@ -32,4 +32,3 @@ This function evaluates the posterior distribution at \code{theta} and returns t
 \seealso{
 \code{\link{dTrajObs}}, \code{\link{margLogLikeSto}}
 }
-

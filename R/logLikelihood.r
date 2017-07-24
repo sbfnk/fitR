@@ -89,6 +89,7 @@ logPosterior <- function(fitmodel, theta, init.state, data, margLogLike = dTrajO
 #' @inheritParams logPosterior
 #' @export
 #' @return a \R-function with one argument called \code{theta}.
+#' @keywords internal
 logPosteriorWrapper <- function(fitmodel, init.state, data, margLogLike, ...) {
 
 	function(theta) {

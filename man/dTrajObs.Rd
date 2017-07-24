@@ -28,4 +28,3 @@ summing the point log-likelihoods.
 \seealso{
 \code{\link{rTrajObs}}
 }
-
