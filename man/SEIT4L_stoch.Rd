@@ -21,3 +21,4 @@ The stochastic SEIT4L model with constant population size, uniform prior and Poi
 Look at the documentation of \code{\link{fitmodel}} for more details about each of these elements.
 You can look at the code of the \R-functions by typing \code{SEIT4L_stoch$simulate} for instance. There are some comments included.
 }
+

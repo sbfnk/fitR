@@ -45,3 +45,4 @@ This function use faceting to plot all trajectories in a data frame. Convenient 
 \seealso{
 \code{\link{simulateModelReplicates}}
 }
+

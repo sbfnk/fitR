@@ -26,3 +26,4 @@ a data.frame of dimension \code{[nxlength(times)]x[length(init.state)+2]} with c
 \description{
 Simulate several replicate of a fitmodel using its function simulate
 }
+

@@ -28,3 +28,4 @@ Compute a Monte-Carlo estimate of the log-likelihood of \code{theta} for a stoch
 \seealso{
 particleFilter
 }
+

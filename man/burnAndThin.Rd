@@ -19,3 +19,4 @@ an object with the same format as \code{trace} (\code{data.frame} or \code{list}
 \description{
 Return a burned and thined trace of the chain.
 }
+

@@ -70,3 +70,4 @@ and \eqn{d} is the number of estimated parameters in the model.
 \references{
 Roberts GO, Rosenthal JS. Examples of adaptive MCMC. Journal of Computational and Graphical Statistics. Taylor & Francis; 2009;18(2):349-67.
 }
+

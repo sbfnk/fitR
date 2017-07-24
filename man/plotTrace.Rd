@@ -17,3 +17,4 @@ Plot the traces of all estimated variables.
 \seealso{
 burnAndThin
 }
+

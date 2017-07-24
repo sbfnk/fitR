@@ -32,3 +32,4 @@ a list of 5 elements:
 \description{
 This function computes the Deviance Information Criterion (DIC) of a \code{\link{fitmodel}} from a MCMC sample.
 }
+

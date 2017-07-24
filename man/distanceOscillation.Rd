@@ -15,3 +15,4 @@ This positive distance is the mean squared differences between \code{x} and the 
 \note{
 To illustrate this distance, suppose we observed a time series \code{y = c(1,3,5,7,5,3,1)} and we have two simulated time series \code{x1 = (3,5,7,9,7,5,3)} and \code{x2 = (3,5,3,5,7,5,3)}; \code{x1} is consistently above \code{y} and \code{x2} oscillates around \code{y}. While the squared differences are the same, we obtain \eqn{d(y, x1) = 4} and \eqn{d(y, x2) = 1.3}.
 }
+

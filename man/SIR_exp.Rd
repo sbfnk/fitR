@@ -21,3 +21,4 @@ A simple deterministic SIR model with constant population size, uniform prior an
 Look at the documentation of \code{\link{fitmodel}} for more details about each of these elements.
 You can look at the code of the \R-functions by typing \code{SIR_exp$simulate} for instance. There are some comments included.
 }
+

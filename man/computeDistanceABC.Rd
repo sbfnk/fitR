@@ -25,3 +25,4 @@ a sampled distance between
 \description{
 Compute the distance (using \code{distance.ABC}) between the observed time series and a simulated time series of observations obtained by running the model with parameters \code{theta}.
 }
+

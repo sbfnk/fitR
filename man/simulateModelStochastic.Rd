@@ -53,3 +53,4 @@ a data.frame of dimension \code{length(times)x(length(init.state)+1)} with colum
 \description{
 This function uses the function \code{\link[adaptivetau]{ssa.adaptivetau}} to simulate the model and returns the trajectories in a valid format for the class \code{\link{fitmodel}}.
 }
+
