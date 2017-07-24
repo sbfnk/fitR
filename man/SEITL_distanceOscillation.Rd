@@ -35,4 +35,3 @@ d2 <- SEITL_distanceOscillation(traj2,data)
 \seealso{
 distanceOscillation
 }
-

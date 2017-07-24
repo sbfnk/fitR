@@ -28,4 +28,3 @@ Update covariance matrix using a stable one-pass algorithm. This is much more ef
 \references{
 \url{http://en.wikipedia.org/wiki/Algorithms\%5Ffor\%5Fcalculating\%5Fvariance#Covariance}
 }
-

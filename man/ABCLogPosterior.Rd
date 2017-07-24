@@ -35,4 +35,3 @@ This function evaluates the ABC posterior distribution at \code{theta} (using a 
 \seealso{
 computeDistanceABC
 }
-

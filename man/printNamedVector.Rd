@@ -20,4 +20,3 @@ Print named vector with format specified by \code{fmt} (2 decimal places by defa
 \seealso{
 \code{\link[base]{sprintf}}
 }
-

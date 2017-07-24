@@ -21,4 +21,3 @@ a plot of the ESS against burn.in
 \description{
 Takes an mcmc trace and tests the ESS at different values of burn-in
 }
-

@@ -42,4 +42,3 @@ if \code{plot == FALSE}, a list of 2 elements is returned:
 \description{
 This function simulates the model under \code{theta}, generates observation and plot them against the data. Since simulation and observation processes can be stochastic, \code{n.replicates} can be plotted.
 }
-

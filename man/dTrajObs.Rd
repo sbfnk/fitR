@@ -14,16 +14,17 @@ dTrajObs(fitmodel, theta, init.state, data, log = FALSE)
 \item{init.state}{named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.}
 
 \item{data}{data frame. Observation times and observed data. The time column must be named \code{"time"} and the observation column must be named \code{"obs"}.}
+
+\item{log}{logical (default: FALSE); whether the logarithm of the likelihood should be returned}
 }
 \value{
 numeric value of the log-likelihood
 }
 \description{
-Compute the trajectory log-likelihood of \code{theta} for a
+Compute the trajectory (log-)likelihood of \code{theta} for a
 deterministic model defined in a \code{\link{fitmodel}} object by
 summing the point log-likelihoods.
 }
 \seealso{
 \code{\link{rTrajObs}}
 }
-

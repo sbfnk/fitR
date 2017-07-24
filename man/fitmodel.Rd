@@ -147,4 +147,3 @@ SIR <- fitmodel(
 \seealso{
 \code{\link{testFitmodel}}
 }
-

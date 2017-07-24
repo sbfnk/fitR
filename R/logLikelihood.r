@@ -1,6 +1,6 @@
 #' Log-likelihood of a trajectory for a deterministic model
 #'
-#' Compute the trajectory log-likelihood of \code{theta} for a
+#' Compute the trajectory (log-)likelihood of \code{theta} for a
 #' deterministic model defined in a \code{\link{fitmodel}} object by
 #' summing the point log-likelihoods.
 #' @inheritParams testFitmodel
@@ -8,6 +8,7 @@
 #' @import deSolve
 #' @seealso \code{\link{rTrajObs}}
 #' @return numeric value of the log-likelihood
+#' @param log logical (default: FALSE); whether the logarithm of the likelihood should be returned
 dTrajObs <- function(fitmodel, theta, init.state, data, log = FALSE) {
 
 	# time sequence (must include initial time)

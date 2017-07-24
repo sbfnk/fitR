@@ -8,14 +8,15 @@
 #' @param lines.data logical. If \code{TRUE}, the data will be plotted as lines
 #' @param summary logical. If \code{TRUE}, the mean, median as well as the 50th and 95th percentile of the trajectories are plotted (default). If \code{FALSE}, all individual trajectories are plotted (transparency can be set with \code{alpha}).
 #' @param replicate.column character Vector. The column in the data that indicates the replicate (if muliple replicates are to be plotted, i.e. if \code{summary} is \code{FALSE}
-#' @param colour character vector. If a character, will use that colour to plot trajectories. If "all", use all available colous. If \code{NULL}, don't set the colour. 
 #' @param non.extinct character vector. Names of the infected states which must be non-zero so the epidemic is still ongoing. 
 #' When the names of these states are provided, the extinction probability is plotted by computing the proportion of faded-out epidemics over time. 
 #' An epidemic has faded-out when all the infected states (whose names are provided) are equal to 0. This is only relevant for stochastic models. 
 #' In addition, if \code{summary == TRUE}, the summaries of the trajectories conditioned on non-extinction are shown. Default to \code{NULL}.
 #' @param alpha transparency of the trajectories (between 0 and 1).
 #' @param plot if \code{TRUE} the plot is displayed, and returned otherwise.
+#' @param colour character vector. If a character, will use that colour to plot trajectories. If "all", use all available colous. If \code{NULL}, don't set the colour. 
 #' @param init.date character. Date of the first point of the time series (default to \code{NULL}). If provided, the x-axis will be in calendar format. NB: currently only works if the unit of time is the day.
+#' @param same logical (default: FALSE); if TRUE, trajectories will be plotted in the same panel.
 #' @export
 #' @import reshape2 ggplot2 stringr
 #' @seealso \code{\link{simulateModelReplicates}}
@@ -53,7 +54,7 @@ plotTraj <- function(traj = NULL, state.names = NULL, data = NULL, time.column =
         traj[[time.column]] <- traj[[time.column]] + init.date
         if(!is.null(data)) {
             data[[time.column]] <- data[[time.column]] + init.date
-        }    
+        }
     }
 
     if (colour == "all" && summary == TRUE)
