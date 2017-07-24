@@ -52,7 +52,7 @@ SE2IR_stepDecay_simulateDeterministic <- function(theta,init.state,times) {
 	traj <- as.data.frame(ode(init.state, times, SE2IR_stepDecay_ode, theta, method = "ode45"))
 
 	# compute incidence of each time interval
-	traj <- mutate(traj,Inc=c(0,diff(Inc)))
+	traj$Inc <- c(0, diff(traj$Inc))
 
 	return(traj)
 
@@ -104,34 +104,34 @@ SE2IR_stepDecay_deter <- fitmodel(
 
 ## test it
 
-theta <- c("R0"=1.5, "D_lat"=9/7, "D_inf"=10/7, "t_intervention" = 25, "alpha"=0.5, "rho"=0.7)
-init.state <- c("S"=99995,"E1"=0, "E2"=0,"I"=5,"R"=0,"Inc"=0)
-# data(FluTdC1971) 
-# testFitmodel(fitmodel=SE2IR_stepDecay, theta=theta, init.state=init.state, data= FluTdC1971, verbose=TRUE)
+## theta <- c("R0"=1.5, "D_lat"=9/7, "D_inf"=10/7, "t_intervention" = 25, "alpha"=0.5, "rho"=0.7)
+## init.state <- c("S"=99995,"E1"=0, "E2"=0,"I"=5,"R"=0,"Inc"=0)
+## # data(FluTdC1971) 
+## # testFitmodel(fitmodel=SE2IR_stepDecay, theta=theta, init.state=init.state, data= FluTdC1971, verbose=TRUE)
 
 
-times <- 1:65
-Rt <- calculate_R_t(times, theta[["R0"]], theta[["t_intervention"]], theta[["alpha"]])
+## times <- 1:65
+## Rt <- calculate_R_t(times, theta[["R0"]], theta[["t_intervention"]], theta[["alpha"]])
 
-quartz()
-plot(times, Rt, t='l')
+## quartz()
+## plot(times, Rt, t='l')
 
-# df_traj <- SE2IR_stepDecay_deter$simulate(theta, init.state, times=1:70)
-df_traj <- rTrajObs(SE2IR_stepDecay_deter, theta, init.state, times=1:65)
+## # df_traj <- SE2IR_stepDecay_deter$simulate(theta, init.state, times=1:70)
+## df_traj <- rTrajObs(SE2IR_stepDecay_deter, theta, init.state, times=1:65)
 
-quartz()
-plotTraj(df_traj)
-
-
-df_data_step_decay_noisy <- df_traj %>% select(time, obs) %>% mutate(time = time - 1) %>% filter(time > 0)
-df_data_step_decay <- df_traj %>% mutate(time = time - 1, obs = round(0.7*Inc)) %>% select(time, obs)  %>% filter(time > 0)
-
-library(readr)
-# write_csv(df_data_step_decay, file.path("/Users/Tonton/edu/Fit_course/mfiidd/website/data","ebola_dataset_3.csv")) #dataset3
-# write_csv(df_data_step_decay_noisy, file.path("/Users/Tonton/edu/Fit_course/mfiidd/website/data","ebola_dataset_4.csv")) #dataset4
+## quartz()
+## plotTraj(df_traj)
 
 
+## df_data_step_decay_noisy <- df_traj %>% select(time, obs) %>% mutate(time = time - 1) %>% filter(time > 0)
+## df_data_step_decay <- df_traj %>% mutate(time = time - 1, obs = round(0.7*Inc)) %>% select(time, obs)  %>% filter(time > 0)
 
-# df_plot <- df_data_step_decay_noisy
-# ggplot(df_plot, aes(x=time, y=obs)) + geom_line()
+## library(readr)
+## # write_csv(df_data_step_decay, file.path("/Users/Tonton/edu/Fit_course/mfiidd/website/data","ebola_dataset_3.csv")) #dataset3
+## # write_csv(df_data_step_decay_noisy, file.path("/Users/Tonton/edu/Fit_course/mfiidd/website/data","ebola_dataset_4.csv")) #dataset4
+
+
+
+## # df_plot <- df_data_step_decay_noisy
+## # ggplot(df_plot, aes(x=time, y=obs)) + geom_line()
 

@@ -293,6 +293,8 @@ plotTrace <- function(trace, estimated.only = FALSE) {
 #' @inheritParams plotTraj
 #' @export
 #' @import ggplot2 reshape2
+#' @importFrom dplyr n_distinct
+#' @importFrom plyr ldply
 #' @seealso burnAndThin
 plotPosteriorDensity <- function(trace, prior = NULL, colour = NULL, plot = TRUE) {
 
