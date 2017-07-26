@@ -35,7 +35,7 @@
 #' @importFrom lubridate as.period
 #' @return a list with 3 elements:
 #' \itemize{
-#'      \item \code{trace} a \code{data.frame}. Each row contains a state of the chain (as returned by \code{target}).
+#'      \item \code{trace} a \code{data.frame}. Each row contains a state of the chain (as returned by \code{target}, and an extra column for the log.density).
 #'      \item \code{acceptance.rate} acceptance rate of the MCMC chain.
 #'      \item \code{covmat.empirical} empirical covariance matrix of the target sample.
 #' }
@@ -118,7 +118,7 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
     }
 
     trace <- data.frame(t(c(target.theta.current[["trace"]],
-                            target.theta.current["log.density"])))
+                            log.density=target.theta.current[["log.density"]])))
 
     # acceptance rate
     acceptance.rate <- 0
@@ -278,7 +278,7 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
             message("rejected")
         }
         trace <- rbind(trace,c(target.theta.current[["trace"]],
-                               target.theta.current["log.density"]))
+                               log.density=target.theta.current[["log.density"]]))
 
         # update acceptance rate
         if (i.iteration == 1) {
