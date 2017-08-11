@@ -35,13 +35,13 @@
 #' \itemize{
 #'      \item \code{trace} a \code{data.frame}. Each row contains a state of the chain (as returned by \code{target}, and an extra column for the log.density).
 #'      \item \code{acceptance.rate} acceptance rate of the MCMC chain.
-#'      \item \code{covmat.empirical} empirical covariance matrix of the target sample.
+#'      \item \code{covmat.proposal} last covariance matrix used for proposals.
 #' }
 mcmcMH <- function(target, init.theta, proposal.sd = NULL,
    n.iterations, covmat = NULL,
    limits=list(lower = NULL, upper = NULL),
    adapt.size.start = NULL, adapt.size.cooling = 0.99,
-   adapt.shape.start = NULL,
+   adapt.shape.start = NULL, adapt.shape.stop = NULL,
    print.info.every = n.iterations/100,
    verbose = FALSE, max.scaling.sd = 50) {
 
@@ -92,8 +92,8 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
     adapting.size <- FALSE # will be set to TRUE once we start
                            # adapting the size
 
-    adapting.shape <- FALSE # will be set to TRUE once we start
-                            # adapting the shape
+    adapting.shape <- 0  # will be set to the iteration at which
+                         # adaptation starts
 
     # find estimated theta
     theta.estimated.names <- names(which(diag(covmat.proposal) > 0))
@@ -109,7 +109,7 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
     }
 
     if (!is.null(print.info.every)) {
-        message("Init: ", printNamedVector(theta.current[theta.estimated.names]),
+        message(Sys.time(), "Init: ", printNamedVector(theta.current[theta.estimated.names]),
             ", target: ", target.theta.current[["log.density"]])
     }
 
@@ -160,16 +160,21 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
             }
 
         } else if (!is.null(adapt.shape.start) &&
-           acceptance.rate*i.iteration >= adapt.shape.start) {
+                   acceptance.rate*i.iteration >= adapt.shape.start &&
+                   (adapting.shape == 0 || i.iteration < adapting.shape + adapt.shape.stop)) {
             if (!adapting.shape) {
                 message("\n---> Start adapting shape of covariance matrix")
                 # flush.console()
-                adapting.shape <- TRUE
+                adapting.shape <- i.iteration
             }
-            # adapt shape of covmat using optimal scaling factor for multivariate target distributions
+
+            ## adapt shape of covmat using optimal scaling factor for multivariate target distributions
             scaling.sd <- 2.38/sqrt(length(theta.estimated.names))
 
             covmat.proposal <- scaling.sd^2 * covmat.empirical
+        } else if (adapting.shape > 0) {
+            message("\n---> Stop adapting shape of covariance matrix")
+            adapting.shape <- -1
         }
 
         # print info
@@ -178,7 +183,7 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
             state.mcmc <- target.theta.current$trace
             ## suppressMessages(time.estimation <- round(as.period((end_iteration_time-start_iteration_time)*10000/round(print.info.every))))
             ## message("Iteration: ",i.iteration,"/",n.iterations,", ETA: ",time.estimation,", acceptance rate: ",sprintf("%.3f",acceptance.rate),appendLF=FALSE)
-            message("Iteration: ",i.iteration,"/", n.iterations,
+            message(Sys.time(), ", Iteration: ",i.iteration,"/", n.iterations,
                 ", acceptance rate: ",
                 sprintf("%.3f",acceptance.rate), appendLF=FALSE)
             if (!is.null(adapt.size.start) || !is.null(adapt.shape.start)) {
@@ -208,7 +213,7 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
                                        lower.proposal[theta.estimated.names],
                                    upper = upper.proposal[theta.estimated.names]))
         }
-        
+
         # evaluate posterior of proposed parameter
         target.theta.propose <- target(theta.propose)
         # if return value is a vector, set log.density and trace
@@ -282,10 +287,12 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
         }
 
         # update empirical covariance matrix
-        tmp <- updateCovmat(covmat.empirical, theta.mean,
-            theta.current, i.iteration)
-        covmat.empirical <- tmp$covmat
-        theta.mean <- tmp$theta.mean
+        if (adapting.shape >= 0) {
+            tmp <- updateCovmat(covmat.empirical, theta.mean,
+                                theta.current, i.iteration)
+            covmat.empirical <- tmp$covmat
+            theta.mean <- tmp$theta.mean
+        }
 
     }
 
