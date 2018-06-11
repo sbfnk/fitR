@@ -109,7 +109,7 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
     }
 
     if (!is.null(print.info.every)) {
-        message(Sys.time(), "Init: ", printNamedVector(theta.current[theta.estimated.names]),
+        message(Sys.time(), ", Init: ", printNamedVector(theta.current[theta.estimated.names]),
             ", target: ", target.theta.current[["log.density"]])
     }
 
