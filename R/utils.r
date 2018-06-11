@@ -202,7 +202,7 @@ burnAndThin <- function(trace, burn = 0, thin = 0) {
         trace <- as.list(trace)
     }
 
-    if(is.data.frame(trace)){
+    if(is.data.frame(trace) || is.matrix(trace)){
 
         # remove burn
         if (burn > 0) {
