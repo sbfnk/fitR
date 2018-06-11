@@ -23,8 +23,7 @@ Imports:
     lattice,
     dplyr,
     truncnorm,
-    emdbook,
-    pomp
+    emdbook
 License: GPL-2
 LazyData: true
 Roxygen: list(wrap = FALSE)
