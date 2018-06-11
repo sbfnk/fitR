@@ -301,5 +301,5 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
 
     return(list(trace = trace,
         acceptance.rate = acceptance.rate,
-        covmat.proposal = covmat.proposal))
+        covmat.empirical = covmat.empirical))
 }
