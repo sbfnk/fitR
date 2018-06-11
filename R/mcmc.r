@@ -109,12 +109,15 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
     }
 
     if (!is.null(print.info.every)) {
-        message(Sys.time(), "Init: ", printNamedVector(theta.current[theta.estimated.names]),
+        message(Sys.time(), ", Init: ", printNamedVector(theta.current[theta.estimated.names]),
             ", target: ", target.theta.current[["log.density"]])
     }
 
-    trace <- data.frame(t(c(target.theta.current[["trace"]],
-                            log.density=target.theta.current[["log.density"]])))
+    # trace
+    trace <- matrix(ncol=length(target.theta.current[["trace"]])+1,
+                    nrow=n.iterations,
+                    0)
+    colnames(trace) <- c(theta.estimated.names, "log.density")
 
     # acceptance rate
     acceptance.rate <- 0
@@ -161,7 +164,8 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
 
         } else if (!is.null(adapt.shape.start) &&
                    acceptance.rate*i.iteration >= adapt.shape.start &&
-                   (adapting.shape == 0 || i.iteration < adapting.shape + adapt.shape.stop)) {
+                   (adapting.shape == 0 || is.null(adapt.shape.stop) ||
+                    i.iteration < adapting.shape + adapt.shape.stop)) {
             if (!adapting.shape) {
                 message("\n---> Start adapting shape of covariance matrix")
                 # flush.console()
@@ -275,8 +279,7 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
         } else if (verbose) {
             message("rejected")
         }
-        trace <- rbind(trace,c(target.theta.current[["trace"]],
-                               log.density=target.theta.current[["log.density"]]))
+        trace[i.iteration, ] <- c(target.theta.current[["trace"]], target.theta.current[["log.density"]])
 
         # update acceptance rate
         if (i.iteration == 1) {
@@ -298,5 +301,5 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
 
     return(list(trace = trace,
         acceptance.rate = acceptance.rate,
-        covmat.proposal = covmat.proposal))
+        covmat.empirical = covmat.empirical))
 }
