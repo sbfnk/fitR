@@ -78,7 +78,7 @@ logPosterior <- function(fitmodel, theta, init.state, data, margLogLike = dTrajO
 
     log.posterior <- log.prior + log.likelihood
 
-    return(list(log.density=log.posterior, trace=c(theta,log.prior=log.prior,log.likelihood=log.likelihood,log.posterior=log.posterior)))
+    return(log.posterior)
 
 }
 
