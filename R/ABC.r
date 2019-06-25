@@ -60,30 +60,3 @@ computeDistanceABC <- function(sum.stats, distanceABC, fitmodel, theta, init.sta
     return(dist.ABC)
 }
 
-#'ABC logged posterior distribution
-#'
-#'This function evaluates the ABC posterior distribution at \code{theta} (using a single simulation trajectory) and returns the result in a suitable format for \code{\link{mcmcMH}}.
-#' @param epsilon numeric vector, ABC tolerances for distances between data and simulations. If a vector of length 1 and the distance function returns a vector of distances, this will be expanded to be same tolerance for all the parameters.
-#' @inheritParams computeDistanceABC
-#' @export
-#' @seealso computeDistanceABC
-#' @return a list of two elements
-#' \itemize{
-#'      \item \code{log.density} numeric, logged value of the ABC posterior distribution evaluated at \code{theta}
-#'      \item \code{trace} named vector with trace information (theta, distance, log.density)
-#' }
-ABCLogPosterior <- function(epsilon, sum.stats, distanceABC, fitmodel, theta, init.state, data) {
-
-    distance <-
-        computeDistanceABC(sum.stats, distanceABC, fitmodel, theta, init.state, data)
-
-    if (all(distance < epsilon)) {
-        log.density <- fitmodel$dprior(theta, log = TRUE)
-    } else {
-        log.density <- -Inf
-    }
-
-    return(list(log.density = log.density,
-                trace = c(theta, distance = distance, log.density = log.density)))
-}
-
