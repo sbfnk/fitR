@@ -4,11 +4,12 @@
 \alias{mcmcMH}
 \title{Metropolis-Hasting MCMC}
 \usage{
-mcmcMH(target, init.theta, proposal.sd = NULL, n.iterations, covmat = NULL,
-  limits = list(lower = NULL, upper = NULL), adapt.size.start = NULL,
-  adapt.size.cooling = 0.99, adapt.shape.start = NULL,
-  adapt.shape.stop = NULL, print.info.every = n.iterations/100,
-  verbose = FALSE, max.scaling.sd = 50)
+mcmcMH(target, init.theta, proposal.sd = NULL, n.iterations,
+  covmat = NULL, limits = list(lower = NULL, upper = NULL),
+  adapt.size.start = NULL, adapt.size.cooling = 0.99,
+  adapt.shape.start = NULL, adapt.shape.stop = NULL,
+  print.info.every = n.iterations/100, verbose = FALSE,
+  max.scaling.sd = 50)
 }
 \arguments{
 \item{target}{\R-function that takes a single argument: \code{theta} (named numeric vector of parameter values) and returns a list of 2 elements:

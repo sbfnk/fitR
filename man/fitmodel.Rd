@@ -5,7 +5,8 @@
 \title{Constructor of fitmodel object}
 \usage{
 fitmodel(name = NULL, state.names = NULL, theta.names = NULL,
-  simulate = NULL, rPointObs = NULL, dprior = NULL, dPointObs = NULL)
+  simulate = NULL, rPointObs = NULL, dprior = NULL,
+  dPointObs = NULL)
 }
 \arguments{
 \item{name}{character. Name of the model (required).}

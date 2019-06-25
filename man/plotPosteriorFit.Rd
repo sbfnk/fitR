@@ -5,9 +5,10 @@
 \title{Plot MCMC posterior fit}
 \usage{
 plotPosteriorFit(trace, fitmodel, init.state, data,
-  posterior.summary = c("sample", "median", "mean", "max"), summary = TRUE,
-  sample.size = 100, non.extinct = NULL, alpha = min(1, 10/sample.size),
-  plot = TRUE, all.vars = FALSE, init.date = NULL)
+  posterior.summary = c("sample", "median", "mean", "max"),
+  summary = TRUE, sample.size = 100, non.extinct = NULL,
+  alpha = min(1, 10/sample.size), plot = TRUE, all.vars = FALSE,
+  init.date = NULL)
 }
 \arguments{
 \item{trace}{a \code{data.frame} with one column per estimated parameter, as returned by \code{\link{burnAndThin}}}

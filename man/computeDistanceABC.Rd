@@ -4,7 +4,8 @@
 \alias{computeDistanceABC}
 \title{Compute the distance between a model and data for ABC}
 \usage{
-computeDistanceABC(sum.stats, distanceABC, fitmodel, theta, init.state, data)
+computeDistanceABC(sum.stats, distanceABC, fitmodel, theta, init.state,
+  data)
 }
 \arguments{
 \item{sum.stats}{a list of functions to calculate summary statistics. Each of these takes one argument (a trajectory with an "obs" column) and returns a number (the summary statistic given the trajectory)}

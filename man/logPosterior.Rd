@@ -4,7 +4,8 @@
 \alias{logPosterior}
 \title{Posterior distribution for a fitmodel}
 \usage{
-logPosterior(fitmodel, theta, init.state, data, margLogLike = dTrajObs, ...)
+logPosterior(fitmodel, theta, init.state, data, margLogLike = dTrajObs,
+  ...)
 }
 \arguments{
 \item{fitmodel}{a \code{\link{fitmodel}} object}
