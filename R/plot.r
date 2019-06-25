@@ -180,6 +180,7 @@ plotTraj <- function(traj = NULL, state.names = NULL, data = NULL, time.column =
 #' @param all.vars logical, if \code{FALSE} only the observations are plotted. Otherwise, all state variables are plotted.
 #' @inheritParams testFitmodel
 #' @inheritParams plotTraj
+#' @inheritParams simulateModelReplicates
 #' @export
 #' @import plyr ggplot2
 #' @return if \code{plot == FALSE}, a list of 2 elements is returned:
@@ -187,14 +188,14 @@ plotTraj <- function(traj = NULL, state.names = NULL, data = NULL, time.column =
 #'     \item \code{simulations} \code{data.frame} of \code{n.replicates} simulated observations.
 #'     \item \code{plot} the plot of the fit.
 #' }
-plotFit <- function(fitmodel, theta, init.state, data, n.replicates = 1, summary = TRUE, alpha = min(1, 10/n.replicates), all.vars = FALSE, non.extinct = NULL, plot = TRUE) {
+plotFit <- function(fitmodel, theta, init.state, data, n.replicates = 1, summary = TRUE, alpha = min(1, 10/n.replicates), all.vars = FALSE, non.extinct = NULL, observation = TRUE, plot = TRUE) {
 
     times <- c(0, data$time)
 
     if (n.replicates > 1) {
         cat("Simulate ", n.replicates, " replicate(s)\n")
     }
-    traj <- simulateModelReplicates(fitmodel = fitmodel, theta = theta, init.state = init.state, times = times, n = n.replicates, observation = TRUE)
+    traj <- simulateModelReplicates(fitmodel = fitmodel, theta = theta, init.state = init.state, times = times, n = n.replicates, observation = observation)
 
     if(all.vars) {
         state.names <- NULL
