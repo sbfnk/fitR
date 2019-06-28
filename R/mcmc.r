@@ -101,22 +101,13 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
     # evaluate target at theta init
     target.theta.current <- target(theta.current)
 
-    # if return value is a vector, set log.density and trace
-    if (class(target.theta.current) == "numeric") {
-        target.theta.current <-
-            list(log.density = target.theta.current,
-                 trace = theta.current)
-    }
-
     if (!is.null(print.info.every)) {
         message(Sys.time(), ", Init: ", printNamedVector(theta.current[theta.estimated.names]),
-            ", target: ", target.theta.current[["log.density"]])
+            ", target: ", target.theta.current)
     }
 
     # trace
-    trace <- matrix(ncol=length(target.theta.current[["trace"]])+1,
-                    nrow=n.iterations,
-                    0)
+    trace <- matrix(ncol=length(theta.current)+1, nrow=n.iterations, 0)
     colnames(trace) <- c(theta.estimated.names, "log.density")
 
     # acceptance rate
@@ -183,10 +174,6 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
 
         # print info
         if (i.iteration %% ceiling(print.info.every) == 0) {
-            ## end_iteration_time <- Sys.time()
-            state.mcmc <- target.theta.current$trace
-            ## suppressMessages(time.estimation <- round(as.period((end_iteration_time-start_iteration_time)*10000/round(print.info.every))))
-            ## message("Iteration: ",i.iteration,"/",n.iterations,", ETA: ",time.estimation,", acceptance rate: ",sprintf("%.3f",acceptance.rate),appendLF=FALSE)
             message(Sys.time(), ", Iteration: ",i.iteration,"/", n.iterations,
                 ", acceptance rate: ",
                 sprintf("%.3f",acceptance.rate), appendLF=FALSE)
@@ -195,9 +182,8 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
                     ", scaling.multiplier: ", sprintf("%.3f", scaling.multiplier),
                     appendLF=FALSE)
             }
-            message(", state: ",printNamedVector(state.mcmc))
-            message(", logdensity: ", target.theta.current$log.density)
-            ## start_iteration_time <- end_iteration_time
+            message(", state: ",(printNamedVector(theta.current)))
+            message(", logdensity: ", target.theta.current)
         }
 
         # propose another parameter set
@@ -221,21 +207,15 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
         # evaluate posterior of proposed parameter
         target.theta.propose <- target(theta.propose)
         # if return value is a vector, set log.density and trace
-        if (class(target.theta.propose) == "numeric") {
-            target.theta.propose <-
-                list(log.density = target.theta.propose,
-                     trace = theta.propose)
-        }
 
-        if (!is.finite(target.theta.propose$log.density)) {
+        if (!is.finite(target.theta.propose)) {
             # if posterior is 0 then do not compute anything else and don't accept
             log.acceptance <- -Inf
 
         }else{
 
             # compute Metropolis-Hastings ratio (acceptance probability)
-            log.acceptance <- target.theta.propose$log.density -
-            target.theta.current$log.density
+            log.acceptance <- target.theta.propose - target.theta.current
             log.acceptance <- log.acceptance +
             dtmvnorm(x = theta.current[theta.estimated.names],
              mean =
@@ -264,7 +244,7 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
 
         if (verbose) {
             message("Propose: ", theta.propose[theta.estimated.names],
-                ", target: ", target.theta.propose[["log.density"]],
+                ", target: ", target.theta.propose,
                 ", acc prob: ", exp(log.acceptance), ", ",
                 appendLF = FALSE)
         }
@@ -279,7 +259,7 @@ mcmcMH <- function(target, init.theta, proposal.sd = NULL,
         } else if (verbose) {
             message("rejected")
         }
-        trace[i.iteration, ] <- c(target.theta.current[["trace"]], target.theta.current[["log.density"]])
+        trace[i.iteration, ] <- c(theta.current, target.theta.current)
 
         # update acceptance rate
         if (i.iteration == 1) {
