@@ -59,7 +59,7 @@ test_that("posterior deter of SEITL",{
 	data("FluTdC1971",envir = environment())
 	data <- FluTdC1971[1:5,]
 
-	x <- logPosterior(fitmodel=SEITL_deter, theta=theta, init.state=init.state, data=data, margLogLike=dTrajObs)
+	x <- dLogPosterior(fitmodel=SEITL_deter, theta=theta, init.state=init.state, data=data, margLogLike=dTrajObs)
 	expect_true(is.numeric(x))
 
 })
@@ -72,7 +72,7 @@ test_that("posterior deter of SEIT2L",{
 	data("FluTdC1971",envir = environment())
 	data <- FluTdC1971[1:5,]
 
-	x <- logPosterior(fitmodel=SEIT2L_stoch, theta=theta, init.state=init.state, data=data, margLogLike=dTrajObs)
+	x <- dLogPosterior(fitmodel=SEIT2L_stoch, theta=theta, init.state=init.state, data=data, margLogLike=dTrajObs)
 	expect_true(is.numeric(x))
 
 })
@@ -85,7 +85,7 @@ test_that("posterior sto of SEITL",{
 	data("FluTdC1971",envir = environment())
 	data <- FluTdC1971[1:5,]
 
-	x <- logPosterior(fitmodel=SEITL_stoch, theta=theta, init.state=init.state, data=data, margLogLike=margLogLikeSto, n.particles=10)
+	x <- dLogPosterior(fitmodel=SEITL_stoch, theta=theta, init.state=init.state, data=data, margLogLike=margLogLikeSto, n.particles=10)
   expect_true(is.numeric(x))
 
 })
@@ -98,7 +98,7 @@ test_that("posterior sto of SEIT2L",{
 	data("FluTdC1971",envir = environment())
 	data <- FluTdC1971[1:5,]
 
-	x <- logPosterior(fitmodel=SEIT2L_stoch, theta=theta, init.state=init.state, data=data, margLogLike=margLogLikeSto, n.particles=10)
+	x <- dLogPosterior(fitmodel=SEIT2L_stoch, theta=theta, init.state=init.state, data=data, margLogLike=margLogLikeSto, n.particles=10)
   expect_true(is.numeric(x))
 
 

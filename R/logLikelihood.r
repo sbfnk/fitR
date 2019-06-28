@@ -65,14 +65,14 @@ margLogLikeSto <- function(fitmodel, theta, init.state, data, n.particles, n.cor
 #' 	\item \code{log.density} numeric, logged value of the posterior density evaluated at \code{theta}
 #' 	\item \code{trace} named vector with trace information (theta, log.prior, marg.log.like, log.posterior)
 #' }
-logPosterior <- function(fitmodel, theta, init.state, data, margLogLike = dTrajObs, ...) {
+dLogPosterior <- function(fitmodel, theta, init.state, data, margLogLike = dTrajObs, ...) {
 
     log.prior <- fitmodel$dprior(theta=theta, log = TRUE)
 
     if(is.finite(log.prior)){
         log.likelihood <- margLogLike(fitmodel=fitmodel, theta=theta, init.state=init.state, data=data, ...)
     }else{
-                                        # do not compute log-likelihood (theta prior is 0)
+      ## do not compute log-likelihood (theta prior is 0)
         log.likelihood  <-  -Inf
     }
 
@@ -83,17 +83,17 @@ logPosterior <- function(fitmodel, theta, init.state, data, margLogLike = dTrajO
 }
 
 
-#'A wrapper for \code{logPosterior}
+#'A wrapper for \code{dLogPosterior}
 #'
-#'A wrapper for \code{\link{logPosterior}} that returns a function that can be used as a \code{target} for \code{\link{mcmcMH}}
-#' @inheritParams logPosterior
+#'A wrapper for \code{\link{dLogPosterior}} that returns a function that can be used as a \code{target} for \code{\link{mcmcMH}}
+#' @inheritParams dLogPosterior
 #' @export
 #' @return a \R-function with one argument called \code{theta}.
 #' @keywords internal
-logPosteriorWrapper <- function(fitmodel, init.state, data, margLogLike, ...) {
+dLogPosteriorWrapper <- function(fitmodel, init.state, data, margLogLike, ...) {
 
 	function(theta) {
-		logPosterior(fitmodel, theta, init.state, data, margLogLike, ...)	
+		dLogPosterior(fitmodel, theta, init.state, data, margLogLike, ...)	
 	} 
 
 }
@@ -133,7 +133,7 @@ rTrajObs <- function(fitmodel, theta, init.state, times) {
 #'This function computes the Deviance Information Criterion (DIC) of a \code{\link{fitmodel}} from a MCMC sample.
 #' @param trace either a \code{data.frame} or \code{mcmc} object. Must contain one column with the posterior \code{log.likelihood}.
 #' @inheritParams testFitmodel
-#' @inheritParams logPosterior
+#' @inheritParams dLogPosterior
 #' @export
 #' @return a list of 5 elements:
 #' \itemize{
@@ -165,9 +165,3 @@ computeDIC <- function(trace, fitmodel, init.state, data, margLogLike = dTrajObs
 
     return(ans)
 }
-
-
-
-
-
-
