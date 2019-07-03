@@ -17,4 +17,3 @@ A dataset containing the daily incidence recorded during the 1971 influenza A/H3
   \item \code{Inc} daily count incidence of influenza-like-illness
 }
 }
-

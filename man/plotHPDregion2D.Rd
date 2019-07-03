@@ -26,4 +26,3 @@ Given a sample from a multivariate posterior distribution, plot the bivariate re
 \note{
 HPD levels are computed using the function \code{\link[emdbook]{HPDregionplot}} from the package \code{emdbook}.
 }
-

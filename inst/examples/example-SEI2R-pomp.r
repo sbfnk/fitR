@@ -22,7 +22,7 @@ SEI2R.sim.c <- '
     reulermultinom(1, E2, &rate[2], dt, &dN[2]);
     reulermultinom(1, Ic, &rate[3], dt, &dN[3]);
     reulermultinom(1, Ih, &rate[4], dt, &dN[4]);
-    
+
     S += -dN[0];
     E1 += dN[0] - dN[1];
     E2 += dN[1] - dN[2];
@@ -77,7 +77,7 @@ SEI2R.dprior.c <- '
           dunif(D_imm, 0, 50, 1) +
           dunif(alpha, 0, 1, 1) +
           dunif(rho, 0, 1, 1);
-  lik = (give_log) ? lik : exp(lik);    
+  lik = (give_log) ? lik : exp(lik);
 '
 
 SEI2R_pomp <- pomp(data = FluTdC1971[, c("time", "obs")],
@@ -85,12 +85,10 @@ SEI2R_pomp <- pomp(data = FluTdC1971[, c("time", "obs")],
                    dprior = Csnippet(SEI2R.dprior.c), 
                    rmeasure = Csnippet(SEI2R.rmeas.c),
                    dmeasure = Csnippet(SEI2R.dmeas.c),
-                   skeleton = Csnippet(SEI2R.skel.c),
-                   skeleton.type = "vectorfield", 
+                   skeleton = vectorfield(Csnippet(SEI2R.skel.c)),
                    times = "time",
                    t0 = 1,
                    zeronames = "Inc", 
                    paramnames = c("init_R0", "D_lat", "D_not", "D_inf", "rho"),
                    statenames = c("S", "E1", "E2", "Ic", "Ih", "R", "Inc", "beta"),
                    obsnames = c("obs"))
-                   

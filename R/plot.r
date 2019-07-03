@@ -8,14 +8,15 @@
 #' @param lines.data logical. If \code{TRUE}, the data will be plotted as lines
 #' @param summary logical. If \code{TRUE}, the mean, median as well as the 50th and 95th percentile of the trajectories are plotted (default). If \code{FALSE}, all individual trajectories are plotted (transparency can be set with \code{alpha}).
 #' @param replicate.column character Vector. The column in the data that indicates the replicate (if muliple replicates are to be plotted, i.e. if \code{summary} is \code{FALSE}
-#' @param colour character vector. If a character, will use that colour to plot trajectories. If "all", use all available colous. If \code{NULL}, don't set the colour. 
 #' @param non.extinct character vector. Names of the infected states which must be non-zero so the epidemic is still ongoing. 
 #' When the names of these states are provided, the extinction probability is plotted by computing the proportion of faded-out epidemics over time. 
 #' An epidemic has faded-out when all the infected states (whose names are provided) are equal to 0. This is only relevant for stochastic models. 
 #' In addition, if \code{summary == TRUE}, the summaries of the trajectories conditioned on non-extinction are shown. Default to \code{NULL}.
 #' @param alpha transparency of the trajectories (between 0 and 1).
 #' @param plot if \code{TRUE} the plot is displayed, and returned otherwise.
+#' @param colour character vector. If a character, will use that colour to plot trajectories. If "all", use all available colous. If \code{NULL}, don't set the colour. 
 #' @param init.date character. Date of the first point of the time series (default to \code{NULL}). If provided, the x-axis will be in calendar format. NB: currently only works if the unit of time is the day.
+#' @param same logical (default: FALSE); if TRUE, trajectories will be plotted in the same panel.
 #' @export
 #' @import reshape2 ggplot2 stringr
 #' @seealso \code{\link{simulateModelReplicates}}
@@ -53,7 +54,7 @@ plotTraj <- function(traj = NULL, state.names = NULL, data = NULL, time.column =
         traj[[time.column]] <- traj[[time.column]] + init.date
         if(!is.null(data)) {
             data[[time.column]] <- data[[time.column]] + init.date
-        }    
+        }
     }
 
     if (colour == "all" && summary == TRUE)
@@ -179,6 +180,7 @@ plotTraj <- function(traj = NULL, state.names = NULL, data = NULL, time.column =
 #' @param all.vars logical, if \code{FALSE} only the observations are plotted. Otherwise, all state variables are plotted.
 #' @inheritParams testFitmodel
 #' @inheritParams plotTraj
+#' @inheritParams simulateModelReplicates
 #' @export
 #' @import plyr ggplot2
 #' @return if \code{plot == FALSE}, a list of 2 elements is returned:
@@ -186,14 +188,14 @@ plotTraj <- function(traj = NULL, state.names = NULL, data = NULL, time.column =
 #'     \item \code{simulations} \code{data.frame} of \code{n.replicates} simulated observations.
 #'     \item \code{plot} the plot of the fit.
 #' }
-plotFit <- function(fitmodel, theta, init.state, data, n.replicates = 1, summary = TRUE, alpha = min(1, 10/n.replicates), all.vars = FALSE, non.extinct = NULL, plot = TRUE) {
+plotFit <- function(fitmodel, theta, init.state, data, n.replicates = 1, summary = TRUE, alpha = min(1, 10/n.replicates), all.vars = FALSE, non.extinct = NULL, observation = TRUE, plot = TRUE) {
 
     times <- c(0, data$time)
 
     if (n.replicates > 1) {
         cat("Simulate ", n.replicates, " replicate(s)\n")
     }
-    traj <- simulateModelReplicates(fitmodel = fitmodel, theta = theta, init.state = init.state, times = times, n = n.replicates, observation = TRUE)
+    traj <- simulateModelReplicates(fitmodel = fitmodel, theta = theta, init.state = init.state, times = times, n = n.replicates, observation = observation)
 
     if(all.vars) {
         state.names <- NULL
@@ -292,6 +294,8 @@ plotTrace <- function(trace, estimated.only = FALSE) {
 #' @inheritParams plotTraj
 #' @export
 #' @import ggplot2 reshape2
+#' @importFrom dplyr n_distinct
+#' @importFrom plyr ldply
 #' @seealso burnAndThin
 plotPosteriorDensity <- function(trace, prior = NULL, colour = NULL, plot = TRUE) {
 

@@ -4,7 +4,8 @@
 \alias{computeDIC}
 \title{Compute the DIC}
 \usage{
-computeDIC(trace, fitmodel, init.state, data, margLogLike = dTrajObs, ...)
+computeDIC(trace, fitmodel, init.state, data, margLogLike = dTrajObs,
+  ...)
 }
 \arguments{
 \item{trace}{either a \code{data.frame} or \code{mcmc} object. Must contain one column with the posterior \code{log.likelihood}.}
@@ -32,4 +33,3 @@ a list of 5 elements:
 \description{
 This function computes the Deviance Information Criterion (DIC) of a \code{\link{fitmodel}} from a MCMC sample.
 }
-

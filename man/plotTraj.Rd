@@ -36,6 +36,8 @@ In addition, if \code{summary == TRUE}, the summaries of the trajectories condit
 \item{colour}{character vector. If a character, will use that colour to plot trajectories. If "all", use all available colous. If \code{NULL}, don't set the colour.}
 
 \item{init.date}{character. Date of the first point of the time series (default to \code{NULL}). If provided, the x-axis will be in calendar format. NB: currently only works if the unit of time is the day.}
+
+\item{same}{logical (default: FALSE); if TRUE, trajectories will be plotted in the same panel.}
 }
 \description{
 This function use faceting to plot all trajectories in a data frame. Convenient to see results of several simulations, or data. Also, if \code{data} is present, then an additional plot is displayed with data and potentially observation generated.
@@ -43,4 +45,3 @@ This function use faceting to plot all trajectories in a data frame. Convenient 
 \seealso{
 \code{\link{simulateModelReplicates}}
 }
-

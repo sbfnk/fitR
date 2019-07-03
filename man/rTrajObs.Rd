@@ -26,4 +26,3 @@ the trajectory with an additions \code{obs} column.
 \seealso{
 \code{\link{dTrajObs}}
 }
-

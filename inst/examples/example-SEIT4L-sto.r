@@ -60,7 +60,7 @@ SEIT4L_simulateStochastic <- function(theta,init.state,times) {
 	traj <- simulateModelStochastic(theta,init.state,times,SEIT4L_transitions,SEIT4L_rateFunc) 
 	
 	# compute incidence of each time interval
-	traj <- mutate(traj,Inc=c(0,diff(Inc)))
+	traj$Inc <- c(0, diff(traj$Inc))
 
 	return(traj)
 

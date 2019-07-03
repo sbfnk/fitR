@@ -40,4 +40,3 @@ An unbiased state sample \eqn{x(t_{0:T}) ~ p(X(t_{0:T})|\theta,y(t_{0:T}))} can 
 \seealso{
 plotSMC
 }
-

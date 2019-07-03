@@ -4,7 +4,8 @@
 \alias{margLogLikeSto}
 \title{Marginal log-likelihood for a stochastic model}
 \usage{
-margLogLikeSto(fitmodel, theta, init.state, data, n.particles, n.cores = 1)
+margLogLikeSto(fitmodel, theta, init.state, data, n.particles,
+  n.cores = 1)
 }
 \arguments{
 \item{fitmodel}{a \code{\link{fitmodel}} object}
@@ -28,4 +29,3 @@ Compute a Monte-Carlo estimate of the log-likelihood of \code{theta} for a stoch
 \seealso{
 particleFilter
 }
-

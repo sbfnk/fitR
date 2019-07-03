@@ -4,9 +4,9 @@
 \alias{simulateFinalStateAtExtinction}
 \title{Simulate model until extinction}
 \usage{
-simulateFinalStateAtExtinction(fitmodel, theta, init.state, extinct = NULL,
-  time.init = 0, time.step = 100, n = 100, observation = FALSE,
-  n.cores = 1)
+simulateFinalStateAtExtinction(fitmodel, theta, init.state,
+  extinct = NULL, time.init = 0, time.step = 100, n = 100,
+  observation = FALSE, n.cores = 1)
 }
 \arguments{
 \item{fitmodel}{a \code{\link{fitmodel}} object}
@@ -30,4 +30,3 @@ simulateFinalStateAtExtinction(fitmodel, theta, init.state, extinct = NULL,
 \description{
 Return final state at extinction
 }
-

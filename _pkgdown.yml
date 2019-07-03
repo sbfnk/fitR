@@ -1,0 +1,46 @@
+url: https://sbfnk.github.io/fitR
+
+template:
+  params:
+    bootswatch: cerulean
+
+reference:
+  - title: "Basic modelling"
+    desc: "Functions for constructing models, via the fitmodel object."
+    contents: 
+      - fitmodel
+      - dTrajObs
+      - rTrajObs
+      - logPosterior
+      - testFitmodel
+  # - title: "Models"
+  #   desc: "Models of infectious disease dynamics (instances of the fitmodel class)."
+  #   contents:
+  #     - starts_with("SIR")
+  #     - SEITL_deter
+  #     - SEITL_stoch
+  #     - starts_with("SEIT2L_")
+  #     - starts_with("SEIT4L_")
+  #     - starts_with("SEITL_pomp")
+  #     - starts_with("SEIT2L_pomp")
+  #     - starts_with("SEIT4L_pomp")
+  # - title: "Data"
+  #   desc: "Epidemiological datasets."
+  #   contents:
+  #     - FluTdC1971
+  #     - measles
+  - title: "MCMC"
+    desc: "Functions related to Markov-chain Monte Carlo."
+    contents:
+      - mcmcMH
+      - burnAndThin
+      - computeDIC
+  - title: "Particle filtering"
+    desc: "Functions for particle filtering."
+    contents:
+      - particleFilter
+      - margLogLikeSto
+  - title: "Plotting"
+    desc: "Functions for plotting model trajectories and fits."
+    contents:
+      - starts_with("plot")

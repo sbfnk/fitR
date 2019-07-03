@@ -16,7 +16,7 @@ SEIT4L.skel.c <- '
     double nu = 1 / D_inf;
     double tau = 1 / D_imm;
 
-    double N = S + E + I + T1 + T2 + L;
+    double N = S + E + I + T1 + T2 + T3 + T4 + L;
 
     trans[0] = beta * I / N * S;
     trans[1] = epsilon * E;
@@ -33,7 +33,7 @@ SEIT4L.skel.c <- '
     DT1 = trans[2] - trans[3];
     DT2 = trans[3] - trans[4];
     DT3 = trans[4] - trans[5];
-    DT4 = trans[5] - trans[6];
+    DT4 = trans[5] - trans[6] - trans[7];
     DL = trans[6];
     DInc = trans[1];
 '
@@ -80,17 +80,16 @@ SEIT4L.sim.c <- '
 
 ## construct pomp object
 SEIT4L_pomp <- pomp(data = FluTdC1971[, c("time", "obs")],
-                    skeleton = Csnippet(SEIT4L.skel.c),
-                    skeleton.type = "vectorfield",
-                    rprocess = euler.sim(step.fun = Csnippet(SEIT4L.sim.c),
-                    delta.t = 0.1),
-                    rmeasure = Csnippet(SEITL.rmeas.c),
-                    dmeasure = Csnippet(SEITL.dmeas.c),
-                    toEstimationScale = Csnippet(SEITL.logtrans.c),
-                    fromEstimationScale = Csnippet(SEITL.exptrans.c), 
-                    times = "time",
-                    t0 = 1,
-                    zeronames = "Inc",
-                    paramnames = c("R0", "D_inf", "D_lat", "D_imm", "alpha", "rho"),
-                    statenames = c("S", "E", "I", "T1", "T2", "T3", "T4", "L", "Inc"),
-                    obsnames = c("obs"))
+                      skeleton = vectorfield(Csnippet(SEIT4L.skel.c)),
+                      rprocess = euler.sim(step.fun = Csnippet(SEIT4L.sim.c),
+                                           delta.t = 0.1),
+                      rmeasure = Csnippet(SEITL.rmeas.c),
+                      dmeasure = Csnippet(SEITL.dmeas.c),
+                      toEstimationScale = Csnippet(SEITL.logtrans.c),
+                      fromEstimationScale = Csnippet(SEITL.exptrans.c), 
+                      times = "time",
+                      t0 = 1,
+                      zeronames = "Inc",
+                      paramnames = c("R0", "D_inf", "D_lat", "D_imm", "alpha", "rho"),
+                      statenames = c("S", "E", "I", "T1", "T2", "T3", "T4", "L", "Inc"),
+                      obsnames = c("obs"))
