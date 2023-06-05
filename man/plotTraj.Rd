@@ -4,43 +4,77 @@
 \alias{plotTraj}
 \title{Plot model trajectories}
 \usage{
-plotTraj(traj = NULL, state.names = NULL, data = NULL,
-  time.column = "time", lines.data = FALSE, summary = TRUE,
-  replicate.column = "replicate", non.extinct = NULL, alpha = 1,
-  plot = TRUE, colour = "red", init.date = NULL, same = FALSE)
+plotTraj(
+  traj = NULL,
+  stateNames = NULL,
+  data = NULL,
+  timeColumn = "time",
+  linesData = FALSE,
+  summary = TRUE,
+  replicateColumn = "replicate",
+  nonExtinct = NULL,
+  alpha = 1,
+  plot = TRUE,
+  colour = "red",
+  initDate = NULL,
+  same = FALSE
+)
 }
 \arguments{
-\item{traj}{data.frame, output of \code{fitmodel$simulate} or \code{simulateModelReplicates}.}
+\item{traj}{data.frame, output of \code{fitmodel$simulate} or
+\code{simulateModelReplicates}.}
 
-\item{state.names}{character vector. Names of the state variables to plot. Names must match \code{fitmodel$state.names}. If \code{NULL} (default) all state variables are plotted.}
+\item{stateNames}{character vector. Names of the state variables to plot.
+Names must match \code{fitmodel$stateNames}. If \code{NULL} (default) all
+state variables are plotted.}
 
-\item{data}{data frame. Observation times and observed data. The time column must be named as given by \code{time.column}, whereas the name of the data column should match one of \code{fitmodel$state.names}.}
+\item{data}{data frame. Observation times and observed data. The time column
+must be named as given by \code{timeColumn}, whereas the name of the data
+column should match one of \code{fitmodel$stateNames}.}
 
-\item{time.column}{character vector. The column in the data that indicates time}
+\item{timeColumn}{character vector. The column in the data that indicates
+time}
 
-\item{lines.data}{logical. If \code{TRUE}, the data will be plotted as lines}
+\item{linesData}{logical. If \code{TRUE}, the data will be plotted as lines}
 
-\item{summary}{logical. If \code{TRUE}, the mean, median as well as the 50th and 95th percentile of the trajectories are plotted (default). If \code{FALSE}, all individual trajectories are plotted (transparency can be set with \code{alpha}).}
+\item{summary}{logical. If \code{TRUE}, the mean, median as well as the 50th
+and 95th percentile of the trajectories are plotted (default). If
+\code{FALSE}, all individual trajectories are plotted (transparency can be
+set with \code{alpha}).}
 
-\item{replicate.column}{character Vector. The column in the data that indicates the replicate (if muliple replicates are to be plotted, i.e. if \code{summary} is \code{FALSE}}
+\item{replicateColumn}{character Vector. The column in the data that
+indicates the replicate (if muliple replicates are to be plotted, i.e. if
+\code{summary} is \code{FALSE}}
 
-\item{non.extinct}{character vector. Names of the infected states which must be non-zero so the epidemic is still ongoing. 
-When the names of these states are provided, the extinction probability is plotted by computing the proportion of faded-out epidemics over time. 
-An epidemic has faded-out when all the infected states (whose names are provided) are equal to 0. This is only relevant for stochastic models. 
-In addition, if \code{summary == TRUE}, the summaries of the trajectories conditioned on non-extinction are shown. Default to \code{NULL}.}
+\item{nonExtinct}{character vector. Names of the infected states which must
+be non-zero so the epidemic is still ongoing.  When the names of these
+states are provided, the extinction probability is plotted by computing the
+proportion of faded-out epidemics over time.  An epidemic has faded-out
+when all the infected states (whose names are provided) are equal to 0.
+This is only relevant for stochastic models.  In addition, if \code{summary
+== TRUE}, the summaries of the trajectories conditioned on non-extinction
+are shown. Default to \code{NULL}.}
 
 \item{alpha}{transparency of the trajectories (between 0 and 1).}
 
 \item{plot}{if \code{TRUE} the plot is displayed, and returned otherwise.}
 
-\item{colour}{character vector. If a character, will use that colour to plot trajectories. If "all", use all available colous. If \code{NULL}, don't set the colour.}
+\item{colour}{character vector. If a character, will use that colour to plot
+trajectories. If "all", use all available colous. If \code{NULL}, don't set
+the colour.}
 
-\item{init.date}{character. Date of the first point of the time series (default to \code{NULL}). If provided, the x-axis will be in calendar format. NB: currently only works if the unit of time is the day.}
+\item{initDate}{character. Date of the first point of the time series
+(default to \code{NULL}). If provided, the x-axis will be in calendar
+format. NB: currently only works if the unit of time is the day.}
 
-\item{same}{logical (default: FALSE); if TRUE, trajectories will be plotted in the same panel.}
+\item{same}{logical (default: FALSE); if TRUE, trajectories will be plotted
+in the same panel.}
 }
 \description{
-This function use faceting to plot all trajectories in a data frame. Convenient to see results of several simulations, or data. Also, if \code{data} is present, then an additional plot is displayed with data and potentially observation generated.
+This function use faceting to plot all trajectories in a data frame.
+Convenient to see results of several simulations, or data. Also, if
+\code{data} is present, then an additional plot is displayed with data and
+potentially observation generated.
 }
 \seealso{
 \code{\link{simulateModelReplicates}}

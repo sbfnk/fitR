@@ -4,16 +4,23 @@
 \alias{plotESSBurn}
 \title{Plot Effective Sample Size (ESS) against burn-in}
 \usage{
-plotESSBurn(trace, longest.burn.in = ifelse(is.data.frame(trace) |
-  is.mcmc(trace), nrow(trace), nrow(trace[[1]]))/2,
-  step.size = round(longest.burn.in/50))
+plotESSBurn(
+  trace,
+  longestBurnIn = ifelse(is.data.frame(trace) | is.mcmc(trace), nrow(trace),
+    nrow(trace[[1]]))/2,
+  stepSize = round(longestBurnIn/50)
+)
 }
 \arguments{
-\item{trace}{either a \code{data.frame} or a \code{list} of \code{data.frame} with all variables in column, as outputed by \code{\link{mcmcMH}}. Accept also \code{mcmc} or \code{mcmc.list} objects.}
+\item{trace}{either a \code{data.frame} or a \code{list} of
+\code{data.frame} with all variables in column, as outputed by
+\code{\link{mcmcMH}}. Accept also \code{mcmc} or \code{mcmc.list} objects.}
 
-\item{longest.burn.in}{The longest burn-in to test. Defaults to half the length of the trace}
+\item{longest.burn.in}{The longest burn-in to test. Defaults to half the
+length of the trace}
 
-\item{step.size}{The size of the steps of burn-in to test. Defaults to 1/50th of \code{longest.burn.in}}
+\item{step.size}{The size of the steps of burn-in to test. Defaults to
+1/50th of \code{longest.burn.in}}
 }
 \value{
 a plot of the ESS against burn.in

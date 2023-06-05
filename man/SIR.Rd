@@ -3,21 +3,27 @@
 \name{SIR}
 \alias{SIR}
 \title{A simple deterministic SIR model with constant population size}
-\format{A \code{\link{fitmodel}} object, that is a list with the following elements:}
+\format{
+A \code{\link{fitmodel}} object, that is a list with the following
+  elements:
+}
 \description{
-A simple deterministic SIR model with constant population size, uniform prior and Poisson observation.
+A simple deterministic SIR model with constant population size, uniform prior
+and Poisson observation.
 }
 \details{
 \itemize{
   \item \code{name} character.
-  \item \code{state.names} character vector.
-  \item \code{theta.names} character vector.
+  \item \code{stateNames} character vector.
+  \item \code{thetaNames} character vector.
   \item \code{simulate} \R-function.
   \item \code{rPointObs} \R-function.
   \item \code{dprior} \R-function.
   \item \code{dPointObs} \R-function.
 }
 
-Look at the documentation of \code{\link{fitmodel}} for more details about each of these elements.
-You can look at the code of the \R-functions by typing \code{SIR$simulate} for instance. There are some comments included.
+Look at the documentation of \code{\link{fitmodel}} for more details about
+each of these elements.
+You can look at the code of the \R-functions by typing \code{SIR$simulate}
+for instance. There are some comments included.
 }

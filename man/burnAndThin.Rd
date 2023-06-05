@@ -7,14 +7,18 @@
 burnAndThin(trace, burn = 0, thin = 0)
 }
 \arguments{
-\item{trace}{either a \code{data.frame} or a \code{list} of \code{data.frame} with all variables in column, as outputed by \code{\link{mcmcMH}}. Accept also an \code{mcmc} or \code{mcmc.list} object.}
+\item{trace}{either a \code{data.frame} or a \code{list} of \code{data.frame}
+with all variables in column, as outputed by \code{\link{mcmcMH}}. Accept
+also an \code{mcmc} or \code{mcmc.list} object.}
 
 \item{burn}{proportion of the chain to burn.}
 
 \item{thin}{number of samples to discard per sample that is being kept}
 }
 \value{
-an object with the same format as \code{trace} (\code{data.frame} or \code{list} of \code{data.frame} or \code{mcmc} object or \code{mcmc.list} object)
+an object with the same format as \code{trace} (\code{data.frame} or
+  \code{list} of \code{data.frame} or \code{mcmc} object or \code{mcmc.list}
+  object)
 }
 \description{
 Return a burned and thined trace of the chain.

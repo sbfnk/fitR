@@ -4,38 +4,59 @@
 \alias{particleFilter}
 \title{Run a particle filter for fitmodel object}
 \usage{
-particleFilter(fitmodel, theta, init.state, data, n.particles,
-  progress = FALSE, n.cores = 1)
+particleFilter(
+  fitmodel,
+  theta,
+  initState,
+  data,
+  nParticles,
+  progress = FALSE,
+  nCores = 1
+)
 }
 \arguments{
 \item{fitmodel}{a \code{\link{fitmodel}} object}
 
-\item{theta}{named numeric vector. Values of the parameters. Names should match \code{fitmodel$theta.names}.}
+\item{theta}{named numeric vector. Values of the parameters. Names should
+match \code{fitmodel$thetaNames}.}
 
-\item{init.state}{named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.}
+\item{initState}{named numeric vector. Initial values of the state
+variables. Names should match \code{fitmodel$stateNames}.}
 
-\item{data}{data frame. Observation times and observed data. The time column must be named \code{"time"} and the observation column must be named \code{"obs"}.}
+\item{data}{data frame. Observation times and observed data. The time column
+must be named \code{"time"} and the observation column must be named
+\code{"obs"}.}
 
-\item{n.particles}{number of particles}
+\item{nParticles}{number of particles}
 
-\item{progress}{if \code{TRUE} progression of the filter is displayed in the console.}
+\item{progress}{if \code{TRUE} progression of the filter is displayed in the
+console.}
 
-\item{n.cores}{number of cores on which propogation of the particles is parallelised. By default no parallelisation (\code{n.cores=1}). If \code{NULL}, set to the value returned by \code{\link[parallel]{detectCores}}.}
+\item{nCores}{number of cores on which propogation of the particles is
+parallelised. By default no parallelisation (\code{nCores=1}). If
+\code{NULL}, set to the value returned by
+\code{\link[parallel]{detectCores}}.}
 }
 \value{
 A list of 3 elements:
 \itemize{
 \item \code{dPointObs} the marginal log-likelihood of the theta.
-\item \code{traj} a list of size \code{n.particles} with all filtered trajectories.
-\item \code{traj.weight} a vector of size \code{n.particles} with the normalised weight of the filtered trajectories.
+\item \code{traj} a list of size \code{nParticles} with all filtered
+  trajectories.
+\item \code{trajWeight} a vector of size \code{nParticles} with the
+  normalised weight of the filtered trajectories.
 }
 }
 \description{
-The particle filter returns an estimate of the marginal log-likelihood \eqn{L = p(y(t_{1:T})|\theta)}
-as well as the set of filtered trajectories and their respective weights at the last observation time \eqn{\omega(t_T)=p(y(t_T)|\theta)}.
+The particle filter returns an estimate of the marginal log-likelihood \eqn{L
+= p(y(t_{1:T})|\theta)} as well as the set of filtered trajectories and their
+respective weights at the last observation time
+\eqn{\omega(t_T)=p(y(t_T)|\theta)}.
 }
 \note{
-An unbiased state sample \eqn{x(t_{0:T}) ~ p(X(t_{0:T})|\theta,y(t_{0:T}))} can be obtained by sampling the set of trajectories \code{traj} with probability \code{traj.weight}.
+An unbiased state sample \eqn{x(t_{0:T}) ~
+  p(X(t_{0:T})|\theta,y(t_{0:T}))} can be obtained by sampling the set of
+  trajectories \code{traj} with probability \code{trajWeight}.
 }
 \seealso{
 plotSMC

@@ -12,10 +12,11 @@ printNamedVector(x, fmt = "\%.2f", sep = " | ")
 \item{fmt}{a character vector of format strings, each of up to 8192 bytes.}
 
 \item{sep}{a character string to separate the terms.  Not
-    \code{\link{NA_character_}}.}
+    \code{\link[base]{NA_character_}}.}
 }
 \description{
-Print named vector with format specified by \code{fmt} (2 decimal places by default).
+Print named vector with format specified by \code{fmt} (2 decimal places by
+default).
 }
 \seealso{
 \code{\link[base]{sprintf}}

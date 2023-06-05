@@ -7,16 +7,22 @@
 plotPosteriorDensity(trace, prior = NULL, colour = NULL, plot = TRUE)
 }
 \arguments{
-\item{trace}{either a \code{data.frame} or a \code{list} of \code{data.frame} with all variables in column, as outputed by \code{\link{mcmcMH}}. Accept also an \code{mcmc}, a \code{mcmc.list} object or a \code{list} of \code{mcmc.list} .}
+\item{trace}{either a \code{data.frame} or a \code{list} of \code{data.frame}
+with all variables in column, as outputed by \code{\link{mcmcMH}}. Accept
+also an \code{mcmc}, a \code{mcmc.list} object or a \code{list} of
+\code{mcmc.list} .}
 
-\item{prior}{a \code{data.frame} containing the prior density. It must have the three following columns: 
+\item{prior}{a \code{data.frame} containing the prior density. It must have
+  the three following columns:
 \itemize{
     \item \code{theta} names of the parameters
     \item \code{x} value of the parameters
-    \item \code{density} density of the prior at \code{x} 
+    \item \code{density} density of the prior at \code{x}
 }}
 
-\item{colour}{named vector of two characters and containing colour names for posterior and prior distributions. Vector names must be \code{posterior} and \code{prior}.}
+\item{colour}{named vector of two characters and containing colour names for
+posterior and prior distributions. Vector names must be \code{posterior}
+and \code{prior}.}
 
 \item{plot}{if \code{TRUE} the plot is displayed, and returned otherwise.}
 }

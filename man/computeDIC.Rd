@@ -4,19 +4,23 @@
 \alias{computeDIC}
 \title{Compute the DIC}
 \usage{
-computeDIC(trace, fitmodel, init.state, data, margLogLike = dTrajObs,
-  ...)
+computeDIC(trace, fitmodel, initState, data, margLogLike = dTrajObs, ...)
 }
 \arguments{
-\item{trace}{either a \code{data.frame} or \code{mcmc} object. Must contain one column with the posterior \code{log.likelihood}.}
+\item{trace}{either a \code{data.frame} or \code{mcmc} object. Must contain
+one column with the posterior \code{logLikelihood}.}
 
 \item{fitmodel}{a \code{\link{fitmodel}} object}
 
-\item{init.state}{named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.}
+\item{initState}{named numeric vector. Initial values of the state
+variables. Names should match \code{fitmodel$stateNames}.}
 
-\item{data}{data frame. Observation times and observed data. The time column must be named \code{"time"} and the observation column must be named \code{"obs"}.}
+\item{data}{data frame. Observation times and observed data. The time column
+must be named \code{"time"} and the observation column must be named
+\code{"obs"}.}
 
-\item{margLogLike}{\R-function to compute the marginal log-likelihood of \code{theta}.}
+\item{margLogLike}{\R-function to compute the marginal log-likelihood of
+\code{theta}.}
 
 \item{...}{further arguments to be passed to \code{margLogLike}}
 }
@@ -24,12 +28,13 @@ computeDIC(trace, fitmodel, init.state, data, margLogLike = dTrajObs,
 a list of 5 elements:
 \itemize{
     \item \code{DIC} value of the DIC
-    \item \code{theta_bar} mean posterior of theta
-    \item \code{log_like_theta_bar} log-likelihood of \code{theta_bar}
-    \item \code{D_theta_bar} deviance of \code{theta_bar}
-    \item \code{p_D} effective number of parameters
+    \item \code{thetaBar} mean posterior of theta
+    \item \code{logLikeThetaBar} log-likelihood of \code{thetaBar}
+    \item \code{DThetaBar} deviance of \code{thetaBar}
+    \item \code{pD} effective number of parameters
 }
 }
 \description{
-This function computes the Deviance Information Criterion (DIC) of a \code{\link{fitmodel}} from a MCMC sample.
+This function computes the Deviance Information Criterion (DIC) of a
+\code{\link{fitmodel}} from a MCMC sample.
 }

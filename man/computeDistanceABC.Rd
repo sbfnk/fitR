@@ -4,25 +4,36 @@
 \alias{computeDistanceABC}
 \title{Compute the distance between a model and data for ABC}
 \usage{
-computeDistanceABC(sum.stats, distanceABC, fitmodel, theta, init.state,
-  data)
+computeDistanceABC(sumStats, distanceABC, fitmodel, theta, initState, data)
 }
 \arguments{
-\item{sum.stats}{a list of functions to calculate summary statistics. Each of these takes one argument (a trajectory with an "obs" column) and returns a number (the summary statistic given the trajectory)}
+\item{sumStats}{a list of functions to calculate summary statistics. Each of
+these takes one argument (a trajectory with an "obs" column) and returns a
+number (the summary statistic given the trajectory)}
 
-\item{distanceABC}{a function that take three arguments: \code{sum.stats}, a list of summary statistics, \code{data.obs} (the data trajectory of observations) and \code{model.obs} (a model trajectory of observations), and returns the distance between the model run and the data in terms of the summary statistics}
+\item{distanceABC}{a function that take three arguments: \code{sumStats}, a
+list of summary statistics, \code{dataObs} (the data trajectory of
+observations) and \code{modelObs} (a model trajectory of observations),
+and returns the distance between the model run and the data in terms of the
+summary statistics}
 
 \item{fitmodel}{a \code{\link{fitmodel}} object}
 
-\item{theta}{named numeric vector. Values of the parameters. Names should match \code{fitmodel$theta.names}.}
+\item{theta}{named numeric vector. Values of the parameters. Names should
+match \code{fitmodel$thetaNames}.}
 
-\item{init.state}{named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.}
+\item{initState}{named numeric vector. Initial values of the state
+variables. Names should match \code{fitmodel$stateNames}.}
 
-\item{data}{data frame. Observation times and observed data. The time column must be named \code{"time"} and the observation column must be named \code{"obs"}.}
+\item{data}{data frame. Observation times and observed data. The time column
+must be named \code{"time"} and the observation column must be named
+\code{"obs"}.}
 }
 \value{
 a sampled distance between
 }
 \description{
-Compute the distance (using \code{distance.ABC}) between the observed time series and a simulated time series of observations obtained by running the model with parameters \code{theta}.
+Compute the distance (using \code{distance.ABC}) between the observed time
+series and a simulated time series of observations obtained by running the
+model with parameters \code{theta}.
 }

@@ -2,22 +2,30 @@
 % Please edit documentation in R/fitR-package.r
 \name{SIR_exp}
 \alias{SIR_exp}
-\title{A simple deterministic SIR model with constant population size and parameters on the exponential scale}
-\format{A \code{\link{fitmodel}} object, that is a list with the following elements:}
+\title{A simple deterministic SIR model with constant population size and parameters
+on the exponential scale}
+\format{
+A \code{\link{fitmodel}} object, that is a list with the following
+  elements:
+}
 \description{
-A simple deterministic SIR model with constant population size, uniform prior and Poisson observation. The parameters are transformed using an exponential transformation.
+A simple deterministic SIR model with constant population size, uniform prior
+and Poisson observation. The parameters are transformed using an exponential
+transformation.
 }
 \details{
 \itemize{
   \item \code{name} character.
-  \item \code{state.names} character vector.
-  \item \code{theta.names} character vector.
+  \item \code{stateNames} character vector.
+  \item \code{thetaNames} character vector.
   \item \code{simulate} \R-function.
   \item \code{rPointObs} \R-function.
   \item \code{dprior} \R-function.
   \item \code{dPointObs} \R-function.
 }
 
-Look at the documentation of \code{\link{fitmodel}} for more details about each of these elements.
-You can look at the code of the \R-functions by typing \code{SIR_exp$simulate} for instance. There are some comments included.
+Look at the documentation of \code{\link{fitmodel}} for more details about
+each of these elements.
+You can look at the code of the \R-functions by typing
+\code{SIR_exp$simulate} for instance. There are some comments included.
 }
