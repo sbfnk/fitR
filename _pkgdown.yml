@@ -11,15 +11,20 @@ reference:
       - fitmodel
       - dTrajObs
       - rTrajObs
-      - logPosterior
+      - dLogPosterior
       - testFitmodel
   - title: "Models"
     desc: "Models of infectious disease dynamics (instances of the fitmodel class)."
     contents:
-      - starts_with("SIR")
+      - starts_with("SIR_")
       - starts_with("SEITL_")
       - starts_with("SEIT2L_")
       - starts_with("SEIT4L_")
+  - title: "Stochastic modelling"
+    desc: "Methods for generating stochastic simulations"
+    contents:
+      - simulateModelStochastic
+      - simulateModelReplicates
   - title: "Data"
     desc: "Epidemiological datasets."
     contents:
@@ -35,6 +40,11 @@ reference:
     contents:
       - particleFilter
       - margLogLikeSto
+  - title: "ABC"
+    desc: "Functions for ABC."
+    contents:
+      - computeDistanceABC
+      - distanceOscillation
   - title: "Plotting"
     desc: "Functions for plotting model trajectories and fits."
     contents:

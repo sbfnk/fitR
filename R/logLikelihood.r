@@ -161,7 +161,7 @@ computeDIC <-
   simulation <- match.arg(simulation)
 
   # compute mean posterior estimate
-  thetaBar <- colMeans(trace[fitmodel$theta.names])
+  thetaBar <- colMeans(trace[fitmodel$thetaNames])
 
   logLikeThetaBar <- margLogLike(
     fitmodel, thetaBar, initState, data = data, ...

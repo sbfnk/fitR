@@ -92,6 +92,7 @@ simulateModelReplicates <- function(fitmodel, theta, initState, times, n,
 #' @export
 #' @import plyr parallel doParallel
 #' @importFrom dplyr last
+#' @keywords internal
 simulateFinalStateAtExtinction <- function(fitmodel, theta, initState,
                                            extinct = NULL, timeInit = 0,
                                            timeStep = 100, n = 100,

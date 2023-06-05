@@ -36,7 +36,7 @@ NULL
 #'
 #' @format A \code{\link{fitmodel}} object, that is a list with the following
 #'   elements:
-#' @name SIR
+#' @name SIR_deter
 NULL
 
 #' A simple stochastic SIR model with constant population size
@@ -87,7 +87,7 @@ NULL
 #'
 #' @format A \code{\link{fitmodel}} object, that is a list with the following
 #'   elements:
-#' @name SIR_reporting
+#' @name SIR_reporting_deter
 NULL
 
 #' A simple deterministic SIR model with constant population size and parameters
@@ -114,7 +114,7 @@ NULL
 #'
 #' @format A \code{\link{fitmodel}} object, that is a list with the following
 #'   elements:
-#' @name SIR_exp
+#' @name SIR_exp_deter
 NULL
 
 #' The deterministic SEITL model with constant population size

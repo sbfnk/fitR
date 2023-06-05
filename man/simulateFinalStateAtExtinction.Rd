@@ -45,3 +45,4 @@ parallelised. By default no parallelisation (\code{nCores=1}). If
 \description{
 Return final state at extinction
 }
+\keyword{internal}
