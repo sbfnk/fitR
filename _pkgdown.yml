@@ -13,22 +13,17 @@ reference:
       - rTrajObs
       - logPosterior
       - testFitmodel
-  # - title: "Models"
-  #   desc: "Models of infectious disease dynamics (instances of the fitmodel class)."
-  #   contents:
-  #     - starts_with("SIR")
-  #     - SEITL_deter
-  #     - SEITL_stoch
-  #     - starts_with("SEIT2L_")
-  #     - starts_with("SEIT4L_")
-  #     - starts_with("SEITL_pomp")
-  #     - starts_with("SEIT2L_pomp")
-  #     - starts_with("SEIT4L_pomp")
-  # - title: "Data"
-  #   desc: "Epidemiological datasets."
-  #   contents:
-  #     - FluTdC1971
-  #     - measles
+  - title: "Models"
+    desc: "Models of infectious disease dynamics (instances of the fitmodel class)."
+    contents:
+      - starts_with("SIR")
+      - starts_with("SEITL_")
+      - starts_with("SEIT2L_")
+      - starts_with("SEIT4L_")
+  - title: "Data"
+    desc: "Epidemiological datasets."
+    contents:
+      - FluTdC1971
   - title: "MCMC"
     desc: "Functions related to Markov-chain Monte Carlo."
     contents:
