@@ -1,6 +1,3 @@
-data(SEITL_deter)
-
-
 SEITL_sto_name <- # nolint
   "stochastic SEITL model with daily incidence and constant population size"
 
@@ -16,7 +13,7 @@ SEITL_simulateStochastic <- function(theta, initState, times) { # nolint
 
   SEITL_rateFunc <- function(state, theta, t) { # nolint
     # param
-    beta <- theta[["R0"]] / theta[["D_inf"]]
+    beta <- theta[["R_0"]] / theta[["D_inf"]]
     epsilon <- 1 / theta[["D_lat"]]
     nu <- 1 / theta[["D_inf"]]
     alpha <- theta[["alpha"]]

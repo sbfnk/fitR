@@ -1,8 +1,6 @@
-context("mcmc")
-
 test_that("mcmcMH for deterministic SEITL model", {
   theta <- c(
-    "R0" = 10, "D_lat" = 2, "D_inf" = 3, "alpha" = 0.5, "D_imm" = 15,
+    "R_0" = 10, "D_lat" = 2, "D_inf" = 3, "alpha" = 0.5, "D_imm" = 15,
     "rho" = 0.7
   )
   initState <- c("S" = 280, "E" = 0, "I" = 2, "T" = 0, "L" = 4, "Inc" = 0)
@@ -30,7 +28,7 @@ test_that("mcmcMH for deterministic SEITL model", {
 
 test_that("mcmcMH for deterministic SEIT2L model", {
   theta <- c(
-    "R0" = 10, "D_lat" = 2, "D_inf" = 3, "alpha" = 0.5, "D_imm" = 15,
+    "R_0" = 10, "D_lat" = 2, "D_inf" = 3, "alpha" = 0.5, "D_imm" = 15,
     "rho" = 0.7
   )
   initState <- c(
@@ -60,7 +58,7 @@ test_that("mcmcMH for deterministic SEIT2L model", {
 
 test_that("mcmcMH for stochastic SEITL model", {
   theta <- c(
-    "R0" = 10, "D_lat" = 2, "D_inf" = 3, "alpha" = 0.5, "D_imm" = 15,
+    "R_0" = 10, "D_lat" = 2, "D_inf" = 3, "alpha" = 0.5, "D_imm" = 15,
     "rho" = 0.7
   )
   initState <- c("S" = 280, "E" = 0, "I" = 2, "T" = 0, "L" = 4, "Inc" = 0)
@@ -88,7 +86,7 @@ test_that("mcmcMH for stochastic SEITL model", {
 
 test_that("mcmcMH for stochastic SEIT2L model", {
   theta <- c(
-    "R0" = 10, "D_lat" = 2, "D_inf" = 3, "alpha" = 0.5, "D_imm" = 15,
+    "R_0" = 10, "D_lat" = 2, "D_inf" = 3, "alpha" = 0.5, "D_imm" = 15,
     "rho" = 0.7
   )
   initState <- c(

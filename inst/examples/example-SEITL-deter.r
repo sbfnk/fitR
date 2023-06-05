@@ -2,13 +2,13 @@ SEITL_deter_name <- # nolint
   "deterministic SEITL model with daily incidence and constant population size"
 # note the new state Inc for the daily incidence
 SEITL_stateNames <- c("S", "E", "I", "T", "L", "Inc") # nolint
-SEITL_thetaNames <- c("R0", "D_lat", "D_inf", "alpha", "D_imm", "rho") # nolint
+SEITL_thetaNames <- c("R_0", "D_lat", "D_inf", "alpha", "D_imm", "rho") # nolint
 
 # Solves the system of ordinary differential equations for the SEITL model.
 SEITL_simulateDeterministic <- function(theta, initState, times) { # nolint
   SEITL_ode <- function(time, state, theta) { # nolint
     # param
-    beta <- theta[["R0"]] / theta[["D_inf"]]
+    beta <- theta[["R_0"]] / theta[["D_inf"]]
     epsilon <- 1 / theta[["D_lat"]]
     nu <- 1 / theta[["D_inf"]]
     alpha <- theta[["alpha"]]
@@ -58,8 +58,8 @@ SEITL_genObsPoint <- function(modelPoint, theta) { # nolint
 
 # Evaluate the (log of the) prior density distribution of the parameter values.
 SEITL_prior <- function(theta, log = FALSE) { # nolint
-  logPrior_R0 <- dunif( # nolint
-    theta[["R0"]], min = 1, max = 50, log = TRUE
+  logPrior_R_0 <- dunif( # nolint
+    theta[["R_0"]], min = 1, max = 50, log = TRUE
   )
   logPrior_latentPeriod <- dunif( # nolint
     theta[["D_lat"]], min = 0, max = 10, log = TRUE
@@ -78,7 +78,7 @@ SEITL_prior <- function(theta, log = FALSE) { # nolint
   )
 
   logSum <-
-    logPrior_R0 + logPrior_latentPeriod + logPrior_infectiousPeriod +
+    logPrior_R_0 + logPrior_latentPeriod + logPrior_infectiousPeriod +
     logPrior_temporaryImmunePeriod + logPrior_probabilityLongTermImmunity +
     logPrior_reportingRate
 

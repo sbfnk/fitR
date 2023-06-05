@@ -1,5 +1,3 @@
-data(SEITL_deter)
-
 SEIT4L_sto_name <- # nolint
   "stochastic SEIT4L model with daily incidence and constant population size"
 SEIT4L_stateNames <- c("S", "E", "I", "T1", "T2", "T3", "T4", "L", "Inc") # nolint
@@ -19,7 +17,7 @@ SEIT4L_simulateStochastic <- function(theta, initState, times) { # nolint
 
   SEIT4L_rateFunc <- function(state, theta, t) { # nolint
     # param
-    beta <- theta[["R0"]] / theta[["D_inf"]]
+    beta <- theta[["R_0"]] / theta[["D_inf"]]
     epsilon <- 1 / theta[["D_lat"]]
     nu <- 1 / theta[["D_inf"]]
     alpha <- theta[["alpha"]]

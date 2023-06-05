@@ -1,6 +1,3 @@
-data(SEITL_deter)
-
-
 SEIT2L_deter_name <- # nolint
   "deterministic SEIT2L model with daily incidence and constant population size"
 SEIT2L_stateNames <- c("S", "E", "I", "T1", "T2", "L", "Inc") # nolint
@@ -8,7 +5,7 @@ SEIT2L_stateNames <- c("S", "E", "I", "T1", "T2", "L", "Inc") # nolint
 SEIT2L_simulateDeterministic <- function(theta, initState, times) { # nolint
   SEIT2L_ode <- function(time, state, theta) { # nolint
     # param
-    beta <- theta[["R0"]] / theta[["D_inf"]]
+    beta <- theta[["R_0"]] / theta[["D_inf"]]
     epsilon <- 1 / theta[["D_lat"]]
     nu <- 1 / theta[["D_inf"]]
     alpha <- theta[["alpha"]]

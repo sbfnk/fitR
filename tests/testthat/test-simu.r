@@ -1,5 +1,3 @@
-context("simu")
-
 test_that("simulate and generate observation", {
   # SEITL
   data(SEITL_deter)
@@ -7,7 +5,7 @@ test_that("simulate and generate observation", {
   listModel <- list(SEITL_deter, SEITL_stoch)
 
   theta <- c(
-    "R0" = 10, "D_lat" = 2, "D_inf" = 3, "alpha" = 0.5, "D_imm" = 15,
+    "R_0" = 10, "D_lat" = 2, "D_inf" = 3, "alpha" = 0.5, "D_imm" = 15,
     "rho" = 0.7
   )
   initState <- c("S" = 280, "E" = 0, "I" = 2, "T" = 0, "L" = 4, "Inc" = 0)

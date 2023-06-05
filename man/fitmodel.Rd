@@ -21,7 +21,7 @@ fitmodel(
 \code{c("S","I","R")} (required).}
 
 \item{thetaNames}{character vector. Names of the parameters i.e.
-\code{c("R0","infectiousPeriod")} (required).}
+\code{c("R_0","infectiousPeriod")} (required).}
 
 \item{simulate}{\R-function to simulate forward the model (required). This
   function takes 3 arguments:
@@ -103,12 +103,12 @@ course.
 
 SIR_name <- "SIR with constant population size" # nolint
 SIR_stateNames <- c("S", "I", "R") # nolint
-SIR_thetaNames <- c("R0", "D_inf") # nolint
+SIR_thetaNames <- c("R_0", "D_inf") # nolint
 
 SIR_simulateDeterministic <- function(theta, initState, times) { # nolint
   SIR_ode <- function(time, state, parameters) { # nolint
     ## parameters
-    beta <- parameters[["R0"]] / parameters[["D_inf"]]
+    beta <- parameters[["R_0"]] / parameters[["D_inf"]]
     nu <- 1 / parameters[["D_inf"]]
 
     ## states
@@ -138,12 +138,12 @@ SIR_simulateDeterministic <- function(theta, initState, times) { # nolint
 
 ## function to compute log-prior
 SIR_prior <- function(theta, log = FALSE) { # nolint
-  ## uniform prior on R0: U[1,100]
-  logPrior_R0 <- dunif(theta[["R0"]], min = 1, max = 100, log = TRUE) # nolint
+  ## uniform prior on R_0: U[1,100]
+  logPrior_R_0 <- dunif(theta[["R_0"]], min = 1, max = 100, log = TRUE) # nolint
   ## uniform prior on infectious period: U[0,30]
   logPrior_D <- dunif(theta[["D_inf"]], min = 0, max = 30, log = TRUE) # nolint
 
-  logSum <- logPrior_R0 + logPrior_D
+  logSum <- logPrior_R_0 + logPrior_D
 
   return(ifelse(log, logSum, exp(logSum)))
 }

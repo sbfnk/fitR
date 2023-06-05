@@ -7,7 +7,7 @@ Authors@R: c(person(given="Anton", family="Camacho", email="ntncmch@gmail.com",
 Description: This package contains helper functions for model fitting and
     inference
 Depends:
-    R (>= 3.0.2),
+    R (>= 3.5.0),
     deSolve,
     adaptivetau
 Imports:
@@ -26,7 +26,9 @@ Imports:
     emdbook
 Suggests:
     here,
-    purrr
+    purrr,
+    testthat (>= 3.0.0)
 License: GPL-2
 LazyData: true
 RoxygenNote: 7.2.3
+Config/testthat/edition: 3

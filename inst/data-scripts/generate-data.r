@@ -7,6 +7,7 @@ dataFiles <- list.files(exampleDir, pattern = "^example-")
 
 safeSource <- purrr::safely(source)
 purrr::walk(dataFiles, \(x) safeSource(file.path(exampleDir, x)))
+purrr::walk(dataFiles, \(x) safeSource(file.path(exampleDir, x)))
 
 models <- gsub("-", "_",
   sub("^example-(.+)\\.r", "\\1", dataFiles)
