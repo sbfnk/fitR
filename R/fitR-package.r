@@ -14,21 +14,6 @@
 #' @name FluTdC1971
 NULL
 
-#' Time-series of a measles outbreak
-#'
-#' A dataset containing the weekly incidence recorded during a recent outbreak
-#' of measles in Europe
-#'
-#' \itemize{
-#'   \item \code{time} week of the record
-#'   \item \code{Inc} weekly recorded incidence of measles
-#' }
-#'
-#' @format A data frame with 37 rows and 2 variables
-#' @name measles
-NULL
-
-
 #' A simple deterministic SIR model with constant population size
 #'
 #' A simple deterministic SIR model with constant population size, uniform prior
