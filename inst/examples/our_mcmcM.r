@@ -2,80 +2,81 @@
 ## This is a function that takes four parameters:
 ## - target: the target distribution, a function that takes one argument
 ##           (a vector) and returns the (logged) value of a distribution
-## - init.theta: the initial value of theta, a named vector
-## - covmat.proposal: the covariance matrix of the (Gaussian) proposal distribution,
-##                    in the same order as in the "target" vector
-## - n.iterations: the number of iterations
-## it returns an MCMC trace (value of theta and target(theta) at every MCMC step)
+## - initTheta: the initial value of theta, a named vector
+## - covmatProposal: the covariance matrix of the (Gaussian) proposal
+##                    distribution, in the same order as in the "target" vector
+## - nIterations: the number of iterations
+## it returns an MCMC trace (value of theta and target(theta) at every MCMC
+## step)
 
-our_mcmcM <- function(target, init.theta, covmat.proposal, n.iterations) {
+our_mcmcM <- function(target, initTheta, covmatProposal, nIterations) { # nolint
+  ## initialise theta
+  thetaCurrent <- initTheta
+  thetaProposed <- initTheta
 
-    ## initialise theta
-    theta.current <- init.theta
-    theta.proposed <- init.theta
+  ## evaluate the function "target" at "initTheta", and assign to
+  ## a variable called targetThetaCurrent
+  targetThetaCurrent <- target(thetaCurrent)
 
-    ## evaluate the function "target" at "init.theta", and assign to 
-    ## a variable called target.theta.current
-    target.theta.current <- target(theta.current)
+  ## initialise trace data.frame
+  trace <- data.frame(target = targetThetaCurrent, t(thetaCurrent))
 
-    ## initialise trace data.frame
-    trace <- data.frame(target = target.theta.current, t(theta.current))
+  ## initialise number of accepted runs (to calculate acceptance rate later)
+  accepted <- 0
 
-    ## initialise number of accepted runs (to calculate acceptance rate later)
-    accepted <- 0
+  ## run MCMC for nIteration interations
+  for (iIteration in seq_len(nIterations)) {
+    ## draw a new theta from the (multivariate Gaussian) proposal
+    ## distribution and assign to a variable called thetaProposed.
+    ## See "?rmvnorm for help.
+    thetaProposed <- tmvtnorm::rmvnorm(
+      n = 1, mean = thetaCurrent,
+      sigma = covmatProposal
+    )
 
-    ## run MCMC for n.iteration interations
-    for (i.iteration in seq_len(n.iterations)) {
+    ## evaluate the function target at the proposed theta and
+    ## assign to a variable called targetThetaProposed
+    targetThetaProposed <- target(thetaProposed)
 
-        ## draw a new theta from the (multivariate Gaussian) proposal 
-        ## distribution and assign to a variable called theta.proposed. 
-        ## See "?rmvnorm for help.
-        theta.proposed <- rmvnorm(n = 1, mean = theta.current, 
-                                  sigma = covmat.proposal)
+    ## compute Metropolis ratio (acceptance probability). Since the
+    ## multivariate Gaussian is symmetric, we don't need to consider
+    ## the proposal distribution here
+    logAcceptance <- targetThetaProposed - targetThetaCurrent
 
-        ## evaluate the function target at the proposed theta and
-        ## assign to a variable called target.theta.proposed
-        target.theta.proposed <- target(theta.proposed)
+    ## draw random number number between 0 and 1 using "runif" and assign to
+    ## a variable called r.
+    r <- runif(1)
 
-        ## compute Metropolis ratio (acceptance probability). Since the
-        ## multivariate Gaussian is symmetric, we don't need to consider
-        ## the proposal distribution here
-        log.acceptance <- target.theta.proposed - target.theta.current
+    ## calculate acceptance ratio. This is easiest if you assume
+    ## the target function to return the logarithm of the
+    ## distribution value. Assign the result to a variable called
+    ## logAcceptance
+    logAcceptance <- targetThetaProposed - targetThetaCurrent
 
-        ## draw random number number between 0 and 1 using "runif" and assign to
-        ## a variable called r.
-        r <- runif(1)
+    ## test acceptance (using "exp" because we calculated the logarithm of the
+    ## acceptance ratio before
+    if (r < exp(logAcceptance)) {
+      ## if accepted: update proposed parameter
+      trace <- rbind(trace, c(target = targetThetaProposed, t(thetaProposed)))
+      ## update theta
+      thetaCurrent <- thetaProposed
 
-        ## calculate acceptance ratio. This is easiest if you assume
-        ## the target function to return the logarithm of the 
-        ## distribution value. Assign the result to a variable called
-        ## log.acceptance
-        log.acceptance <- target.theta.proposed - target.theta.current
+      ## update target
+      targetThetaCurrent <- targetThetaProposed
 
-        ## test acceptance (using "exp" because we calculated the logarithm of the
-        ## acceptance ratio before
-        if (r < exp(log.acceptance)) {
-
-            ## if accepted: update proposed parameter
-            trace <- rbind(trace, c(target = target.theta.proposed, t(theta.proposed)))
-            ## update theta
-            theta.current <- theta.proposed
-
-            ## update target
-            target.theta.current <- target.theta.proposed
-
-            ## update number of accepted proposals
-            accepted <- accepted + 1
-        } else {
-            ## reject proposed parameter
-            trace <- rbind(trace, c(target = target.theta.current, t(theta.current)))
-        }
-
-        ## print current state of chain and acceptance rate
-        cat("chain:", unlist(trace[nrow(trace), ]),
-            "acceptance rate:", accepted / i.iteration, "\n")
-
+      ## update number of accepted proposals
+      accepted <- accepted + 1
+    } else {
+      ## reject proposed parameter
+      trace <- rbind(trace, c(target = targetThetaCurrent, t(thetaCurrent)))
     }
 
-    return(trace)
+    ## print current state of chain and acceptance rate
+    cat(
+      "chain:", unlist(trace[nrow(trace), ]),
+      "acceptance rate:", accepted / iIteration, "\n"
+    )
+  }
+
+  return(trace)
 }

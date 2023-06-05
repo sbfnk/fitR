@@ -1,104 +1,108 @@
-
-SEITL_deter_name <- "deterministic SEITL model with daily incidence and constant population size"
+SEITL_deter_name <- # nolint
+  "deterministic SEITL model with daily incidence and constant population size"
 # note the new state Inc for the daily incidence
-SEITL_state.names <- c("S","E","I","T","L","Inc")
-SEITL_theta.names <- c("R0", "D_lat", "D_inf", "alpha", "D_imm", "rho")
-
+SEITL_stateNames <- c("S", "E", "I", "T", "L", "Inc") # nolint
+SEITL_thetaNames <- c("R0", "D_lat", "D_inf", "alpha", "D_imm", "rho") # nolint
 
 # Solves the system of ordinary differential equations for the SEITL model.
-SEITL_simulateDeterministic <- function(theta,init.state,times) {
+SEITL_simulateDeterministic <- function(theta, initState, times) { # nolint
+  SEITL_ode <- function(time, state, theta) { # nolint
+    # param
+    beta <- theta[["R0"]] / theta[["D_inf"]]
+    epsilon <- 1 / theta[["D_lat"]]
+    nu <- 1 / theta[["D_inf"]]
+    alpha <- theta[["alpha"]]
+    tau <- 1 / theta[["D_imm"]]
 
-	SEITL_ode <- function(time, state, theta) {
+    # states
+    S <- state[["S"]] # nolint
+    E <- state[["E"]] # nolint
+    I <- state[["I"]] # nolint
+    Ti <- state[["T"]] # nolint
+    L <- state[["L"]] # nolint
+    Inc <- state[["Inc"]] # nolint
 
-		# param
-		beta <- theta[["R0"]]/theta[["D_inf"]]
-		epsilon <- 1/theta[["D_lat"]]
-		nu <- 1/theta[["D_inf"]]
-		alpha <- theta[["alpha"]]
-		tau <- 1/theta[["D_imm"]]
+    N <- S + E + I + T + L # nolint
 
-		# states
-		S <- state[["S"]]
-		E <- state[["E"]]
-		I <- state[["I"]]
-		T <- state[["T"]]
-		L <- state[["L"]]
-		Inc <- state[["Inc"]]
+    dS <- -beta * S * I / N + (1 - alpha) * tau * Ti
+    dE <- beta * S * I / N - epsilon * E
+    dI <- epsilon * E - nu * I
+    dT <- nu * I - tau * Ti
+    dL <- alpha * tau * Ti
+    dInc <- epsilon * E
 
-		N <- S + E +I + T + L
-
-		dS <- -beta*S*I/N + (1-alpha)*tau*T
-		dE <- beta*S*I/N - epsilon*E
-		dI <- epsilon*E - nu*I
-		dT <- nu*I - tau*T
-		dL <- alpha*tau*T
-		dInc <- epsilon*E
-
-		return(list(c(dS,dE,dI,dT,dL,dInc)))
-	}
+    return(list(c(dS, dE, dI, dT, dL, dInc)))
+  }
 
 
-	# put incidence at 0 in init.state
-	init.state["Inc"] <- 0
+  # put incidence at 0 in initState
+  initState["Inc"] <- 0
 
-	traj <- as.data.frame(ode(init.state, times, SEITL_ode, theta, method = "ode45"))
+  traj <- as.data.frame(deSolve::ode(
+    initState, times, SEITL_ode, theta, method = "ode45"
+  ))
 
-	# compute incidence of each time interval
+  # compute incidence of each time interval
   traj$Inc <- c(0, diff(traj$Inc))
 
-	return(traj)
-
+  return(traj)
 }
 
 
-# Generate an observed incidence under a Poisson observation process.  
-SEITL_genObsPoint <- function(model.point, theta){
+# Generate an observed incidence under a Poisson observation process.
+SEITL_genObsPoint <- function(modelPoint, theta) { # nolint
+  obsPoint <- rpois(n = 1, lambda = theta[["rho"]] * modelPoint[["Inc"]])
 
-	obs.point <- rpois(n=1, lambda=theta[["rho"]]*model.point[["Inc"]])
-
-	return(c(obs=obs.point))
+  return(c(obs = obsPoint))
 }
 
 # Evaluate the (log of the) prior density distribution of the parameter values.
-SEITL_prior <- function(theta, log = FALSE) {
+SEITL_prior <- function(theta, log = FALSE) { # nolint
+  logPrior_R0 <- dunif( # nolint
+    theta[["R0"]], min = 1, max = 50, log = TRUE
+  )
+  logPrior_latentPeriod <- dunif( # nolint
+    theta[["D_lat"]], min = 0, max = 10, log = TRUE
+  )
+  logPrior_infectiousPeriod <- dunif( # nolint
+    theta[["D_inf"]], min = 0, max = 15, log = TRUE
+  )
+  logPrior_temporaryImmunePeriod <- dunif( # nolint
+    theta[["D_imm"]], min = 0, max = 50, log = TRUE
+  )
+  logPrior_probabilityLongTermImmunity <- dunif( # nolint
+    theta[["alpha"]], min = 0, max = 1, log = TRUE
+  )
+  logPrior_reportingRate <- dunif( # nolint
+    theta[["rho"]], min = 0, max = 1, log = TRUE
+  )
 
-	log.prior.R0 <- dunif(theta[["R0"]], min = 1, max = 50, log = TRUE)
-	log.prior.latent.period <- dunif(theta[["D_lat"]], min = 0, max = 10, log = TRUE)
-	log.prior.infectious.period <- dunif(theta[["D_inf"]], min = 0, max = 15, log = TRUE)
-	log.prior.temporary.immune.period <- dunif(theta[["D_imm"]], min = 0, max = 50, log = TRUE)
-	log.prior.probability.long.term.immunity <- dunif(theta[["alpha"]], min = 0, max = 1, log = TRUE)
-        log.prior.reporting.rate <- dunif(theta[["rho"]], min = 0, max = 1, log = TRUE)
+  logSum <-
+    logPrior_R0 + logPrior_latentPeriod + logPrior_infectiousPeriod +
+    logPrior_temporaryImmunePeriod + logPrior_probabilityLongTermImmunity +
+    logPrior_reportingRate
 
-        log.sum = log.prior.R0 + log.prior.latent.period + log.prior.infectious.period + log.prior.temporary.immune.period + log.prior.probability.long.term.immunity + log.prior.reporting.rate
-	
-        return(ifelse(log, log.sum, exp(log.sum)))
-
+  return(ifelse(log, logSum, exp(logSum)))
 }
 
 
-# Computes the (log)-likelihood of a data point given the state of the model and under a poisson observation process.
-SEITL_pointLike <- function(data.point, model.point, theta, log = FALSE){
-
-	return(dpois(x=data.point[["obs"]],lambda=theta[["rho"]]*model.point[["Inc"]],log=log))
-
+# Computes the (log)-likelihood of a data point given the state of the model and
+# under a poisson observation process.
+SEITL_pointLike <- function(dataPoint, modelPoint, theta, log = FALSE) { # nolint
+  return(dpois(
+    x = dataPoint[["obs"]], lambda = theta[["rho"]] * modelPoint[["Inc"]],
+    log = log
+  ))
 }
 
 
 # create fitmodel
-SEITL_deter <- fitmodel(
-	name=SEITL_deter_name,
-	state.names=SEITL_state.names,
-	theta.names=SEITL_theta.names,
-	simulate=SEITL_simulateDeterministic,
-	dprior=SEITL_prior,
-	rPointObs=SEITL_genObsPoint,
-	dPointObs=SEITL_pointLike)
-
-## test it
-
-# theta <- c("R0"=10, "D_lat"=2 , "D_inf"=3, "alpha"=0.5, "D_imm"=15, "rho"=0.7)
-# init.state <- c("S"=280,"E"=0,"I"=2,"T"=0,"L"=4,"Inc"=0)
-# data(FluTdC1971)
-# testFitmodel(fitmodel=SEITL, theta=theta, init.state=init.state, data= FluTdC1971, verbose=TRUE)
-
-
+SEITL_deter <- fitmodel( # nolint
+  name = SEITL_deter_name,
+  stateNames = SEITL_stateNames,
+  thetaNames = SEITL_thetaNames,
+  simulate = SEITL_simulateDeterministic,
+  dprior = SEITL_prior,
+  rPointObs = SEITL_genObsPoint,
+  dPointObs = SEITL_pointLike
+)
