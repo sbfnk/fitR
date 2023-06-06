@@ -1,13 +1,16 @@
+---
+output: github_document
+---
 
-# fitR
+fitR
+====
 
 Functions for model fitting and inference
 
 ## Installation
-
 The easiest way to install `fitR` is to use the `devtools` package:
 
-``` r
+```{r eval = FALSE}
 # install.packages("remotes")
 library(remotes)
 install_github("sbfnk/fitR")

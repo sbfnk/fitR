@@ -24,6 +24,8 @@ Imports:
     dplyr,
     truncnorm,
     emdbook
+Suggests:
+    covr
 License: GPL-2
 LazyData: true
 Roxygen: list(wrap = FALSE)
