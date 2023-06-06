@@ -6,6 +6,7 @@ exampleDir <- here::here("inst", "examples")
 dataFiles <- list.files(exampleDir, pattern = "^example-")
 
 safeSource <- purrr::safely(source)
+## run twice to ensure dependencies are fulfilled
 purrr::walk(dataFiles, \(x) safeSource(file.path(exampleDir, x)))
 purrr::walk(dataFiles, \(x) safeSource(file.path(exampleDir, x)))
 
