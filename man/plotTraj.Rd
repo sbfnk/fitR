@@ -60,8 +60,8 @@ are shown. Default to \code{NULL}.}
 \item{plot}{if \code{TRUE} the plot is displayed, and returned otherwise.}
 
 \item{colour}{character vector. If a character, will use that colour to plot
-trajectories. If "all", use all available colous. If \code{NULL}, don't set
-the colour.}
+trajectories. If "all", use all available colours. If \code{NULL}, don't
+set the colour.}
 
 \item{initDate}{character. Date of the first point of the time series
 (default to \code{NULL}). If provided, the x-axis will be in calendar

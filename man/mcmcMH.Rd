@@ -56,14 +56,14 @@ estimated theta. If \code{proposalSD} is given, this is ignored.}
 }}
 
 \item{adaptSizeStart}{number of iterations to run before adapting the size
-of the proposal covariance matrix (see note below). Set to NULL (default) if
-size is not to be adapted.}
+of the proposal covariance matrix (see note below). Set to NULL (default)
+if size is not to be adapted.}
 
 \item{adaptSizeCooling}{cooling factor for the scaling factor of the
 covariance matrix during size adaptation (see note below).}
 
-\item{adaptShapeStart}{number of accepted jumps before adapting the shape
-of the proposal covariance matrix (see note below). Set to NULL (default) if
+\item{adaptShapeStart}{number of accepted jumps before adapting the shape of
+the proposal covariance matrix (see note below). Set to NULL (default) if
 shape is not to be adapted}
 
 \item{adaptShapeStop}{number of iterations to run with adaptations

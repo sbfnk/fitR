@@ -74,7 +74,6 @@
 #'   data point; usage: \code{dPointObs(dataPoint, modelPoint, theta, log)}.
 #' }
 #' @seealso \code{\link{testFitmodel}}
-#' @example inst/examples/example-SIR-deter.r
 fitmodel <- function(name = NULL, stateNames = NULL, thetaNames = NULL,
                      simulate = NULL, rPointObs = NULL, dprior = NULL,
                      dPointObs = NULL) {
@@ -133,7 +132,6 @@ fitmodel <- function(name = NULL, stateNames = NULL, thetaNames = NULL,
 #'   validity of the arguments
 #' @export
 #' @seealso \code{\link{fitmodel}}
-#' @example inst/examples/example-SIR-deter.r
 # nolint start: cyclocomp_linter
 testFitmodel <- function(fitmodel, theta, initState, data = NULL,
                          verbose = TRUE) {
