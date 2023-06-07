@@ -1,0 +1,5 @@
+^.github$
+^.lintr$
+^README.Rmd$
+^_pkgdown.yml$
+^docs$
