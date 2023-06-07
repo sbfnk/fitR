@@ -89,6 +89,7 @@ simulateModelReplicates <- function(fitmodel, theta, initState, times, n,
 #' @inheritParams simulateModelReplicates
 #' @inheritParams particleFilter
 #' @export
+#' @importFrom future plan
 #' @importFrom furrr future_map
 #' @importFrom dplyr last bind_rows
 #' @keywords internal
@@ -108,11 +109,17 @@ simulateFinalStateAtExtinction <- function(fitmodel, theta, initState,
   rep <- as.list(1:n)
   names(rep) <- rep
 
-  if (n > 1 && nCores == 1) {
-    progress <- "text"
-  } else {
-    progress <- "none"
+  if ((is.null(nCores) > 1 || is.null(nCores)) &&
+      inherits(plan(), "sequential")) {
+    warning(
+      "Parallel processing is disabled. To enable, call `future::plan` ",
+      "with a parallel strategy, e.g. `future::plan(\"multisession\")`. ",
+      "For more details, read the corresponding manual page using ",
+      "`?future::plan`."
+    )
   }
+
+  progress <- (n > 1 && nCores == 1)
 
   times <- c(timeInit, timeStep) # nolint: object_usage_linter
 

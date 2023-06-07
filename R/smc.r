@@ -19,6 +19,7 @@
 #' @seealso plotSMC
 #' @importFrom utils txtProgressBar setTxtProgressBar
 #' @importFrom furrr future_map furrr_options
+#' @importFrom future plan
 #' @return A list of 3 elements:
 #' \itemize{
 #' \item \code{dPointObs} the marginal log-likelihood of the theta.
@@ -29,9 +30,15 @@
 #' }
 particleFilter <- function(fitmodel, theta, initState, data, nParticles,
                            progress = FALSE, nCores = 1) {
-  ## compute the margLogLike using a particle filter
-
-  # initialisation
+  if ((is.null(nCores) > 1 || is.null(nCores)) &&
+      inherits(future::plan(), "sequential")) {
+    warning(
+      "Parallel processing is disabled. To enable, call `future::plan` ",
+      "with a parallel strategy, e.g. `future::plan(\"multisession\")`. ",
+      "For more details, read the corresponding manual page using ",
+      "`?future::plan`."
+    )
+  }
 
   # marginal log-likelihood of theta
   margLogLike <- 0
