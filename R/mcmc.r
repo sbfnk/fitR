@@ -35,12 +35,12 @@
 #'   \code{Inf}.
 #' }
 #' @param adaptSizeStart number of iterations to run before adapting the size
-#'   of the proposal covariance matrix (see note below). Set to NULL (default) if
-#'   size is not to be adapted.
+#'   of the proposal covariance matrix (see note below). Set to NULL (default)
+#'   if size is not to be adapted.
 #' @param adaptSizeCooling cooling factor for the scaling factor of the
 #'   covariance matrix during size adaptation (see note below).
-#' @param adaptShapeStart number of accepted jumps before adapting the shape
-#'   of the proposal covariance matrix (see note below). Set to NULL (default) if
+#' @param adaptShapeStart number of accepted jumps before adapting the shape of
+#'   the proposal covariance matrix (see note below). Set to NULL (default) if
 #'   shape is not to be adapted
 #' @param adaptShapeStop number of iterations to run with adaptations
 #'   of the shape of the proposal covariance matrix  before stopping. Se
@@ -79,6 +79,7 @@
 #'      \item \code{acceptanceRate} acceptance rate of the MCMC chain.
 #'      \item \code{covmatProposal} last covariance matrix used for proposals.
 #' }
+# nolint start: cyclocomp_linter
 mcmcMH <- function(
     target, initTheta, proposalSD = NULL,
     nIterations, covmat = NULL,
@@ -341,3 +342,4 @@ mcmcMH <- function(
     covmatEmpirical = covmatEmpirical
   ))
 }
+# nolint end: cyclocomp_linter

@@ -134,6 +134,7 @@ fitmodel <- function(name = NULL, stateNames = NULL, thetaNames = NULL,
 #' @export
 #' @seealso \code{\link{fitmodel}}
 #' @example inst/examples/example-SIR-deter.r
+# nolint start: cyclocomp_linter
 testFitmodel <- function(fitmodel, theta, initState, data = NULL,
                          verbose = TRUE) {
   if (missing(fitmodel)) {
@@ -395,3 +396,4 @@ testFitmodel <- function(fitmodel, theta, initState, data = NULL,
     warning("fitmodel does not contain a dPointObs method -- not tested\n")
   }
 }
+# nolint end: cyclocomp_linter

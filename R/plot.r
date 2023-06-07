@@ -51,6 +51,7 @@
 #' @importFrom rlang .data inherits_any
 #' @importFrom stats quantile
 #' @seealso \code{\link{simulateModelReplicates}}
+# nolint start: cyclocomp_linter
 plotTraj <- function(traj = NULL, stateNames = NULL, data = NULL,
                      timeColumn = "time", linesData = FALSE, summary = TRUE,
                      replicateColumn = "replicate", nonExtinct = NULL,
@@ -749,3 +750,4 @@ plotESSBurn <- function(trace, longestBurnIn = ifelse(
 
   print(p)
 }
+# nolint end: cyclocomp_linter

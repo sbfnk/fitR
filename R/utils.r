@@ -114,7 +114,7 @@ simulateFinalStateAtExtinction <- function(fitmodel, theta, initState,
     progress <- "none"
   }
 
-  times <- c(timeInit, timeStep)
+  times <- c(timeInit, timeStep) # nolint: object_usage_linter
 
   finalStateRep <- future_map(
     rep, function(x) {
