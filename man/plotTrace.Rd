@@ -16,6 +16,10 @@ displayed.}
 \description{
 Plot the traces of all estimated variables.
 }
+\examples{
+data(mcmc.epi)
+plotTrace(mcmc.epi1$trace)
+}
 \seealso{
 burnAndThin
 }

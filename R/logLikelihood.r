@@ -5,7 +5,6 @@
 #' summing the point log-likelihoods.
 #' @inheritParams testFitmodel
 #' @export
-#' @import deSolve
 #' @seealso \code{\link{rTrajObs}}
 #' @return numeric value of the log-likelihood
 #' @param log logical (default: FALSE); whether the logarithm of the likelihood
@@ -120,8 +119,9 @@ dLogPosteriorWrapper <- function(fitmodel, initState, data, margLogLike, ...) {
 #' @inheritParams testFitmodel
 #' @param times the times at which to generate observations
 #' @export
-#' @importFrom plyr ddply join
 #' @seealso \code{\link{dTrajObs}}
+#' @importFrom furrr future_map furrr_options
+#' @importFrom dplyr bind_rows left_join
 #' @return data.frame
 rTrajObs <- function(fitmodel, theta, initState, times) {
   ## simulate model at successive observation times of data
@@ -130,11 +130,17 @@ rTrajObs <- function(fitmodel, theta, initState, times) {
   ## generate observations by applying fitmodel$rPointObs to
   ## each row of traj. The parameter value theta as passed as
   ## extra argument to fitmodel$rPointObs
+  obs <- split(traj, f = traj$time)
+  obs <- future_map(obs, \(x) {
+    data.frame(
+      time = unique(x$time),
+      obs = fitmodel$rPointObs(x, theta = theta)
+    )
+  }, .options = furrr_options(seed = TRUE))
+  obs <- bind_rows(obs)
+  traj <- left_join(traj, obs, by = "time")
 
-  obs <- ddply(traj, "time", fitmodel$rPointObs, theta = theta)
-  trajObs <- join(traj, obs, by = "time")
-
-  return(trajObs)
+  return(traj)
 }
 
 
@@ -148,6 +154,7 @@ rTrajObs <- function(fitmodel, theta, initState, times) {
 #' @inheritParams testFitmodel
 #' @inheritParams dLogPosterior
 #' @export
+#' @importFrom stats var
 #' @return a list of 5 elements:
 #' \itemize{
 #'     \item \code{DIC} value of the DIC

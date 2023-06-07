@@ -2,7 +2,7 @@
 % Please edit documentation in R/mcmc.r
 \name{mcmcMH}
 \alias{mcmcMH}
-\title{Metropolis-Hasting MCMC}
+\title{Metropolis-Hasting MCMCda}
 \usage{
 mcmcMH(
   target,
@@ -56,15 +56,19 @@ estimated theta. If \code{proposalSD} is given, this is ignored.}
 }}
 
 \item{adaptSizeStart}{number of iterations to run before adapting the size
-of the proposal covariance matrix (see note below). Set to 0 (default) if
+of the proposal covariance matrix (see note below). Set to NULL (default) if
 size is not to be adapted.}
 
 \item{adaptSizeCooling}{cooling factor for the scaling factor of the
 covariance matrix during size adaptation (see note below).}
 
 \item{adaptShapeStart}{number of accepted jumps before adapting the shape
-of the proposal covariance matrix (see note below). Set to 0 (default) if
+of the proposal covariance matrix (see note below). Set to NULL (default) if
 shape is not to be adapted}
+
+\item{adaptShapeStop}{number of iterations to run with adaptations
+of the shape of the proposal covariance matrix  before stopping. Se
+to NULL (default) if never to stop.}
 
 \item{printInfoEvery}{frequency of information on the chain: acceptance
 rate and state of the chain. Default value to \code{nIterations/100}. Set

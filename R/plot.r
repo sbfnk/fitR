@@ -33,8 +33,8 @@
 #' @param alpha transparency of the trajectories (between 0 and 1).
 #' @param plot if \code{TRUE} the plot is displayed, and returned otherwise.
 #' @param colour character vector. If a character, will use that colour to plot
-#'   trajectories. If "all", use all available colous. If \code{NULL}, don't set
-#'   the colour.
+#'   trajectories. If "all", use all available colours. If \code{NULL}, don't
+#'   set the colour.
 #' @param initDate character. Date of the first point of the time series
 #'   (default to \code{NULL}). If provided, the x-axis will be in calendar
 #'   format. NB: currently only works if the unit of time is the day.
@@ -43,10 +43,13 @@
 #' @export
 #' @importFrom stringr str_split
 #' @importFrom ggplot2 ggplot facet_wrap geom_ribbon geom_line aes_string
+#'    scale_alpha_manual scale_linetype guide_legend guides theme_bw theme
+#'    geom_point
 #' @importFrom dplyr mutate filter
-#' @importFrom rlang .data
-#' @importFrom plyr ddply
-#' @importFrom reshape2 melt dcast
+#' @importFrom tidyselect all_of
+#' @importFrom tidyr pivot_longer
+#' @importFrom rlang .data inherits_any
+#' @importFrom stats quantile
 #' @seealso \code{\link{simulateModelReplicates}}
 plotTraj <- function(traj = NULL, stateNames = NULL, data = NULL,
                      timeColumn = "time", linesData = FALSE, summary = TRUE,
@@ -71,7 +74,7 @@ plotTraj <- function(traj = NULL, stateNames = NULL, data = NULL,
 
   if (is.null(stateNames)) {
     numericNames <- names(traj)[sapply(names(traj), function(x) {
-      any(class(traj[[x]]) %in% c("numeric", "integer"))
+      inherits_any(traj[[x]], c("numeric", "integer"))
     })]
     stateNames <- setdiff(numericNames, c(timeColumn, replicateColumn))
   } else if (!is.character(stateNames)) {
@@ -99,12 +102,13 @@ plotTraj <- function(traj = NULL, stateNames = NULL, data = NULL,
         traj,
         infected = eval(parse(text = paste(nonExtinct, collapse = "+")), traj)
       )
-      dfInfected <- melt(
-        traj, measure.vars = "infected", variable.name = "state"
-      )
-      dfPExt <- ddply(dfInfected, timeColumn, function(df) {
-        return(data.frame(value = sum(df$value == 0) / nrow(df)))
+      dfPExt <- split(traj, f = traj[[timeColumn]])
+      dfPExt <- future_map(dfPExt, \(df) {
+        tmp <- data.frame(value = sum(df$infected == 0) / nrow(df))
+        tmp[[timeColumn]] <- unique(df[[timeColumn]])
+        return(tmp)
       })
+      dfPExt <- bind_rows(dfPExt)
       dfPExt$state <- "pExtinction"
       dfPExt[replicateColumn] <- 0
 
@@ -114,28 +118,36 @@ plotTraj <- function(traj = NULL, stateNames = NULL, data = NULL,
       }
     }
 
-    dfTraj <- melt(traj, measure.vars = stateNames, variable.name = "state")
+    dfTraj <- pivot_longer(
+      traj, all_of(stateNames), names_to = "state"
+    )
     dfTraj <- filter(dfTraj, !is.na(.data$value))
 
     if (summary) {
       message("Compute confidence intervals")
 
-      trajCI <- ddply(dfTraj, c(timeColumn, "state"), function(df) {
+      trajCI <- split(dfTraj, dfTraj[c(timeColumn, "state")])
+      trajCI <- future_map(trajCI, \(df) {
         tmp <- as.data.frame(
           t(quantile(df$value, prob = c(0.025, 0.25, 0.5, 0.75, 0.975)))
         )
         names(tmp) <- c("low_95", "low_50", "median", "up_50", "up_95")
         tmp$mean <- mean(df$value)
+        tmp[[timeColumn]] <- unique(df[[timeColumn]])
+        tmp[["state"]] <- unique(df[["state"]])
         return(tmp)
-      }, .progress = "text")
+      }, .progress = TRUE)
+      trajCI <- bind_rows(trajCI)
 
-      trajCILine <- melt(
+      trajCILine <- pivot_longer(
         trajCI[c(timeColumn, "state", "mean", "median")],
-        idVars = c(timeColumn, "state")
+        c(-timeColumn, -"state"),
+        names_to = "variable"
       )
-      trajCIArea <- melt(
+      trajCIArea <- pivot_longer(
         trajCI[c(timeColumn, "state", "low_95", "low_50", "up_50", "up_95")],
-        idVars = c(timeColumn, "state")
+        c(-timeColumn, -"state"),
+        names_to = "variable"
       )
       trajCIArea$type <- sapply(trajCIArea$variable, function(x) {
         str_split(x, "_")[[1]][1]
@@ -144,7 +156,7 @@ plotTraj <- function(traj = NULL, stateNames = NULL, data = NULL,
         str_split(x, "_")[[1]][2]
       })
       trajCIArea$variable <- NULL
-      trajCIArea <- dcast(trajCIArea, paste0(timeColumn, "+state+CI~type"))
+      trajCIArea <- tidyr::pivot_wider(trajCIArea, names_from = "type")
 
       p <- ggplot(trajCIArea)
       if (!same) {
@@ -248,7 +260,7 @@ plotTraj <- function(traj = NULL, stateNames = NULL, data = NULL,
     if (length(obsNames) == 0) {
       obsNames <- setdiff(names(data), timeColumn)
     }
-    data <- melt(data, measureVars = obsNames, variableName = "state")
+    data <- pivot_longer(data, all_of(obsNames), names_to = "state")
     if (linesData) {
       p <- p + geom_line(
         data = data, aes_string(x = timeColumn, y = "value"), colour = "black"
@@ -282,7 +294,6 @@ plotTraj <- function(traj = NULL, stateNames = NULL, data = NULL,
 #' @inheritParams plotTraj
 #' @inheritParams simulateModelReplicates
 #' @export
-#' @import plyr ggplot2
 #' @return if \code{plot == FALSE}, a list of 2 elements is returned:
 #' \itemize{
 #'     \item \code{simulations} \code{data.frame} of \code{nReplicates}
@@ -329,21 +340,22 @@ plotFit <- function(fitmodel, theta, initState, data, nReplicates = 1,
 #' @param smc output of \code{\link{particleFilter}}
 #' @inheritParams plotTraj
 #' @inheritParams plotFit
+#' @importFrom furrr future_map
+#' @importFrom dplyr bind_rows left_join
 #' @export
-#' @import ggplot2
-#' @importFrom plyr ldply ddply
 #' @seealso particleFilter
 plotSMC <- function(smc, fitmodel, theta, data = NULL, summary = TRUE,
                     alpha = 1, allVars = FALSE, plot = TRUE) {
   traj <- smc$traj
   names(traj) <- seq_along(traj)
 
-  traj <- ldply(traj, function(df) {
-    obs <- ddply(df, "time", fitmodel$rPointObs, theta = theta)
-    trajObs <- join(df, obs, by = "time")
+  traj <- future_map(traj, function(df) {
+    obs <- apply(df, 1, \(x) fitmodel$rPointObs(x, theta = theta))
+    trajObs <- left_join(df, obs, by = "time")
 
     return(trajObs)
-  }, .id = "replicate")
+  })
+  traj <- bind_rows(traj, .id = "replicate")
 
   if (allVars) {
     stateNames <- NULL
@@ -373,9 +385,11 @@ plotSMC <- function(smc, fitmodel, theta, data = NULL, summary = TRUE,
 #' @param estimatedOnly logical, if \code{TRUE} only estimated parameters are
 #'   displayed.
 #' @export
-#' @import ggplot2
 #' @importFrom ggplot2 ggplot aes facet_wrap geom_line
 #' @seealso burnAndThin
+#' @examples
+#' data(mcmc.epi)
+#' plotTrace(mcmc.epi1$trace)
 plotTrace <- function(trace, estimatedOnly = FALSE) {
   if (estimatedOnly) {
     isFixed <- apply(trace, 2, function(x) {
@@ -384,11 +398,12 @@ plotTrace <- function(trace, estimatedOnly = FALSE) {
     trace <- trace[, -which(isFixed)]
   }
 
-  df <- melt(trace, id.vars = "iteration")
+  trace$iteration <- seq_len(nrow(trace))
+  df <- pivot_longer(trace, -"iteration")
 
   # density
   p <- ggplot(df, aes(x = .data$iteration, y = .data$value)) +
-    facet_wrap(~variable, scales = "free")
+    facet_wrap(~name, scales = "free")
   p <- p + geom_line(alpha = 0.75)
   print(p)
 }
@@ -412,37 +427,41 @@ plotTrace <- function(trace, estimatedOnly = FALSE) {
 #'   and \code{prior}.
 #' @inheritParams plotTraj
 #' @export
-#' @import reshape2
-#' @importFrom dplyr n_distinct
-#' @importFrom plyr ldply
-#' @importFrom ggplot2 ggplot aes
+#' @importFrom rlang inherits_any
+#' @importFrom furrr future_map
+#' @importFrom dplyr n_distinct bind_rows
+#' @importFrom ggplot2 ggplot aes facet_wrap geom_density geom_histogram
+#'   geom_area theme_bw xlab after_stat
 #' @seealso burnAndThin
+#' @examples
+#' data(mcmc.epi)
+#' plotPosteriorDensity(mcmc.epi1$trace)
 plotPosteriorDensity <- function(trace, prior = NULL, colour = NULL,
                                  plot = TRUE) {
   if (is.null(colour)) {
     colour <- c(posterior = "#7570b3", prior = "#d95f02")
   }
 
-  if (class(trace) %in% c("mcmc.list", "list")) {
+  if (inherits_any(trace, c("mcmc.list", "list"))) {
     if (all(sapply(trace, function(x) {
-      class(x) == "mcmc.list"
+      inherits(x, "mcmc.list")
     }))) {
-      trace <- llply(trace, function(x) {
+      trace <- future_map(trace, \(x) {
         names(x) <- NULL
-        ldply(x)
+        bind_rows(x)
       })
     }
 
     if (is.null(names(trace))) {
       names(trace) <- seq_along(trace)
     }
-    trace <- ldply(trace, .id = "chain")
+    trace <- bind_rows(trace, .id = "chain")
   } else {
     trace$chain <- 1
   }
 
-  dfPosterior <- melt(
-    trace, id.vars = "chain", value.name = "x", variable.name = "theta"
+  dfPosterior <- pivot_longer(
+    trace, -.data$chain, values_to = "x", names_to = "theta"
   )
 
   p <- ggplot(dfPosterior, aes(x = .data$x)) +
@@ -450,11 +469,12 @@ plotPosteriorDensity <- function(trace, prior = NULL, colour = NULL,
 
   if (n_distinct(dfPosterior$chain) > 1) {
     p <- p + geom_density(
-      data = dfPosterior, aes(y = .data$..density.., colour = .data$chain)
+      data = dfPosterior,
+      aes(y = after_stat(.data$density), colour = .data$chain)
     )
   } else {
     p <- p + geom_histogram(
-      data = dfPosterior, mapping = aes(y = .data$..density..),
+      data = dfPosterior, mapping = aes(y = after_stat(.data$density)),
       fill = colour[["posterior"]], colour = colour[["posterior"]], alpha = 0.5
     )
   }
@@ -538,22 +558,25 @@ plotHPDregion2D <- function(trace, vars, prob = c(0.95, 0.75, 0.5, 0.25, 0.1),
 #'
 #' Plot posterior distribution of observation generated under model's posterior
 #' parameter distribution.
-#' @param posterior.summary character. Set to \code{"sample"} to plot
+#' @param posteriorSummary character. Set to \code{"sample"} to plot
 #'   trajectories from a sample of the posterior (default). Set to
 #'   \code{"median"}, \code{"mean"} or \code{"max"} to plot trajectories
 #'   corresponding to the median, mean and maximum of the posterior density.
 #' @param summary logical, if \code{TRUE} trajectories are summarised by their
 #'   mean, median, 50\% and 95\% quantile distributions. Otheriwse, the
 #'   trajectories are ploted.
-#' @param sample.size number of theta sampled from posterior distribution (if
+#' @param sampleSize number of theta sampled from posterior distribution (if
 #'   \code{posterior.summary == "sample"}). Otherwise, number of replicated
 #'   simulations.
 #' @inheritParams testFitmodel
 #' @inheritParams plotTrace
 #' @inheritParams plotTraj
 #' @inheritParams plotFit
+#' @importFrom dplyr bind_rows
+#' @importFrom furrr future_map furrr_options
+#' @importFrom stats median
+#' @importFrom rlang .data
 #' @export
-#' @import ggplot2 plyr
 #' @return If \code{plot == FALSE}, a list of 2 elements is returned:
 #' \itemize{
 #'    \item \code{theta} the \code{theta}(s) used for plotting (either a
@@ -562,6 +585,16 @@ plotHPDregion2D <- function(trace, vars, prob = c(0.95, 0.75, 0.5, 0.25, 0.1),
 #'   observations) sampled from the posterior distribution.
 #'    \item \code{plot} the plot of the fit displayed.
 #' }
+#' @examples
+#' data(FluTdC1971)
+#' data(epi)
+#' data(mcmc.epi)
+#' data(models)
+#' initState <- c(S = 999, I = 1, R = 0)
+#' plotPosteriorFit(
+#'   trace = mcmc.epi1$trace, fitmodel = SIR_deter, initState = initState,
+#'   data = epi1
+#'  )
 plotPosteriorFit <- function(trace, fitmodel, initState, data,
                              posteriorSummary =
                                c("sample", "median", "mean", "max"),
@@ -571,10 +604,10 @@ plotPosteriorFit <- function(trace, fitmodel, initState, data,
                              allVars = FALSE, initDate = NULL) {
   posteriorSummary <- match.arg(posteriorSummary)
 
-  if (class(trace) == "mcmc") {
+  if (inherits(trace, "mcmc")) {
     trace <- as.data.frame(trace)
-  } else if (class(trace) == "mcmc.list") {
-    trace <- ldply(trace)
+  } else if (inherits(trace, "mcmc.list")) {
+    trace <- bind_rows(trace)
   }
 
   # names of estimated theta
@@ -608,17 +641,19 @@ plotPosteriorFit <- function(trace, fitmodel, initState, data,
     sampleSize <- min(c(sampleSize, nrow(trace)))
 
     index <- sample(seq_len(nrow(trace)), sampleSize, replace = TRUE)
-    names(index) <- index
 
-    traj <- ldply(index, function(ind) {
+    traj <- future_map(index, function(ind) {
       # extract posterior parameter set
       theta <- trace[ind, thetaNames]
 
       # simulate model at successive observation times of data
       traj <- rTrajObs(fitmodel, theta, initState, times)
+      traj$replicate <- ind
 
       return(traj)
-    }, .progress = "text", .id = "replicate")
+    }, .progress = TRUE, .options = furrr_options(seed = TRUE))
+    names(traj) <- index
+    traj <- bind_rows(traj)
 
     theta <- trace[index, thetaNames]
   }
@@ -630,7 +665,7 @@ plotPosteriorFit <- function(trace, fitmodel, initState, data,
     stateNames <- grep("obs", names(traj), value = TRUE)
   }
 
-  traj <- subset(traj, time > 0)
+  traj <- subset(traj, traj$time > 0)
 
   p <- plotTraj(
     traj = traj, stateNames = stateNames, data = data, summary = summary,
@@ -651,21 +686,27 @@ plotPosteriorFit <- function(trace, fitmodel, initState, data,
 ##' @param trace either a \code{data.frame} or a \code{list} of
 ##'   \code{data.frame} with all variables in column, as outputed by
 ##'   \code{\link{mcmcMH}}. Accept also \code{mcmc} or \code{mcmc.list} objects.
-##' @param longest.burn.in The longest burn-in to test. Defaults to half the
+##' @param longestBurnIn The longest burn-in to test. Defaults to half the
 ##'   length of the trace
-##' @param step.size The size of the steps of burn-in to test. Defaults to
+##' @param stepSize The size of the steps of burn-in to test. Defaults to
 ##'   1/50th of \code{longest.burn.in}
 ##' @return a plot of the ESS against burn.in
 ##' @export
-##' @importFrom reshape2 melt
+##' @importFrom coda is.mcmc
+##' @importFrom dplyr bind_rows
+##' @importFrom furrr future_map
+##' @importFrom tidyr pivot_longer
+##' @importFrom coda effectiveSize as.mcmc
 ##' @importFrom ggplot2 ggplot facet_wrap geom_line aes theme_bw
-##' @import coda ggplot2 plyr
+##' @examples
+##' data(mcmc.epi)
+##' plotESSBurn(mcmc.epi1$trace)
 plotESSBurn <- function(trace, longestBurnIn = ifelse(
   is.data.frame(trace) | is.mcmc(trace), nrow(trace), nrow(trace[[1]])
 ) / 2, stepSize = round(longestBurnIn / 50)) {
   testBurnIn <- seq(0, longestBurnIn, stepSize) # test values
 
-  if (!class(trace) %in% c("mcmc.list", "list")) {
+  if (!inherits_any(trace, c("mcmc.list", "list"))) {
     trace <- list("chain1" = trace)
     noColour <- TRUE
   } else {
@@ -676,7 +717,7 @@ plotESSBurn <- function(trace, longestBurnIn = ifelse(
     names(trace) <- seq_along(trace)
   }
 
-  dfESSBurnIn <- ldply(trace, function(oneTrace) {
+  dfESSBurnIn <- future_map(trace, function(oneTrace) {
     # initialise data.frame of ess estimates
     essBurnIn <- data.frame(t(effectiveSize(oneTrace)))
     for (burnIn in testBurnIn[-1]) {
@@ -689,11 +730,12 @@ plotESSBurn <- function(trace, longestBurnIn = ifelse(
     essBurnIn$burnIn <- testBurnIn
 
     return(essBurnIn)
-  }, .id = "chain")
+  })
+  dfESSBurnIn <- bind_rows(dfESSBurnIn, .id = "chain")
 
-  essLong <- melt(
-    dfESSBurnIn, id.vars = c("chain", "burnIn"), value.name = "ESS",
-    variable.name = "parameter"
+  essLong <- pivot_longer(
+    dfESSBurnIn, c(-.data$chain, -.data$burnIn), values_to = "ESS",
+    names_to = "parameter"
   )
 
   p <- ggplot(essLong, aes(x = .data$burnIn, y = .data$ESS))

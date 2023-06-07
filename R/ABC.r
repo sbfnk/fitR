@@ -9,6 +9,7 @@
 #'   columns: \code{time} and \code{Inc}.
 #' @export
 #' @seealso distanceOscillation
+#' @importFrom rlang .data
 #' @keywords internal
 #' @examples \dontrun{
 #' # Suppose we observed a time series:
@@ -30,8 +31,8 @@
 SEITL_distanceOscillation <- function(simuTrajObs, data) { # nolint
   # match model and data on time
   keepTime <- intersect(simuTrajObs$time, data$time)
-  simuTrajObs <- subset(simuTrajObs, time %in% keepTime)
-  data <- subset(data, time %in% keepTime)
+  simuTrajObs <- subset(simuTrajObs, .data$time %in% keepTime)
+  data <- subset(data, .data$time %in% keepTime)
 
   x <- simuTrajObs$observation
   y <- data$Inc

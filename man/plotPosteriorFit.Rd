@@ -32,9 +32,18 @@ variables. Names should match \code{fitmodel$stateNames}.}
 must be named \code{"time"} and the observation column must be named
 \code{"obs"}.}
 
+\item{posteriorSummary}{character. Set to \code{"sample"} to plot
+trajectories from a sample of the posterior (default). Set to
+\code{"median"}, \code{"mean"} or \code{"max"} to plot trajectories
+corresponding to the median, mean and maximum of the posterior density.}
+
 \item{summary}{logical, if \code{TRUE} trajectories are summarised by their
 mean, median, 50\% and 95\% quantile distributions. Otheriwse, the
 trajectories are ploted.}
+
+\item{sampleSize}{number of theta sampled from posterior distribution (if
+\code{posterior.summary == "sample"}). Otherwise, number of replicated
+simulations.}
 
 \item{nonExtinct}{character vector. Names of the infected states which must
 be non-zero so the epidemic is still ongoing.  When the names of these
@@ -55,15 +64,6 @@ Otherwise, all state variables are plotted.}
 \item{initDate}{character. Date of the first point of the time series
 (default to \code{NULL}). If provided, the x-axis will be in calendar
 format. NB: currently only works if the unit of time is the day.}
-
-\item{posterior.summary}{character. Set to \code{"sample"} to plot
-trajectories from a sample of the posterior (default). Set to
-\code{"median"}, \code{"mean"} or \code{"max"} to plot trajectories
-corresponding to the median, mean and maximum of the posterior density.}
-
-\item{sample.size}{number of theta sampled from posterior distribution (if
-\code{posterior.summary == "sample"}). Otherwise, number of replicated
-simulations.}
 }
 \value{
 If \code{plot == FALSE}, a list of 2 elements is returned:
@@ -78,4 +78,15 @@ If \code{plot == FALSE}, a list of 2 elements is returned:
 \description{
 Plot posterior distribution of observation generated under model's posterior
 parameter distribution.
+}
+\examples{
+data(FluTdC1971)
+data(epi)
+data(mcmc.epi)
+data(models)
+initState <- c(S = 999, I = 1, R = 0)
+plotPosteriorFit(
+  trace = mcmc.epi1$trace, fitmodel = SIR_deter, initState = initState,
+  data = epi1
+ )
 }

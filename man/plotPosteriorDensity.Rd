@@ -29,6 +29,10 @@ and \code{prior}.}
 \description{
 Plot the posterior density.
 }
+\examples{
+data(mcmc.epi)
+plotPosteriorDensity(mcmc.epi1$trace)
+}
 \seealso{
 burnAndThin
 }

@@ -1,4 +1,4 @@
-#' Metropolis-Hasting MCMC
+#' Metropolis-Hasting MCMCda
 #'
 #' Run \code{nIterations} of a Metropolis-Hasting MCMC to sample from the
 #' target distribution using a gaussian proposal kernel.
@@ -35,13 +35,16 @@
 #'   \code{Inf}.
 #' }
 #' @param adaptSizeStart number of iterations to run before adapting the size
-#'   of the proposal covariance matrix (see note below). Set to 0 (default) if
+#'   of the proposal covariance matrix (see note below). Set to NULL (default) if
 #'   size is not to be adapted.
 #' @param adaptSizeCooling cooling factor for the scaling factor of the
 #'   covariance matrix during size adaptation (see note below).
 #' @param adaptShapeStart number of accepted jumps before adapting the shape
-#'   of the proposal covariance matrix (see note below). Set to 0 (default) if
+#'   of the proposal covariance matrix (see note below). Set to NULL (default) if
 #'   shape is not to be adapted
+#' @param adaptShapeStop number of iterations to run with adaptations
+#'   of the shape of the proposal covariance matrix  before stopping. Se
+#'   to NULL (default) if never to stop.
 #' @param printInfoEvery frequency of information on the chain: acceptance
 #'   rate and state of the chain. Default value to \code{nIterations/100}. Set
 #'   to \code{NULL} to avoid any info.
@@ -67,6 +70,7 @@
 #' @export
 #' @importFrom lubridate as.period
 #' @importFrom tmvtnorm rtmvnorm dtmvnorm
+#' @importFrom stats runif
 #' @return a list with 3 elements:
 #' \itemize{
 #'      \item \code{trace} a \code{data.frame}. Each row contains a state of the

@@ -23,3 +23,7 @@ an object with the same format as \code{trace} (\code{data.frame} or
 \description{
 Return a burned and thined trace of the chain.
 }
+\examples{
+data(mcmc.epi)
+burnAndThin(mcmc.epi1$trace, burn = 100, thin = 4)
+}

@@ -16,10 +16,10 @@ plotESSBurn(
 \code{data.frame} with all variables in column, as outputed by
 \code{\link{mcmcMH}}. Accept also \code{mcmc} or \code{mcmc.list} objects.}
 
-\item{longest.burn.in}{The longest burn-in to test. Defaults to half the
+\item{longestBurnIn}{The longest burn-in to test. Defaults to half the
 length of the trace}
 
-\item{step.size}{The size of the steps of burn-in to test. Defaults to
+\item{stepSize}{The size of the steps of burn-in to test. Defaults to
 1/50th of \code{longest.burn.in}}
 }
 \value{
@@ -27,4 +27,8 @@ a plot of the ESS against burn.in
 }
 \description{
 Takes an mcmc trace and tests the ESS at different values of burn-in
+}
+\examples{
+data(mcmc.epi)
+plotESSBurn(mcmc.epi1$trace)
 }

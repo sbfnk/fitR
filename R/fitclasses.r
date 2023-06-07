@@ -7,7 +7,7 @@
 #' @param stateNames character vector. Names of the state variables i.e.
 #'   \code{c("S","I","R")} (required).
 #' @param thetaNames character vector. Names of the parameters i.e.
-#'   \code{c("R0","infectiousPeriod")} (required).
+#'   \code{c("R_0","infectiousPeriod")} (required).
 #' @param simulate \R-function to simulate forward the model (required). This
 #'   function takes 3 arguments:
 #' \itemize{

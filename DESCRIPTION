@@ -1,34 +1,34 @@
 Package: fitR
-Title: Tool box for fitting dynamic infectious disease models to time series.
+Title: Tool box for fitting dynamic infectious disease models to time series
 Version: 0.1
 Authors@R: c(person(given="Anton", family="Camacho", email="ntncmch@gmail.com",
     role=c("aut")),person(given="Sebastian", family="Funk",
     email="sebastian.funk@lshtm.ac.uk", role=c("aut", "cre")))
 Description: This package contains helper functions for model fitting and
-    inference
+    inference for infectious disease dynamics. It has been designed mainly as
+    a teaching tool for a one-week course on the topic.
 Depends:
     R (>= 3.5.0),
-    deSolve,
     adaptivetau
 Imports:
     ggplot2,
-    reshape2,
-    plyr,
     tmvtnorm,
-    parallel,
-    doParallel,
     lubridate,
     coda,
     stringr,
-    lattice,
     dplyr,
-    truncnorm,
-    emdbook
+    emdbook,
+    rlang,
+    furrr,
+    tidyr,
+    tidyselect
 Suggests:
     here,
     purrr,
     testthat (>= 3.0.0),
-    covr
+    covr,
+    deSolve
 License: GPL-2
 RoxygenNote: 7.2.3
 Config/testthat/edition: 3
+Encoding: UTF-8

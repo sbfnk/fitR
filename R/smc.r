@@ -17,8 +17,8 @@
 #'   trajectories \code{traj} with probability \code{trajWeight}.
 #' @export
 #' @seealso plotSMC
-#' @import doParallel plyr
-#' @importFrom parallel detectCores
+#' @importFrom utils txtProgressBar setTxtProgressBar
+#' @importFrom furrr future_map furrr_options
 #' @return A list of 3 elements:
 #' \itemize{
 #' \item \code{dPointObs} the marginal log-likelihood of the theta.
@@ -29,14 +29,6 @@
 #' }
 particleFilter <- function(fitmodel, theta, initState, data, nParticles,
                            progress = FALSE, nCores = 1) {
-  if (is.null(nCores)) {
-    nCores <- detectCores()
-  }
-
-  if (nCores > 1) {
-    registerDoParallel(cores = nCores)
-  }
-
   ## compute the margLogLike using a particle filter
 
   # initialisation
@@ -86,7 +78,7 @@ particleFilter <- function(fitmodel, theta, initState, data, nParticles,
     currentStateParticles <- currentStateParticles[indexResampled]
 
     # propagate particles (this for loop could be parallelized)
-    propagate <- llply(currentStateParticles, function(currentState) {
+    propagate <- future_map(currentStateParticles, \(currentState) {
       # simulate from previous observation to current observation time
       traj <- fitmodel$simulate(
         theta = theta, initState = currentState, times = times
@@ -99,16 +91,16 @@ particleFilter <- function(fitmodel, theta, initState, data, nParticles,
       )
 
       return(list(state = modelPoint, weight = weight))
-    }, .parallel = (nCores > 1))
+    }, .options = furrr_options(seed = TRUE))
 
     # collect parallel jobs
-    currentStateParticles <- llply(propagate, function(x) {
+    currentStateParticles <- future_map(propagate, \(x) {
       x$state
     })
-    weightParticles <- unlist(llply(propagate, function(x) {
+    weightParticles <- unlist(future_map(propagate, \(x) {
       x$weight
     }))
-    trajParticles <- llply(seq_along(propagate), function(j) {
+    trajParticles <- future_map(seq_along(propagate), \(j) {
       rbind(trajParticles[[j]], c(dataPoint["time"], propagate[[j]]$state))
     })
 
