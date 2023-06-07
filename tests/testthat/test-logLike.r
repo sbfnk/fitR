@@ -1,3 +1,5 @@
+data(models)
+
 test_that("log-like deter of SEITL", {
   theta <- c(
     "R_0" = 10, "D_lat" = 2, "D_inf" = 3, "alpha" = 0.5, "D_imm" = 15,

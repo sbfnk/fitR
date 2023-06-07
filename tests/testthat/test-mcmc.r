@@ -1,3 +1,5 @@
+data(models)
+
 test_that("mcmcMH for deterministic SEITL model", {
   theta <- c(
     "R_0" = 10, "D_lat" = 2, "D_inf" = 3, "alpha" = 0.5, "D_imm" = 15,

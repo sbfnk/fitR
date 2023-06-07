@@ -1,7 +1,7 @@
+data(models)
+
 test_that("simulate and generate observation", {
   # SEITL
-  data(SEITL_deter)
-  data(SEITL_stoch)
   listModel <- list(SEITL_deter, SEITL_stoch)
 
   theta <- c(
@@ -20,8 +20,6 @@ test_that("simulate and generate observation", {
   }
 
   # SEITL2
-  data(SEIT2L_deter)
-  data(SEIT2L_stoch)
   listModel <- list(SEIT2L_deter, SEIT2L_stoch)
 
   initState <- c(

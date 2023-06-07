@@ -1,3 +1,5 @@
+data(models)
+
 test_that("SEITL model classes", {
   ## test them
   theta <- c(
