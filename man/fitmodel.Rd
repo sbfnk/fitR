@@ -10,7 +10,7 @@ fitmodel(
   thetaNames = NULL,
   simulate = NULL,
   rPointObs = NULL,
-  dprior = NULL,
+  dPrior = NULL,
   dPointObs = NULL
 )
 }
@@ -50,7 +50,7 @@ and returns a \code{data.fame} containing the simulated trajectories that is
 }
 and returns an observation point}
 
-\item{dprior}{\R-function that evaluates the prior density of the parameters
+\item{dPrior}{\R-function that evaluates the prior density of the parameters
   at a given \code{theta} (optional). The function should take 2 arguments:
 \itemize{
     \item \code{theta} named numeric vector. Values of the parameters. Names
@@ -87,8 +87,8 @@ a \code{fitmodel} object that is a \code{list} of 7 elements:
   \code{simulate(theta,initState,times)}.
 	\item \code{rPointObs} \R-function to generate simulated observations;
   usage: \code{rPointObs(modelPoint, theta)}.
-	\item \code{dprior} \R-function to evaluate the log-prior of the parameter
-  values; usage: \code{dprior(theta)}.
+	\item \code{dPrior} \R-function to evaluate the log-prior of the parameter
+  values; usage: \code{dPrior(theta)}.
 	\item \code{dPointObs} \R-function to evaluate the log-likelihood of one
   data point; usage: \code{dPointObs(dataPoint, modelPoint, theta, log)}.
 }

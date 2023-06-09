@@ -35,7 +35,7 @@ a list of two elements
 }
 \description{
 This function evaluates the posterior distribution at \code{theta} and
-returns the result in a suitable format for \code{\link{mcmcMH}}.
+returns the result in a suitable format for \code{\link{mcmcMh}}.
 }
 \seealso{
 \code{\link{dTrajObs}}, \code{\link{margLogLikeSto}}

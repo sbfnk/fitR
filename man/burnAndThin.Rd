@@ -8,7 +8,7 @@ burnAndThin(trace, burn = 0, thin = 0)
 }
 \arguments{
 \item{trace}{either a \code{data.frame} or a \code{list} of \code{data.frame}
-with all variables in column, as outputed by \code{\link{mcmcMH}}. Accept
+with all variables in column, as outputed by \code{\link{mcmcMh}}. Accept
 also an \code{mcmc} or \code{mcmc.list} object.}
 
 \item{burn}{proportion of the chain to burn.}
@@ -24,6 +24,6 @@ an object with the same format as \code{trace} (\code{data.frame} or
 Return a burned and thined trace of the chain.
 }
 \examples{
-data(mcmc.epi)
-burnAndThin(mcmc.epi1$trace, burn = 100, thin = 4)
+data(mcmcEpi)
+burnAndThin(mcmcEpi1$trace, burn = 100, thin = 4)
 }

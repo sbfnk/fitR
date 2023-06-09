@@ -207,7 +207,7 @@ updateCovmat <- function(covmat, thetaMean, theta, i) {
 #'
 #' Return a burned and thined trace of the chain.
 #' @param trace either a \code{data.frame} or a \code{list} of \code{data.frame}
-#'   with all variables in column, as outputed by \code{\link{mcmcMH}}. Accept
+#'   with all variables in column, as outputed by \code{\link{mcmcMh}}. Accept
 #'   also an \code{mcmc} or \code{mcmc.list} object.
 #' @param burn proportion of the chain to burn.
 #' @param thin number of samples to discard per sample that is being kept
@@ -217,8 +217,8 @@ updateCovmat <- function(covmat, thetaMean, theta, i) {
 #'   \code{list} of \code{data.frame} or \code{mcmc} object or \code{mcmc.list}
 #'   object)
 #' @examples
-#' data(mcmc.epi)
-#' burnAndThin(mcmc.epi1$trace, burn = 100, thin = 4)
+#' data(mcmcEpi)
+#' burnAndThin(mcmcEpi1$trace, burn = 100, thin = 4)
 burnAndThin <- function(trace, burn = 0, thin = 0) {
   convertToMCMC <- FALSE
 

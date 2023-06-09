@@ -62,7 +62,7 @@ margLogLikeSto <- function(fitmodel, theta, initState, data, nParticles,
 #' Posterior distribution for a fitmodel
 #'
 #' This function evaluates the posterior distribution at \code{theta} and
-#' returns the result in a suitable format for \code{\link{mcmcMH}}.
+#' returns the result in a suitable format for \code{\link{mcmcMh}}.
 #' @param margLogLike \R-function to compute the marginal log-likelihood of
 #'   \code{theta}.
 #' @param ... further arguments to be passed to \code{margLogLike}
@@ -78,7 +78,7 @@ margLogLikeSto <- function(fitmodel, theta, initState, data, nParticles,
 #' }
 dLogPosterior <- function(fitmodel, theta, initState, data,
                           margLogLike = dTrajObs, ...) {
-  logPrior <- fitmodel$dprior(theta = theta, log = TRUE)
+  logPrior <- fitmodel$dPrior(theta = theta, log = TRUE)
 
   if (is.finite(logPrior)) {
     logLikelihood <- margLogLike(
@@ -99,7 +99,7 @@ dLogPosterior <- function(fitmodel, theta, initState, data,
 #' A wrapper for \code{dLogPosterior}
 #'
 #' A wrapper for \code{\link{dLogPosterior}} that returns a function that can be
-#' used as a \code{target} for \code{\link{mcmcMH}}
+#' used as a \code{target} for \code{\link{mcmcMh}}
 #' @inheritParams dLogPosterior
 #' @export
 #' @return a \R-function with one argument called \code{theta}.
@@ -163,7 +163,7 @@ rTrajObs <- function(fitmodel, theta, initState, times) {
 #'     \item \code{DThetaBar} deviance of \code{thetaBar}
 #'     \item \code{pD} effective number of parameters
 #' }
-computeDIC <-
+computeDic <-
   function(trace, fitmodel, initState, data, margLogLike = dTrajObs, ...) {
   simulation <- match.arg(simulation)
 
@@ -181,10 +181,10 @@ computeDIC <-
   pD <- var(-2 * trace$logLikelihood) / 2
 
   # and finally the DIC
-  DIC <- devThetaBar + 2 * pD # nolint
+  dic <- devThetaBar + 2 * pD # nolint
 
   ans <- list(
-    DIC = DIC, thetaBar = thetaBar, logLikeThetaBar = logLikeThetaBar,
+    dic = dic, thetaBar = thetaBar, logLikeThetaBar = logLikeThetaBar,
     devThetaBar = devThetaBar, pD = pD
 )
 

@@ -8,7 +8,7 @@ plotPosteriorDensity(trace, prior = NULL, colour = NULL, plot = TRUE)
 }
 \arguments{
 \item{trace}{either a \code{data.frame} or a \code{list} of \code{data.frame}
-with all variables in column, as outputed by \code{\link{mcmcMH}}. Accept
+with all variables in column, as outputed by \code{\link{mcmcMh}}. Accept
 also an \code{mcmc}, a \code{mcmc.list} object or a \code{list} of
 \code{mcmc.list} .}
 
@@ -30,8 +30,8 @@ and \code{prior}.}
 Plot the posterior density.
 }
 \examples{
-data(mcmc.epi)
-plotPosteriorDensity(mcmc.epi1$trace)
+data(mcmcEpi)
+plotPosteriorDensity(mcmcEpi1$trace)
 }
 \seealso{
 burnAndThin

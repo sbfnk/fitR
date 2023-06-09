@@ -26,6 +26,6 @@ a \R-function with one argument called \code{theta}.
 }
 \description{
 A wrapper for \code{\link{dLogPosterior}} that returns a function that can be
-used as a \code{target} for \code{\link{mcmcMH}}
+used as a \code{target} for \code{\link{mcmcMh}}
 }
 \keyword{internal}

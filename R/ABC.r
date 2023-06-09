@@ -23,12 +23,12 @@
 #' lines(traj2$time, traj2$observation, col = "blue")
 #' # While the squared differences are the same, we obtain a smaller distance
 #' # for traj2:
-#' d1 <- SEITL_distanceOscillation(traj1, data)
+#' d1 <- seitlDistanceOscillation(traj1, data)
 #' # d1 = 4
-#' d2 <- SEITL_distanceOscillation(traj2, data)
+#' d2 <- seitlDistanceOscillation(traj2, data)
 #' # d2 = 1.3
 #' }
-SEITL_distanceOscillation <- function(simuTrajObs, data) { # nolint
+seitlDistanceOscillation <- function(simuTrajObs, data) { # nolint
   # match model and data on time
   keepTime <- intersect(simuTrajObs$time, data$time)
   simuTrajObs <- subset(simuTrajObs, .data$time %in% keepTime)
@@ -43,13 +43,13 @@ SEITL_distanceOscillation <- function(simuTrajObs, data) { # nolint
 
 #' Compute the distance between a model and data for ABC
 #'
-#' Compute the distance (using \code{distance.ABC}) between the observed time
+#' Compute the distance (using \code{distanceAbc}) between the observed time
 #' series and a simulated time series of observations obtained by running the
 #' model with parameters \code{theta}.
 #' @param sumStats a list of functions to calculate summary statistics. Each of
 #'   these takes one argument (a trajectory with an "obs" column) and returns a
 #'   number (the summary statistic given the trajectory)
-#' @param distanceABC a function that take three arguments: \code{sumStats}, a
+#' @param distanceAbc a function that take three arguments: \code{sumStats}, a
 #'   list of summary statistics, \code{dataObs} (the data trajectory of
 #'   observations) and \code{modelObs} (a model trajectory of observations),
 #'   and returns the distance between the model run and the data in terms of the
@@ -57,7 +57,7 @@ SEITL_distanceOscillation <- function(simuTrajObs, data) { # nolint
 #' @inheritParams testFitmodel
 #' @export
 #' @return a sampled distance between
-computeDistanceABC <- function(sumStats, distanceABC, fitmodel, theta,
+computeDistanceAbc <- function(sumStats, distanceAbc, fitmodel, theta,
                                initState, data) {
   # time sequence (must include initial time)
   times <- c(0, data$time)
@@ -68,11 +68,11 @@ computeDistanceABC <- function(sumStats, distanceABC, fitmodel, theta,
   )
 
   # compute distance
-  distABC <- distanceABC(
+  distAbc <- distanceAbc(
     sumStats = sumStats,
     dataObs = data,
     modelObs = modelObs
   )
 
-  return(distABC)
+  return(distAbc)
 }

@@ -13,13 +13,6 @@ reference:
       - rTrajObs
       - dLogPosterior
       - testFitmodel
-  - title: "Models"
-    desc: "Models of infectious disease dynamics (instances of the fitmodel class)."
-    contents:
-      - starts_with("SIR_")
-      - starts_with("SEITL_")
-      - starts_with("SEIT2L_")
-      - starts_with("SEIT4L_")
   - title: "Stochastic modelling"
     desc: "Methods for generating stochastic simulations"
     contents:
@@ -28,22 +21,22 @@ reference:
   - title: "Data"
     desc: "Epidemiological datasets."
     contents:
-      - FluTdC1971
+      - fluTdc1971
   - title: "MCMC"
     desc: "Functions related to Markov-chain Monte Carlo."
     contents:
-      - mcmcMH
+      - mcmcMh
       - burnAndThin
-      - computeDIC
+      - computeDic
   - title: "Particle filtering"
     desc: "Functions for particle filtering."
     contents:
       - particleFilter
       - margLogLikeSto
   - title: "ABC"
-    desc: "Functions for ABC."
+    desc: "Functions for Approximate Bayesian Computation."
     contents:
-      - computeDistanceABC
+      - computeDistanceAbc
       - distanceOscillation
   - title: "Plotting"
     desc: "Functions for plotting model trajectories and fits."

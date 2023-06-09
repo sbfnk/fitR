@@ -11,7 +11,7 @@
 #'
 #' @format A data frame with 59 rows and 3 variables
 #' @source \url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=pubmed&id=4511951&retmode=ref&cmd=prlinks} # nolint
-#' @name FluTdC1971
+#' @name fluTdc1971
 NULL
 
 #' A simple deterministic SIR model with constant population size
@@ -31,12 +31,12 @@ NULL
 #'
 #' Look at the documentation of \code{\link{fitmodel}} for more details about
 #' each of these elements.
-#' You can look at the code of the \R-functions by typing \code{SIR$simulate}
-#' for instance. There are some comments included.
+#' You can look at the code of the \R-functions by typing
+#' \code{sirDeter$simulate} for instance. There are some comments included.
 #'
 #' @format A \code{\link{fitmodel}} object, that is a list with the following
 #'   elements:
-#' @name SIR_deter
+#' @name sirDeter
 NULL
 
 #' A simple stochastic SIR model with constant population size
@@ -57,11 +57,11 @@ NULL
 #' Look at the documentation of \code{\link{fitmodel}} for more details about
 #' each of these elements.
 #' You can look at the code of the \R-functions by typing
-#' \code{SIR_stoch$simulate} for instance. There are some comments included.
+#' \code{sirStoch$simulate} for instance. There are some comments included.
 #'
 #' @format A \code{\link{fitmodel}} object, that is a list with the following
 #'   elements:
-#' @name SIR_stoch
+#' @name sirStoch
 NULL
 
 #' A simple deterministic SIR model with constant population size and reporting
@@ -83,11 +83,12 @@ NULL
 #' Look at the documentation of \code{\link{fitmodel}} for more details about
 #' each of these elements.
 #' You can look at the code of the \R-functions by typing
-#' \code{SIR_reporting$simulate} for instance. There are some comments included.
+#' \code{sirReportingDeter$simulate} for instance. There are some comments
+#' included.
 #'
 #' @format A \code{\link{fitmodel}} object, that is a list with the following
 #'   elements:
-#' @name SIR_reporting_deter
+#' @name sirReportingDeter
 NULL
 
 #' A simple deterministic SIR model with constant population size and parameters
@@ -110,11 +111,11 @@ NULL
 #' Look at the documentation of \code{\link{fitmodel}} for more details about
 #' each of these elements.
 #' You can look at the code of the \R-functions by typing
-#' \code{SIR_exp$simulate} for instance. There are some comments included.
+#' \code{sirExpDeter$simulate} for instance. There are some comments included.
 #'
 #' @format A \code{\link{fitmodel}} object, that is a list with the following
 #'   elements:
-#' @name SIR_exp_deter
+#' @name sirExpDeter
 NULL
 
 #' The deterministic SEITL model with constant population size
@@ -135,11 +136,11 @@ NULL
 #' Look at the documentation of \code{\link{fitmodel}} for more details about
 #' each of these elements.
 #' You can look at the code of the \R-functions by typing
-#' \code{SEITL_deter$simulate} for instance. There are some comments included.
+#' \code{seitlDeter$simulate} for instance. There are some comments included.
 #'
 #' @format A \code{\link{fitmodel}} object, that is a list with the following
 #'   elements:
-#' @name SEITL_deter
+#' @name seitlDeter
 NULL
 
 
@@ -161,11 +162,11 @@ NULL
 #' Look at the documentation of \code{\link{fitmodel}} for more details about
 #' each of these elements.
 #' You can look at the code of the \R-functions by typing
-#' \code{SEITL_stoch$simulate} for instance. There are some comments included.
+#' \code{seitlStoch$simulate} for instance. There are some comments included.
 #'
 #' @format A \code{\link{fitmodel}} object, that is a list with the following
 #'   elements:
-#' @name SEITL_stoch
+#' @name seitlStoch
 NULL
 
 
@@ -187,11 +188,11 @@ NULL
 #' Look at the documentation of \code{\link{fitmodel}} for more details about
 #' each of these elements.
 #' You can look at the code of the \R-functions by typing
-#' \code{SEIT2L_deter$simulate} for instance. There are some comments included.
+#' \code{seit2lDeter$simulate} for instance. There are some comments included.
 #'
 #' @format A \code{\link{fitmodel}} object, that is a list with the following
 #'   elements:
-#' @name SEIT2L_deter
+#' @name seit2lDeter
 NULL
 
 #' The stochastic SEIT2L model with constant population size
@@ -212,11 +213,11 @@ NULL
 #' Look at the documentation of \code{\link{fitmodel}} for more details about
 #' each of these elements.
 #' You can look at the code of the \R-functions by typing
-#' \code{SEIT2L_stoch$simulate} for instance. There are some comments included.
+#' \code{seit2lStoch$simulate} for instance. There are some comments included.
 #'
 #' @format A \code{\link{fitmodel}} object, that is a list with the following
 #'   elements:
-#' @name SEIT2L_stoch
+#' @name seit2lStoch
 NULL
 
 #' The deterministic SEIT4L model with constant population size
@@ -237,11 +238,11 @@ NULL
 #' Look at the documentation of \code{\link{fitmodel}} for more details about
 #' each of these elements.
 #' You can look at the code of the \R-functions by typing
-#' \code{SEIT4L_deter$simulate} for instance. There are some comments included.
+#' \code{seit4lDeter$simulate} for instance. There are some comments included.
 #'
 #' @format A \code{\link{fitmodel}} object, that is a list with the following
 #'   elements:
-#' @name SEIT4L_deter
+#' @name seit4lDeter
 NULL
 
 #' The stochastic SEIT4L model with constant population size
@@ -262,9 +263,9 @@ NULL
 #' Look at the documentation of \code{\link{fitmodel}} for more details about
 #' each of these elements.
 #' You can look at the code of the \R-functions by typing
-#' \code{SEIT4L_stoch$simulate} for instance. There are some comments included.
+#' \code{seit4lStoch$simulate} for instance. There are some comments included.
 #'
 #' @format A \code{\link{fitmodel}} object, that is a list with the following
 #'   elements:
-#' @name SEIT4L_stoch
+#' @name seit4lStoch
 NULL

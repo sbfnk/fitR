@@ -33,7 +33,7 @@
 #'   should match \code{thetaNames}.
 #' }
 #' and returns an observation point
-#' @param dprior \R-function that evaluates the prior density of the parameters
+#' @param dPrior \R-function that evaluates the prior density of the parameters
 #'   at a given \code{theta} (optional). The function should take 2 arguments:
 #' \itemize{
 #' 	\item \code{theta} named numeric vector. Values of the parameters. Names
@@ -68,14 +68,14 @@
 #'   \code{simulate(theta,initState,times)}.
 #' 	\item \code{rPointObs} \R-function to generate simulated observations;
 #'   usage: \code{rPointObs(modelPoint, theta)}.
-#' 	\item \code{dprior} \R-function to evaluate the log-prior of the parameter
-#'   values; usage: \code{dprior(theta)}.
+#' 	\item \code{dPrior} \R-function to evaluate the log-prior of the parameter
+#'   values; usage: \code{dPrior(theta)}.
 #' 	\item \code{dPointObs} \R-function to evaluate the log-likelihood of one
 #'   data point; usage: \code{dPointObs(dataPoint, modelPoint, theta, log)}.
 #' }
 #' @seealso \code{\link{testFitmodel}}
 fitmodel <- function(name = NULL, stateNames = NULL, thetaNames = NULL,
-                     simulate = NULL, rPointObs = NULL, dprior = NULL,
+                     simulate = NULL, rPointObs = NULL, dPrior = NULL,
                      dPointObs = NULL) {
   # mandatory
   if (!is.character(name)) {
@@ -95,8 +95,8 @@ fitmodel <- function(name = NULL, stateNames = NULL, thetaNames = NULL,
   if (!is.null(rPointObs) && !is.function(rPointObs)) {
     stop(sQuote("rPointObs"), " argument is not an R function")
   }
-  if (!is.null(dprior) && !is.function(dprior)) {
-    stop(sQuote("dprior"), " argument is not an R function")
+  if (!is.null(dPrior) && !is.function(dPrior)) {
+    stop(sQuote("dPrior"), " argument is not an R function")
   }
   if (!is.null(dPointObs) && !is.function(dPointObs)) {
     stop(sQuote("dPointObs"), " argument is not an R function")
@@ -109,7 +109,7 @@ fitmodel <- function(name = NULL, stateNames = NULL, thetaNames = NULL,
     thetaNames = thetaNames,
     simulate = simulate,
     rPointObs = rPointObs,
-    dprior = dprior,
+    dPrior = dPrior,
     dPointObs = dPointObs
   ), class = "fitmodel"))
 }
@@ -301,36 +301,36 @@ testFitmodel <- function(fitmodel, theta, initState, data = NULL,
   }
 
 
-  if (!is.null(fitmodel$dprior)) {
+  if (!is.null(fitmodel$dPrior)) {
     if (verbose) {
-      cat("--- checking dprior\n")
+      cat("--- checking dPrior\n")
     }
 
     # check arguments
     funArgs <- c("theta", "log")
-    if (!(all(x <- funArgs %in% names(formals(fitmodel$dprior))))) {
+    if (!(all(x <- funArgs %in% names(formals(fitmodel$dPrior))))) {
       stop(
-        "arguments ", sQuote(funArgs[!x]), " missing in function dprior, ",
+        "arguments ", sQuote(funArgs[!x]), " missing in function dPrior, ",
         "see ?fitmodel."
       )
     }
 
     # test it
-    testDprior <- fitmodel$dprior(theta)
+    testDPrior <- fitmodel$dPrior(theta)
     if (verbose) {
       cat(
-        "dprior(theta) should return a single finite value\nTest:",
-        testDprior, "\n"
+        "dPrior(theta) should return a single finite value\nTest:",
+        testDPrior, "\n"
       )
     }
-    if (!(!is.na(testDprior) && (is.finite(testDprior)))) {
-      stop("dprior must return a finite value for test parameter values")
+    if (!(!is.na(testDPrior) && (is.finite(testDPrior)))) {
+      stop("dPrior must return a finite value for test parameter values")
     }
     if (verbose) {
-      cat("--> dprior looks good!\n")
+      cat("--> dPrior looks good!\n")
     }
   } else {
-    warning("fitmodel does not contain a dprior method -- not tested\n")
+    warning("fitmodel does not contain a dPrior method -- not tested\n")
   }
 
   # data must have a column named time, should not start at 0

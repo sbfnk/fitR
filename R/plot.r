@@ -389,8 +389,8 @@ plotSMC <- function(smc, fitmodel, theta, data = NULL, summary = TRUE,
 #' @importFrom ggplot2 ggplot aes facet_wrap geom_line
 #' @seealso burnAndThin
 #' @examples
-#' data(mcmc.epi)
-#' plotTrace(mcmc.epi1$trace)
+#' data(mcmcEpi)
+#' plotTrace(mcmcEpi1$trace)
 plotTrace <- function(trace, estimatedOnly = FALSE) {
   if (estimatedOnly) {
     isFixed <- apply(trace, 2, function(x) {
@@ -413,7 +413,7 @@ plotTrace <- function(trace, estimatedOnly = FALSE) {
 #'
 #' Plot the posterior density.
 #' @param trace either a \code{data.frame} or a \code{list} of \code{data.frame}
-#'   with all variables in column, as outputed by \code{\link{mcmcMH}}. Accept
+#'   with all variables in column, as outputed by \code{\link{mcmcMh}}. Accept
 #'   also an \code{mcmc}, a \code{mcmc.list} object or a \code{list} of
 #'   \code{mcmc.list} .
 #' @param prior a \code{data.frame} containing the prior density. It must have
@@ -435,8 +435,8 @@ plotTrace <- function(trace, estimatedOnly = FALSE) {
 #'   geom_area theme_bw xlab after_stat
 #' @seealso burnAndThin
 #' @examples
-#' data(mcmc.epi)
-#' plotPosteriorDensity(mcmc.epi1$trace)
+#' data(mcmcEpi)
+#' plotPosteriorDensity(mcmcEpi1$trace)
 plotPosteriorDensity <- function(trace, prior = NULL, colour = NULL,
                                  plot = TRUE) {
   if (is.null(colour)) {
@@ -444,14 +444,10 @@ plotPosteriorDensity <- function(trace, prior = NULL, colour = NULL,
   }
 
   if (inherits_any(trace, c("mcmc.list", "list"))) {
-    if (all(sapply(trace, function(x) {
-      inherits(x, "mcmc.list")
-    }))) {
-      trace <- future_map(trace, \(x) {
-        names(x) <- NULL
-        bind_rows(x)
-      })
-    }
+    ## convert to data farmes
+    trace <- future_map(trace, \(x) {
+      as.data.frame(as.matrix(x))
+    })
 
     if (is.null(names(trace))) {
       names(trace) <- seq_along(trace)
@@ -587,13 +583,13 @@ plotHPDregion2D <- function(trace, vars, prob = c(0.95, 0.75, 0.5, 0.25, 0.1),
 #'    \item \code{plot} the plot of the fit displayed.
 #' }
 #' @examples
-#' data(FluTdC1971)
+#' data(fluTdc1971)
 #' data(epi)
-#' data(mcmc.epi)
+#' data(mcmcEpi)
 #' data(models)
 #' initState <- c(S = 999, I = 1, R = 0)
 #' plotPosteriorFit(
-#'   trace = mcmc.epi1$trace, fitmodel = SIR_deter, initState = initState,
+#'   trace = mcmcEpi1$trace, fitmodel = SIR_deter, initState = initState,
 #'   data = epi1
 #'  )
 plotPosteriorFit <- function(trace, fitmodel, initState, data,
@@ -608,6 +604,9 @@ plotPosteriorFit <- function(trace, fitmodel, initState, data,
   if (inherits(trace, "mcmc")) {
     trace <- as.data.frame(trace)
   } else if (inherits(trace, "mcmc.list")) {
+    trace <- future_map(trace, \(x) {
+      as.data.frame(as.matrix(x))
+    })
     trace <- bind_rows(trace)
   }
 
@@ -686,7 +685,7 @@ plotPosteriorFit <- function(trace, fitmodel, initState, data,
 ##' Takes an mcmc trace and tests the ESS at different values of burn-in
 ##' @param trace either a \code{data.frame} or a \code{list} of
 ##'   \code{data.frame} with all variables in column, as outputed by
-##'   \code{\link{mcmcMH}}. Accept also \code{mcmc} or \code{mcmc.list} objects.
+##'   \code{\link{mcmcMh}}. Accept also \code{mcmc} or \code{mcmc.list} objects.
 ##' @param longestBurnIn The longest burn-in to test. Defaults to half the
 ##'   length of the trace
 ##' @param stepSize The size of the steps of burn-in to test. Defaults to
@@ -700,9 +699,9 @@ plotPosteriorFit <- function(trace, fitmodel, initState, data,
 ##' @importFrom coda effectiveSize as.mcmc
 ##' @importFrom ggplot2 ggplot facet_wrap geom_line aes theme_bw
 ##' @examples
-##' data(mcmc.epi)
-##' plotESSBurn(mcmc.epi1$trace)
-plotESSBurn <- function(trace, longestBurnIn = ifelse(
+##' data(mcmcEpi)
+##' plotEssBurn(mcmcEpi1$trace)
+plotEssBurn <- function(trace, longestBurnIn = ifelse(
   is.data.frame(trace) | is.mcmc(trace), nrow(trace), nrow(trace[[1]])
 ) / 2, stepSize = round(longestBurnIn / 50)) {
   testBurnIn <- seq(0, longestBurnIn, stepSize) # test values
@@ -718,7 +717,7 @@ plotESSBurn <- function(trace, longestBurnIn = ifelse(
     names(trace) <- seq_along(trace)
   }
 
-  dfESSBurnIn <- future_map(trace, function(oneTrace) {
+  dfEssBurnIn <- future_map(trace, function(oneTrace) {
     # initialise data.frame of ess estimates
     essBurnIn <- data.frame(t(effectiveSize(oneTrace)))
     for (burnIn in testBurnIn[-1]) {
@@ -732,10 +731,10 @@ plotESSBurn <- function(trace, longestBurnIn = ifelse(
 
     return(essBurnIn)
   })
-  dfESSBurnIn <- bind_rows(dfESSBurnIn, .id = "chain")
+  dfEssBurnIn <- bind_rows(dfEssBurnIn, .id = "chain")
 
   essLong <- pivot_longer(
-    dfESSBurnIn, c(-.data$chain, -.data$burnIn), values_to = "ESS",
+    dfEssBurnIn, c(-.data$chain, -.data$burnIn), values_to = "ESS",
     names_to = "parameter"
   )
 

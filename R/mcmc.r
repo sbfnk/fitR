@@ -12,18 +12,18 @@
 #' \item \code{logDensity} the logged value of the target density, evaluated at
 #'   \code{theta}.
 #' \item \code{trace} a named numeric vector of values to be printed in the
-#'   \code{trace} data.frame returned by \code{mcmcMH}.
+#'   \code{trace} data.frame returned by \code{mcmcMh}.
 #' }
 #' @param initTheta named vector of initial parameter values to start the
 #'   chain.
-#' @param proposalSD vector of standard deviations. If this is given and covmat
+#' @param proposalSd vector of standard deviations. If this is given and covmat
 #'   is not, a diagonal matrix will be built from this to use as covariance
 #'   matrix of the multivariate Gaussian proposal distribution. By default, this
 #'   is set to \code{initTheta/10}.
 #' @param nIterations number of iterations to run the MCMC chain.
 #' @param covmat named numeric covariance matrix of the multivariate Gaussian
 #'   proposal distribution. Must have named rows and columns with at least all
-#'   estimated theta. If \code{proposalSD} is given, this is ignored.
+#'   estimated theta. If \code{proposalSd} is given, this is ignored.
 #' @param limits limits for the - potentially truncated - multi-variate normal
 #'   proposal distribution of the MCMC. Contains 2 elements:
 #' \itemize{
@@ -49,7 +49,7 @@
 #'   rate and state of the chain. Default value to \code{nIterations/100}. Set
 #'   to \code{NULL} to avoid any info.
 #' @param verbose logical. If \code{TRUE}, information are printed.
-#' @param maxScalingSD numeric. Maximum value for the scaling factor of the
+#' @param maxScalingSd numeric. Maximum value for the scaling factor of the
 #'   covariance matrix. Avoid too high values for the scaling factor, which
 #'   might happen due to the exponential update scheme. In this case, the
 #'   covariance matrix becomes too wide and the sampling from the truncated
@@ -80,14 +80,14 @@
 #'      \item \code{covmatProposal} last covariance matrix used for proposals.
 #' }
 # nolint start: cyclocomp_linter
-mcmcMH <- function(
-    target, initTheta, proposalSD = NULL,
+mcmcMh <- function(
+    target, initTheta, proposalSd = NULL,
     nIterations, covmat = NULL,
     limits = list(lower = NULL, upper = NULL),
     adaptSizeStart = NULL, adaptSizeCooling = 0.99,
     adaptShapeStart = NULL, adaptShapeStop = NULL,
     printInfoEvery = nIterations / 100,
-    verbose = FALSE, maxScalingSD = 50) {
+    verbose = FALSE, maxScalingSd = 50) {
   # initialise theta
   thetaCurrent <- initTheta
   thetaPropose <- initTheta
@@ -99,16 +99,16 @@ mcmcMH <- function(
 
   # reorder vector and matrix by names, set to default if necessary
   thetaNames <- names(initTheta)
-  if (!is.null(proposalSD) && is.null(names(proposalSD))) {
-    names(proposalSD) <- thetaNames
+  if (!is.null(proposalSd) && is.null(names(proposalSd))) {
+    names(proposalSd) <- thetaNames
   }
 
   if (is.null(covmatProposal)) {
-    if (is.null(proposalSD)) {
-      proposalSD <- initTheta / 10
+    if (is.null(proposalSd)) {
+      proposalSd <- initTheta / 10
     }
     covmatProposal <-
-      matrix(diag(proposalSD[thetaNames]^2, nrow = length(thetaNames)),
+      matrix(diag(proposalSd[thetaNames]^2, nrow = length(thetaNames)),
         nrow = length(thetaNames),
         dimnames = list(thetaNames, thetaNames)
       )
@@ -154,14 +154,14 @@ mcmcMH <- function(
   }
 
   # trace
-  trace <- matrix(ncol = length(thetaCurrent) + 1, nrow = nIterations, 0)
+  trace <- matrix(ncol = length(thetaEstimatedNames) + 1, nrow = nIterations, 0)
   colnames(trace) <- c(thetaEstimatedNames, "logDensity")
 
   # acceptance rate
   acceptanceRate <- 0
 
   # scaling factor for covmat size
-  scalingSD <- 1
+  scalingSd <- 1
 
   # scaling multiplier
   scalingMultiplier <- 1
@@ -191,10 +191,10 @@ mcmcMH <- function(
       scalingMultiplier <-
         exp(adaptSizeCooling^(iIteration - adaptSizeStart) *
             (acceptanceRate - 0.234))
-      scalingSD <- scalingSD * scalingMultiplier
-      scalingSD <- min(c(scalingSD, maxScalingSD))
+      scalingSd <- scalingSd * scalingMultiplier
+      scalingSd <- min(c(scalingSd, maxScalingSd))
       # only scale if it doesn't reduce the covariance matrix to 0
-      covmatProposalNew <- scalingSD^2 * covmatProposalInit
+      covmatProposalNew <- scalingSd^2 * covmatProposalInit
       if (!(any(diag(covmatProposalNew)[thetaEstimatedNames] <
         .Machine$double.eps))) {
         covmatProposal <- covmatProposalNew
@@ -210,9 +210,9 @@ mcmcMH <- function(
 
       ## adapt shape of covmat using optimal scaling factor for multivariate
       ## target distributions
-      scalingSD <- 2.38 / sqrt(length(thetaEstimatedNames))
+      scalingSd <- 2.38 / sqrt(length(thetaEstimatedNames))
 
-      covmatProposal <- scalingSD^2 * covmatEmpirical
+      covmatProposal <- scalingSd^2 * covmatEmpirical
     } else if (adaptingShape > 0) {
       message("\n---> Stop adapting shape of covariance matrix")
       adaptingShape <- -1
@@ -226,7 +226,7 @@ mcmcMH <- function(
         appendLF = FALSE
       )
       if (!is.null(adaptSizeStart) || !is.null(adaptShapeStart)) {
-        message(", scalingSD: ", sprintf("%.3f", scalingSD),
+        message(", scalingSd: ", sprintf("%.3f", scalingSd),
           ", scalingMultiplier: ", sprintf("%.3f", scalingMultiplier),
           appendLF = FALSE
         )
@@ -315,7 +315,9 @@ mcmcMH <- function(
     } else if (verbose) {
       message("rejected")
     }
-    trace[iIteration, ] <- c(thetaCurrent, targetThetaCurrent)
+    trace[iIteration, ] <- c(
+      thetaCurrent[thetaEstimatedNames], targetThetaCurrent
+    )
 
     # update acceptance rate
     if (iIteration == 1) {
