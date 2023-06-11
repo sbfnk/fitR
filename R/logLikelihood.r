@@ -71,10 +71,10 @@ margLogLikeSto <- function(fitmodel, theta, initState, data, nParticles,
 #' @seealso \code{\link{dTrajObs}}, \code{\link{margLogLikeSto}}
 #' @return a list of two elements
 #' \itemize{
-#' 	\item \code{log.density} numeric, logged value of the posterior density
+#' 	\item \code{logDensity} numeric, logged value of the posterior density
 #'   evaluated at \code{theta}
 #' 	\item \code{trace} named vector with trace information (theta,
-#'   logPrior, marg.log.like, logPosterior)
+#'   logPrior, margLogLike, logPosterior)
 #' }
 dLogPosterior <- function(fitmodel, theta, initState, data,
                           margLogLike = dTrajObs, ...) {

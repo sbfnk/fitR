@@ -27,10 +27,10 @@ must be named \code{"time"} and the observation column must be named
 \value{
 a list of two elements
 \itemize{
-	\item \code{log.density} numeric, logged value of the posterior density
+	\item \code{logDensity} numeric, logged value of the posterior density
   evaluated at \code{theta}
 	\item \code{trace} named vector with trace information (theta,
-  logPrior, marg.log.like, logPosterior)
+  logPrior, margLogLike, logPosterior)
 }
 }
 \description{
