@@ -20,11 +20,6 @@ must be named \code{"time"} and the observation column must be named
 \code{"obs"}.}
 
 \item{nParticles}{number of particles}
-
-\item{nCores}{number of cores on which propogation of the particles is
-parallelised. By default no parallelisation (\code{nCores=1}). If
-\code{NULL}, set to the value returned by
-\code{\link[parallel]{detectCores}}.}
 }
 \value{
 Monte-Carlo estimate of the marginal log-likelihood of \code{theta}
