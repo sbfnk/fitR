@@ -7,10 +7,6 @@
 #' @param nParticles number of particles
 #' @param progress if \code{TRUE} progression of the filter is displayed in the
 #'   console.
-#' @param nCores number of cores on which propogation of the particles is
-#'   parallelised. By default no parallelisation (\code{nCores=1}). If
-#'   \code{NULL}, set to the value returned by
-#'   \code{\link[parallel]{detectCores}}.
 #' @inheritParams testFitmodel
 #' @note An unbiased state sample \eqn{x(t_{0:T}) ~
 #'   p(X(t_{0:T})|\theta,y(t_{0:T}))} can be obtained by sampling the set of
@@ -29,9 +25,8 @@
 #'   normalised weight of the filtered trajectories.
 #' }
 particleFilter <- function(fitmodel, theta, initState, data, nParticles,
-                           progress = FALSE, nCores = 1) {
-  if ((is.null(nCores) > 1 || is.null(nCores)) &&
-      inherits(future::plan(), "sequential")) {
+                           progress = FALSE) {
+  if (inherits(future::plan(), "sequential")) {
     warning(
       "Parallel processing is disabled. To enable, call `future::plan` ",
       "with a parallel strategy, e.g. `future::plan(\"multisession\")`. ",

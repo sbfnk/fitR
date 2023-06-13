@@ -4,15 +4,7 @@
 \alias{particleFilter}
 \title{Run a particle filter for fitmodel object}
 \usage{
-particleFilter(
-  fitmodel,
-  theta,
-  initState,
-  data,
-  nParticles,
-  progress = FALSE,
-  nCores = 1
-)
+particleFilter(fitmodel, theta, initState, data, nParticles, progress = FALSE)
 }
 \arguments{
 \item{fitmodel}{a \code{\link{fitmodel}} object}
@@ -31,11 +23,6 @@ must be named \code{"time"} and the observation column must be named
 
 \item{progress}{if \code{TRUE} progression of the filter is displayed in the
 console.}
-
-\item{nCores}{number of cores on which propogation of the particles is
-parallelised. By default no parallelisation (\code{nCores=1}). If
-\code{NULL}, set to the value returned by
-\code{\link[parallel]{detectCores}}.}
 }
 \value{
 A list of 3 elements:
