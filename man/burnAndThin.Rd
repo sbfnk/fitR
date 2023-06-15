@@ -25,5 +25,5 @@ Return a burned and thined trace of the chain.
 }
 \examples{
 data(mcmcEpi)
-burnAndThin(mcmcEpi1$trace, burn = 100, thin = 4)
+burnAndThin(mcmcEpi1, burn = 100, thin = 4)
 }

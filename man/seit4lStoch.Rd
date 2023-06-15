@@ -6,12 +6,33 @@
 \format{
 A \code{\link{fitmodel}} object, that is a list with the following
   elements:
+
+A \code{\link{fitmodel}} object, that is a list with the following
+  elements:
 }
 \description{
 The stochastic SEIT4L model with constant population size, uniform prior and
 Poisson observation with reporting rate.
+
+The stochastic SEIT4L model with constant population size, uniform prior and
+Poisson observation with reporting rate.
 }
 \details{
+\itemize{
+  \item \code{name} character.
+  \item \code{stateNames} character vector.
+  \item \code{thetaNames} character vector.
+  \item \code{simulate} \R-function.
+  \item \code{rPointObs} \R-function.
+  \item \code{dprior} \R-function.
+  \item \code{dPointObs} \R-function.
+}
+
+Look at the documentation of \code{\link{fitmodel}} for more details about
+each of these elements.
+You can look at the code of the \R-functions by typing
+\code{seit4lStoch$simulate} for instance. There are some comments included.
+
 \itemize{
   \item \code{name} character.
   \item \code{stateNames} character vector.
