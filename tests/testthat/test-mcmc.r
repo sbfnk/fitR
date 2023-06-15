@@ -67,12 +67,15 @@ test_that("mcmcMh for stochastic SEITL model", {
   data("fluTdc1971", envir = environment())
   data <- fluTdc1971[1:5, ]
 
+  previousPlan <- future::plan()
+  future::plan("multisession")
   target <- function(theta) {
     return(dLogPosterior(
       fitmodel = seitlStoch, theta = theta, initState = initState, data = data,
       margLogLike = margLogLikeSto, nParticles = 10
     ))
   }
+  future::plan(previousPlan)
 
   # default covariance matrix
   suppressMessages(ans <- mcmcMh(
@@ -97,12 +100,15 @@ test_that("mcmcMh for stochastic SEIT2L model", {
   data("fluTdc1971", envir = environment())
   data <- fluTdc1971[1:5, ]
 
+  previousPlan <- future::plan()
+  future::plan("multisession")
   target <- function(theta) {
     return(dLogPosterior(
       fitmodel = seit2lStoch, theta = theta, initState = initState,
       data = data, margLogLike = margLogLikeSto, nParticles = 10
     ))
   }
+  future::plan(previousPlan)
 
   # default covariance matrix
   suppressMessages(ans <- mcmcMh(
