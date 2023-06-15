@@ -12,6 +12,19 @@ of a course on [Model fitting and inference for infectious disease
 dynamics](http://sbfnk.github.io/mfiidd/) run annually at the [London
 School of Hygiene & Tropical Medicine](https://www.lshtm.ac.uk).
 
+The main purpose of this package is to be a teaching tool, and the
+implementation of inference algorithms in this package is not
+particularly efficient of stable. For vastly superior alternative
+options for fitting models to data in R we recommend to consider,
+amongst others
+
+- [https://github.com/stan-dev/rstan](rstan), an interface to
+  [Stan](https://mc-stan.org/).
+- [https://github.com/sbfnk/RBi](rbi), an interface to
+  [LibBi](https://libbi.org/).
+- [https://github.com/kingaa/pomp](pomp), for partially observed Markov
+  processes.
+
 ## Installation
 
 The easiest way to install `fitR` is to use the `remotes` package:
