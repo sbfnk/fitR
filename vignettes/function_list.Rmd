@@ -8,9 +8,14 @@ vignette: >
 ------
 
 ```{r setup, echo = FALSE, cache = FALSE}
-library("fitR")
+devtools::load_all(here::here())
 library("dplyr")
 library("xtable")
+
+data(fluTdc1971)
+data(models)
+data(epi)
+
 f <- capture.output(tools::Rdindex(find.package("fitR")))
 
 desc <- lapply(f, function(x) {
@@ -30,7 +35,10 @@ df <- data.frame(t(vapply(desc, function(x) x, c("a", "b")))) %>%
   dplyr::rename(name = X1, desc = X2) %>%
   mutate(desc = sub("^ ", "", desc)) %>%
   dplyr::filter(!grepl("_pomp(_r)?$", name)) %>%
-  dplyr::filter(!(name %in% c("distanceOscillation", "testFitModel")))
+  dplyr::filter(!(name %in% c("distanceOscillation", "testFitModel"))) %>%
+  dplyr::filter(!grepl("^mcmcEpi", name)) %>% 
+  dplyr::filter(!grepl("^p?mcmcSeit", name)) %>% 
+  dplyr::filter(name != "calibrateSmc") 
 
 df$func <- apply(df, 1, function(x) {
   "function" %in% class(get(x[["name"]]))
@@ -38,7 +46,7 @@ df$func <- apply(df, 1, function(x) {
 
 ds <- df %>%
   dplyr::filter(!func) %>%
-  dplyr::filter(name %in% c("fluTdc1971", "measles"))
+  dplyr::filter(name == "fluTdc1971" | grepl("^epi", name))
 
 ms <- df %>%
   dplyr::filter(!func) %>%
@@ -89,4 +97,3 @@ print(
   hline.after = c()
 )
 ```
-
