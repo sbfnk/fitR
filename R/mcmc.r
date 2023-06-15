@@ -1,4 +1,4 @@
-#' Metropolis-Hasting MCMCda
+#' Metropolis-Hasting MCMC
 #'
 #' Run \code{nIterations} of a Metropolis-Hasting MCMC to sample from the
 #' target distribution using a gaussian proposal kernel.
