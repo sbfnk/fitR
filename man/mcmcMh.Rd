@@ -2,7 +2,7 @@
 % Please edit documentation in R/mcmc.r
 \name{mcmcMh}
 \alias{mcmcMh}
-\title{Metropolis-Hasting MCMCda}
+\title{Metropolis-Hastings MCMC}
 \usage{
 mcmcMh(
   target,
@@ -93,11 +93,11 @@ a list with 3 elements:
 }
 }
 \description{
-Run \code{nIterations} of a Metropolis-Hasting MCMC to sample from the
+Run \code{nIterations} of a Metropolis-Hastings MCMC to sample from the
 target distribution using a gaussian proposal kernel.
 Two optional optimizations are also implemented: truncated gaussian proposal
 (to match the support of the target distribution, i.e. boundary of the
-parameters) and adaptative gaussian proposal (to match the size and the shape
+parameters) and adaptive gaussian proposal (to match the size and the shape
 of the target distribution).
 }
 \note{

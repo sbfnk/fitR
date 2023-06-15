@@ -38,8 +38,8 @@ trajectories from a sample of the posterior (default). Set to
 corresponding to the median, mean and maximum of the posterior density.}
 
 \item{summary}{logical, if \code{TRUE} trajectories are summarised by their
-mean, median, 50\% and 95\% quantile distributions. Otheriwse, the
-trajectories are ploted.}
+mean, median, 50\% and 95\% quantile distributions. Otherwise, the
+trajectories are plotted.}
 
 \item{sampleSize}{number of theta sampled from posterior distribution (if
 \code{posterior.summary == "sample"}). Otherwise, number of replicated

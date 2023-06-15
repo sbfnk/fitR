@@ -31,10 +31,10 @@ Suggests:
     deSolve,
     knitr,
     rmarkdown,
-    devtools,
-    xtable
-License: GPL-2
+    spelling
+License: MIT + file LICENSE
 RoxygenNote: 7.2.3
 Config/testthat/edition: 3
 Encoding: UTF-8
 VignetteBuilder: knitr
+Language: en-GB

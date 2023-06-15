@@ -43,7 +43,7 @@ and 95th percentile of the trajectories are plotted (default). If
 set with \code{alpha}).}
 
 \item{replicateColumn}{character Vector. The column in the data that
-indicates the replicate (if muliple replicates are to be plotted, i.e. if
+indicates the replicate (if multiple replicates are to be plotted, i.e. if
 \code{summary} is \code{FALSE}}
 
 \item{nonExtinct}{character vector. Names of the infected states which must

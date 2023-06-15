@@ -24,7 +24,7 @@ match \code{fitmodel$thetaNames}.}
 \item{initState}{named numeric vector. Initial values of the state
 variables. Names should match \code{fitmodel$stateNames}.}
 
-\item{extinct}{character vetor. Simulations stop when all these state are
+\item{extinct}{character vector. Simulations stop when all these state are
 extinct.}
 
 \item{timeInit}{numeric. Start time of simulation.}

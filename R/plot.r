@@ -20,7 +20,7 @@
 #'   \code{FALSE}, all individual trajectories are plotted (transparency can be
 #'   set with \code{alpha}).
 #' @param replicateColumn character Vector. The column in the data that
-#'   indicates the replicate (if muliple replicates are to be plotted, i.e. if
+#'   indicates the replicate (if multiple replicates are to be plotted, i.e. if
 #'   \code{summary} is \code{FALSE}
 #' @param nonExtinct character vector. Names of the infected states which must
 #'   be non-zero so the epidemic is still ongoing.  When the names of these
@@ -413,7 +413,7 @@ plotTrace <- function(trace, estimatedOnly = FALSE) {
 #'
 #' Plot the posterior density.
 #' @param trace either a \code{data.frame} or a \code{list} of \code{data.frame}
-#'   with all variables in column, as outputed by \code{\link{mcmcMh}}. Accept
+#'   with all variables in column, as returned by \code{\link{mcmcMh}}. Accept
 #'   also an \code{mcmc}, a \code{mcmc.list} object or a \code{list} of
 #'   \code{mcmc.list} .
 #' @param prior a \code{data.frame} containing the prior density. It must have
@@ -560,8 +560,8 @@ plotHPDregion2D <- function(trace, vars, prob = c(0.95, 0.75, 0.5, 0.25, 0.1),
 #'   \code{"median"}, \code{"mean"} or \code{"max"} to plot trajectories
 #'   corresponding to the median, mean and maximum of the posterior density.
 #' @param summary logical, if \code{TRUE} trajectories are summarised by their
-#'   mean, median, 50\% and 95\% quantile distributions. Otheriwse, the
-#'   trajectories are ploted.
+#'   mean, median, 50\% and 95\% quantile distributions. Otherwise, the
+#'   trajectories are plotted.
 #' @param sampleSize number of theta sampled from posterior distribution (if
 #'   \code{posterior.summary == "sample"}). Otherwise, number of replicated
 #'   simulations.
@@ -684,7 +684,7 @@ plotPosteriorFit <- function(trace, fitmodel, initState, data,
 ##'
 ##' Takes an mcmc trace and tests the ESS at different values of burn-in
 ##' @param trace either a \code{data.frame} or a \code{list} of
-##'   \code{data.frame} with all variables in column, as outputed by
+##'   \code{data.frame} with all variables in column, as returned by
 ##'   \code{\link{mcmcMh}}. Accept also \code{mcmc} or \code{mcmc.list} objects.
 ##' @param longestBurnIn The longest burn-in to test. Defaults to half the
 ##'   length of the trace
