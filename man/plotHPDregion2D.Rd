@@ -4,8 +4,14 @@
 \alias{plotHPDregion2D}
 \title{2D highest posterior density region}
 \usage{
-plotHPDregion2D(trace, vars, prob = c(0.95, 0.75, 0.5, 0.25, 0.1),
-  xlab = NULL, ylab = NULL, plot = TRUE)
+plotHPDregion2D(
+  trace,
+  vars,
+  prob = c(0.95, 0.75, 0.5, 0.25, 0.1),
+  xlab = NULL,
+  ylab = NULL,
+  plot = TRUE
+)
 }
 \arguments{
 \item{trace}{either a \code{data.frame} or \code{mcmc} object.}
@@ -21,8 +27,11 @@ plotHPDregion2D(trace, vars, prob = c(0.95, 0.75, 0.5, 0.25, 0.1),
 \item{plot}{if \code{TRUE} the plot is displayed, and returned otherwise.}
 }
 \description{
-Given a sample from a multivariate posterior distribution, plot the bivariate region of highest marginal posterior density (HPD) for two variables with defined levels.
+Given a sample from a multivariate posterior distribution, plot the bivariate
+region of highest marginal posterior density (HPD) for two variables with
+defined levels.
 }
 \note{
-HPD levels are computed using the function \code{\link[emdbook]{HPDregionplot}} from the package \code{emdbook}.
+HPD levels are computed using the function
+  \code{\link[emdbook]{HPDregionplot}} from the package \code{emdbook}.
 }

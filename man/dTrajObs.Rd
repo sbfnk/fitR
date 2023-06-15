@@ -4,18 +4,23 @@
 \alias{dTrajObs}
 \title{Log-likelihood of a trajectory for a deterministic model}
 \usage{
-dTrajObs(fitmodel, theta, init.state, data, log = FALSE)
+dTrajObs(fitmodel, theta, initState, data, log = TRUE)
 }
 \arguments{
 \item{fitmodel}{a \code{\link{fitmodel}} object}
 
-\item{theta}{named numeric vector. Values of the parameters. Names should match \code{fitmodel$theta.names}.}
+\item{theta}{named numeric vector. Values of the parameters. Names should
+match \code{fitmodel$thetaNames}.}
 
-\item{init.state}{named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.}
+\item{initState}{named numeric vector. Initial values of the state
+variables. Names should match \code{fitmodel$stateNames}.}
 
-\item{data}{data frame. Observation times and observed data. The time column must be named \code{"time"} and the observation column must be named \code{"obs"}.}
+\item{data}{data frame. Observation times and observed data. The time column
+must be named \code{"time"} and the observation column must be named
+\code{"obs"}.}
 
-\item{log}{logical (default: FALSE); whether the logarithm of the likelihood should be returned}
+\item{log}{logical (default: FALSE); whether the logarithm of the likelihood
+should be returned}
 }
 \value{
 numeric value of the log-likelihood

@@ -4,15 +4,21 @@
 \alias{plotTrace}
 \title{Plot MCMC trace}
 \usage{
-plotTrace(trace, estimated.only = FALSE)
+plotTrace(trace, estimatedOnly = FALSE)
 }
 \arguments{
-\item{trace}{a \code{data.frame} with one column per estimated parameter, as returned by \code{\link{burnAndThin}}}
+\item{trace}{a \code{data.frame} with one column per estimated parameter, as
+returned by \code{\link{burnAndThin}}}
 
-\item{estimated.only}{logical, if \code{TRUE} only estimated parameters are displayed.}
+\item{estimatedOnly}{logical, if \code{TRUE} only estimated parameters are
+displayed.}
 }
 \description{
 Plot the traces of all estimated variables.
+}
+\examples{
+data(mcmcEpi)
+plotTrace(mcmcEpi1)
 }
 \seealso{
 burnAndThin

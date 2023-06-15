@@ -4,14 +4,17 @@
 \alias{updateCovmat}
 \title{Update covariance matrix}
 \usage{
-updateCovmat(covmat, theta.mean, theta, i)
+updateCovmat(covmat, thetaMean, theta, i)
 }
 \arguments{
-\item{covmat}{covariance matrix at iteration \code{i-1}. Must be numeric, symmetrical and named.}
+\item{covmat}{covariance matrix at iteration \code{i-1}. Must be numeric,
+symmetrical and named.}
 
-\item{theta.mean}{mean vector at iteration \code{i-1}. Must be numeric and named.}
+\item{thetaMean}{mean vector at iteration \code{i-1}. Must be numeric and
+named.}
 
-\item{theta}{vector of new value at iteration \code{i}. Must be numeric and named.}
+\item{theta}{vector of new value at iteration \code{i}. Must be numeric and
+named.}
 
 \item{i}{current iteration.}
 }
@@ -19,13 +22,14 @@ updateCovmat(covmat, theta.mean, theta, i)
 A list of two elements
 \itemize{
 \item \code{covmat} update covariance matrix
-\item \code{theta.mean} updated mean vector
+\item \code{thetaMean} updated mean vector
 }
 }
 \description{
-Update covariance matrix using a stable one-pass algorithm. This is much more efficient than using \code{\link{cov}} on the full data.
+Update covariance matrix using a stable one-pass algorithm. This is much more
+efficient than using \code{\link{cov}} on the full data.
 }
 \references{
-\url{http://en.wikipedia.org/wiki/Algorithms\%5Ffor\%5Fcalculating\%5Fvariance#Covariance}
+\url{http://en.wikipedia.org/wiki/Algorithms\%5Ffor\%5Fcalculating\%5Fvariance#Covariance} # nolint
 }
 \keyword{internal}

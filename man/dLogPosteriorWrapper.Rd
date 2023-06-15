@@ -4,16 +4,20 @@
 \alias{dLogPosteriorWrapper}
 \title{A wrapper for \code{dLogPosterior}}
 \usage{
-dLogPosteriorWrapper(fitmodel, init.state, data, margLogLike, ...)
+dLogPosteriorWrapper(fitmodel, initState, data, margLogLike, ...)
 }
 \arguments{
 \item{fitmodel}{a \code{\link{fitmodel}} object}
 
-\item{init.state}{named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.}
+\item{initState}{named numeric vector. Initial values of the state
+variables. Names should match \code{fitmodel$stateNames}.}
 
-\item{data}{data frame. Observation times and observed data. The time column must be named \code{"time"} and the observation column must be named \code{"obs"}.}
+\item{data}{data frame. Observation times and observed data. The time column
+must be named \code{"time"} and the observation column must be named
+\code{"obs"}.}
 
-\item{margLogLike}{\R-function to compute the marginal log-likelihood of \code{theta}.}
+\item{margLogLike}{\R-function to compute the marginal log-likelihood of
+\code{theta}.}
 
 \item{...}{further arguments to be passed to \code{margLogLike}}
 }
@@ -21,6 +25,7 @@ dLogPosteriorWrapper(fitmodel, init.state, data, margLogLike, ...)
 a \R-function with one argument called \code{theta}.
 }
 \description{
-A wrapper for \code{\link{dLogPosterior}} that returns a function that can be used as a \code{target} for \code{\link{mcmcMH}}
+A wrapper for \code{\link{dLogPosterior}} that returns a function that can be
+used as a \code{target} for \code{\link{mcmcMh}}
 }
 \keyword{internal}

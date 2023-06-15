@@ -4,14 +4,16 @@
 \alias{rTrajObs}
 \title{Generate an observation trajectory for a fitmodel}
 \usage{
-rTrajObs(fitmodel, theta, init.state, times)
+rTrajObs(fitmodel, theta, initState, times)
 }
 \arguments{
 \item{fitmodel}{a \code{\link{fitmodel}} object}
 
-\item{theta}{named numeric vector. Values of the parameters. Names should match \code{fitmodel$theta.names}.}
+\item{theta}{named numeric vector. Values of the parameters. Names should
+match \code{fitmodel$thetaNames}.}
 
-\item{init.state}{named numeric vector. Initial values of the state variables. Names should match \code{fitmodel$state.names}.}
+\item{initState}{named numeric vector. Initial values of the state
+variables. Names should match \code{fitmodel$stateNames}.}
 
 \item{times}{the times at which to generate observations}
 }
