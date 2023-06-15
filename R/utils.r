@@ -96,7 +96,7 @@ simulateModelReplicates <- function(fitmodel, theta, initState, times, n,
 simulateFinalStateAtExtinction <- function(fitmodel, theta, initState,
                                            extinct = NULL, timeInit = 0,
                                            timeStep = 100, n = 100,
-                                           observation = FALSE, nCores = 1) {
+                                           observation = FALSE) {
   stopifnot(inherits(fitmodel, "fitmodel"), n > 0)
 
   if (observation && is.null(fitmodel$dPointObs)) {
@@ -108,18 +108,6 @@ simulateFinalStateAtExtinction <- function(fitmodel, theta, initState,
 
   rep <- as.list(1:n)
   names(rep) <- rep
-
-  if ((is.null(nCores) > 1 || is.null(nCores)) &&
-      inherits(plan(), "sequential")) {
-    warning(
-      "Parallel processing is disabled. To enable, call `future::plan` ",
-      "with a parallel strategy, e.g. `future::plan(\"multisession\")`. ",
-      "For more details, read the corresponding manual page using ",
-      "`?future::plan`."
-    )
-  }
-
-  progress <- (n > 1 && nCores == 1)
 
   times <- c(timeInit, timeStep) # nolint: object_usage_linter
 
