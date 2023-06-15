@@ -4,7 +4,7 @@
 \alias{margLogLikeSto}
 \title{Marginal log-likelihood for a stochastic model}
 \usage{
-margLogLikeSto(fitmodel, theta, initState, data, nParticles, nCores = 1)
+margLogLikeSto(fitmodel, theta, initState, data, nParticles)
 }
 \arguments{
 \item{fitmodel}{a \code{\link{fitmodel}} object}

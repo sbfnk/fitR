@@ -4,7 +4,7 @@
 \alias{dTrajObs}
 \title{Log-likelihood of a trajectory for a deterministic model}
 \usage{
-dTrajObs(fitmodel, theta, initState, data, log = FALSE)
+dTrajObs(fitmodel, theta, initState, data, log = TRUE)
 }
 \arguments{
 \item{fitmodel}{a \code{\link{fitmodel}} object}

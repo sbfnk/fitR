@@ -12,8 +12,7 @@ simulateFinalStateAtExtinction(
   timeInit = 0,
   timeStep = 100,
   n = 100,
-  observation = FALSE,
-  nCores = 1
+  observation = FALSE
 )
 }
 \arguments{
