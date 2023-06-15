@@ -2,13 +2,17 @@
 output: github_document
 ---
 
-fitR
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/license/mit/)
+[![R-CMD-check](https://github.com/{{ gh_repo }}/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/{{ gh_repo }}/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/{{ gh_repo }}/branch/main/graph/badge.svg)](https://app.codecov.io/gh/{{ gh_repo }}?branch=main)
+
+fitR: Functions for model fitting and inference
 ====
 
-Functions for model fitting and inference
+The functions contained in this package have been developed in support of a course on [Model fitting and inference for infectious disease dynamics](http://sbfnk.github.io/mfiidd/) run annually at the [London School of Hygiene & Tropical Medicine](https://www.lshtm.ac.uk). 
 
 ## Installation
-The easiest way to install `fitR` is to use the `devtools` package:
+The easiest way to install `fitR` is to use the `remotes` package:
 
 ```{r eval = FALSE}
 # install.packages("remotes")

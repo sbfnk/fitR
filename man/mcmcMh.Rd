@@ -2,7 +2,7 @@
 % Please edit documentation in R/mcmc.r
 \name{mcmcMh}
 \alias{mcmcMh}
-\title{Metropolis-Hasting MCMCda}
+\title{Metropolis-Hasting MCMC}
 \usage{
 mcmcMh(
   target,
