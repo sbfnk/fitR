@@ -48,12 +48,11 @@ dTrajObs <- function(fitmodel, theta, initState, data, log = TRUE) {
 #' @export
 #' @seealso particleFilter
 #' @return Monte-Carlo estimate of the marginal log-likelihood of \code{theta}
-margLogLikeSto <- function(fitmodel, theta, initState, data, nParticles,
-                           nCores = 1) {
+margLogLikeSto <- function(fitmodel, theta, initState, data, nParticles) {
   # run SMC
   smc <- particleFilter(
     fitmodel = fitmodel, theta = theta, initState = initState, data = data,
-    nParticles = nParticles, nCores = nCores
+    nParticles = nParticles
   )
 
   return(smc$margLogLike)
