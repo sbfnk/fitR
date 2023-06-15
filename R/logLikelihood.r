@@ -9,7 +9,7 @@
 #' @return numeric value of the log-likelihood
 #' @param log logical (default: FALSE); whether the logarithm of the likelihood
 #'   should be returned
-dTrajObs <- function(fitmodel, theta, initState, data, log = FALSE) {
+dTrajObs <- function(fitmodel, theta, initState, data, log = TRUE) {
   # time sequence (must include initial time)
   times <- c(0, data$time)
 
@@ -31,7 +31,7 @@ dTrajObs <- function(fitmodel, theta, initState, data, log = FALSE) {
     dens <- dens +
       fitmodel$dPointObs(
         dataPoint = dataPoint, modelPoint = modelPoint, theta = theta,
-        log = TRUE
+        log = log
       )
   }
 
