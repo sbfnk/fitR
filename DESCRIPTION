@@ -30,7 +30,9 @@ Suggests:
     covr,
     deSolve,
     knitr,
-    rmarkdown
+    rmarkdown,
+    devtools,
+    xtable
 License: GPL-2
 RoxygenNote: 7.2.3
 Config/testthat/edition: 3

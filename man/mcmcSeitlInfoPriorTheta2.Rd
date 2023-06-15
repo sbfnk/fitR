@@ -9,7 +9,7 @@ A list with three elements describing the MCMC outputs
 }
 \description{
 A dataset containing the MCMC outputs of a fit of the `seitlDeter` model to
-the `fluTdc1971` data set with informative priors (100000 iterations). This
+the `fluTdc1971` data set with informative priors (50000 iterations). This
 differs from the `mcmcSeitlTheta2` dataset in the choice of priors and from
 the `mcmcSeitlInfoPriorTheta1` dataset in the choice of initial parameter set
 theta.

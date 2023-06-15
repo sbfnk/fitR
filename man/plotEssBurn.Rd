@@ -6,8 +6,8 @@
 \usage{
 plotEssBurn(
   trace,
-  longestBurnIn = ifelse(is.data.frame(trace) | is.mcmc(trace), nrow(trace),
-    nrow(trace[[1]]))/2,
+  longestBurnIn = ifelse(is.data.frame(trace) | is.matrix(trace) | is.mcmc(trace),
+    nrow(trace), nrow(trace[[1]]))/2,
   stepSize = round(longestBurnIn/50)
 )
 }

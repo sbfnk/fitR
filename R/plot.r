@@ -399,7 +399,7 @@ plotTrace <- function(trace, estimatedOnly = FALSE) {
     trace <- trace[, -which(isFixed)]
   }
 
-  trace$iteration <- seq_len(nrow(trace))
+  trace <- data.frame(cbind(trace, iteration = seq_len(nrow(trace))))
   df <- pivot_longer(trace, -"iteration")
 
   # density
@@ -454,7 +454,7 @@ plotPosteriorDensity <- function(trace, prior = NULL, colour = NULL,
     }
     trace <- bind_rows(trace, .id = "chain")
   } else {
-    trace$chain <- 1
+    trace <- as.data.frame(cbind(trace, chain = 1))
   }
 
   dfPosterior <- pivot_longer(
@@ -589,7 +589,7 @@ plotHPDregion2D <- function(trace, vars, prob = c(0.95, 0.75, 0.5, 0.25, 0.1),
 #' data(models)
 #' initState <- c(S = 999, I = 1, R = 0)
 #' plotPosteriorFit(
-#'   trace = mcmcEpi1, fitmodel = SIR_deter, initState = initState,
+#'   trace = mcmcEpi1, fitmodel = sirDeter, initState = initState,
 #'   data = epi1
 #'  )
 plotPosteriorFit <- function(trace, fitmodel, initState, data,
@@ -702,7 +702,8 @@ plotPosteriorFit <- function(trace, fitmodel, initState, data,
 ##' data(mcmcEpi)
 ##' plotEssBurn(mcmcEpi1)
 plotEssBurn <- function(trace, longestBurnIn = ifelse(
-  is.data.frame(trace) | is.mcmc(trace), nrow(trace), nrow(trace[[1]])
+  is.data.frame(trace) | is.matrix(trace) | is.mcmc(trace),
+  nrow(trace), nrow(trace[[1]])
 ) / 2, stepSize = round(longestBurnIn / 50)) {
   testBurnIn <- seq(0, longestBurnIn, stepSize) # test values
 
