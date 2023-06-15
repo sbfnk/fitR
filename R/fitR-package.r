@@ -544,9 +544,9 @@ NULL
 #' model to the influenza outbreak on Tristan da Cunha
 #'
 #' A dataset containing the MCMC outputs of a fit of the `seit4lStoch` model to
-#' the `fluTdc1971` data set with informative priors (8 chains fo 3000
+#' the `fluTdc1971` data set with informative priors (8 chains of 3000
 #' iterations each), using a particle filter with 8 particles to estimate the
-#' likelihood at each MCMC setp. This differs from the `pMcmcSeitlInfoPrior64`
+#' likelihood at each MCMC setup. This differs from the `pMcmcSeitlInfoPrior64`
 #' dataset in the number of particles.
 #'
 #' \itemize{
@@ -565,9 +565,9 @@ NULL
 #' model to the influenza outbreak on Tristan da Cunha
 #'
 #' A dataset containing the MCMC outputs of a fit of the `seit4lStoch` model to
-#' the `fluTdc1971` data set with informative priors (8 chains fo 3000
+#' the `fluTdc1971` data set with informative priors (8 chains of 3000
 #' iterations each), using a particle filter with 64 particles to estimate the
-#' likelihood at each MCMC setp. This differs from the `pMcmcSeitlInfoPrior8`
+#' likelihood at each MCMC setup. This differs from the `pMcmcSeitlInfoPrior8`
 #' dataset in the number of particles.
 #'
 #' \itemize{
@@ -594,7 +594,7 @@ NULL
 #' \itemize{
 #'   \item \code{nParticles} number of particles
 #'   \item \code{mean} mean estimated likelihood
-#'   \item \code{sd} standard deviatoin of the estimated likelihood
+#'   \item \code{sd} standard deviation of the estimated likelihood
 #'   \item \code{propDepleted} proportion of particles depleted
 #'   \item \code{days} number of days the 100 replicated took to estimate
 #' }

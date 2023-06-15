@@ -1,10 +1,10 @@
-#' Metropolis-Hasting MCMC
+#' Metropolis-Hastings MCMC
 #'
-#' Run \code{nIterations} of a Metropolis-Hasting MCMC to sample from the
+#' Run \code{nIterations} of a Metropolis-Hastings MCMC to sample from the
 #' target distribution using a gaussian proposal kernel.
 #' Two optional optimizations are also implemented: truncated gaussian proposal
 #' (to match the support of the target distribution, i.e. boundary of the
-#' parameters) and adaptative gaussian proposal (to match the size and the shape
+#' parameters) and adaptive gaussian proposal (to match the size and the shape
 #' of the target distribution).
 #' @param target \R-function that takes a single argument: \code{theta} (named
 #'   numeric vector of parameter values) and returns a list of 2 elements:

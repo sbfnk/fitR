@@ -13,7 +13,7 @@ plotEssBurn(
 }
 \arguments{
 \item{trace}{either a \code{data.frame} or a \code{list} of
-\code{data.frame} with all variables in column, as outputed by
+\code{data.frame} with all variables in column, as returned by
 \code{\link{mcmcMh}}. Accept also \code{mcmc} or \code{mcmc.list} objects.}
 
 \item{longestBurnIn}{The longest burn-in to test. Defaults to half the

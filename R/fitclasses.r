@@ -116,10 +116,10 @@ fitmodel <- function(name = NULL, stateNames = NULL, thetaNames = NULL,
 
 #' Test a fitmodel
 #'
-#' This function performs a serie of checks on the \code{\link{fitmodel}}
+#' This function performs a series of checks on the \code{\link{fitmodel}}
 #' provided by the user in order to make sure that it will be compatible both
 #' with the functions coded during the course and the functions available in the
-#' \code{fitR} package. The latters can be used as a correction.
+#' \code{fitR} package.
 #' @param fitmodel a \code{\link{fitmodel}} object
 #' @param theta named numeric vector. Values of the parameters. Names should
 #'   match \code{fitmodel$thetaNames}.

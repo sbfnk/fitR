@@ -23,10 +23,10 @@ must be named \code{"time"} and the observation column must be named
 validity of the arguments}
 }
 \description{
-This function performs a serie of checks on the \code{\link{fitmodel}}
+This function performs a series of checks on the \code{\link{fitmodel}}
 provided by the user in order to make sure that it will be compatible both
 with the functions coded during the course and the functions available in the
-\code{fitR} package. The latters can be used as a correction.
+\code{fitR} package.
 }
 \seealso{
 \code{\link{fitmodel}}

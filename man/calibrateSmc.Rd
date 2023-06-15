@@ -19,7 +19,7 @@ using 100 replicates of the estimation procedure.
 \itemize{
   \item \code{nParticles} number of particles
   \item \code{mean} mean estimated likelihood
-  \item \code{sd} standard deviatoin of the estimated likelihood
+  \item \code{sd} standard deviation of the estimated likelihood
   \item \code{propDepleted} proportion of particles depleted
   \item \code{days} number of days the 100 replicated took to estimate
 }
