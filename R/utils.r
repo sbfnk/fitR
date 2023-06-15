@@ -111,6 +111,8 @@ simulateFinalStateAtExtinction <- function(fitmodel, theta, initState,
 
   times <- c(timeInit, timeStep) # nolint: object_usage_linter
 
+  progress <- (n > 1)
+
   finalStateRep <- future_map(
     rep, function(x) {
       if (observation) {
@@ -206,7 +208,7 @@ updateCovmat <- function(covmat, thetaMean, theta, i) {
 #'   object)
 #' @examples
 #' data(mcmcEpi)
-#' burnAndThin(mcmcEpi1$trace, burn = 100, thin = 4)
+#' burnAndThin(mcmcEpi1, burn = 100, thin = 4)
 burnAndThin <- function(trace, burn = 0, thin = 0) {
   convertToMCMC <- FALSE
 
