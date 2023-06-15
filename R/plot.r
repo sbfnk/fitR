@@ -631,7 +631,7 @@ plotPosteriorFit <- function(trace, fitmodel, initState, data,
       times = times, n = sampleSize, observation = TRUE
     )
   } else if (posteriorSummary == "max") {
-    ind <- which.max(trace$logPosterior)
+    ind <- which.max(trace$logDensity)
     theta <- trace[ind, thetaNames]
     traj <- simulateModelReplicates(
       fitmodel = fitmodel, initState = initState, theta = theta,
