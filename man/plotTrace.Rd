@@ -18,7 +18,7 @@ Plot the traces of all estimated variables.
 }
 \examples{
 data(mcmcEpi)
-plotTrace(mcmcEpi1$trace)
+plotTrace(mcmcEpi1)
 }
 \seealso{
 burnAndThin

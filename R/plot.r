@@ -390,7 +390,7 @@ plotSMC <- function(smc, fitmodel, theta, data = NULL, summary = TRUE,
 #' @seealso burnAndThin
 #' @examples
 #' data(mcmcEpi)
-#' plotTrace(mcmcEpi1$trace)
+#' plotTrace(mcmcEpi1)
 plotTrace <- function(trace, estimatedOnly = FALSE) {
   if (estimatedOnly) {
     isFixed <- apply(trace, 2, function(x) {
@@ -436,7 +436,7 @@ plotTrace <- function(trace, estimatedOnly = FALSE) {
 #' @seealso burnAndThin
 #' @examples
 #' data(mcmcEpi)
-#' plotPosteriorDensity(mcmcEpi1$trace)
+#' plotPosteriorDensity(mcmcEpi1)
 plotPosteriorDensity <- function(trace, prior = NULL, colour = NULL,
                                  plot = TRUE) {
   if (is.null(colour)) {
@@ -589,7 +589,7 @@ plotHPDregion2D <- function(trace, vars, prob = c(0.95, 0.75, 0.5, 0.25, 0.1),
 #' data(models)
 #' initState <- c(S = 999, I = 1, R = 0)
 #' plotPosteriorFit(
-#'   trace = mcmcEpi1$trace, fitmodel = SIR_deter, initState = initState,
+#'   trace = mcmcEpi1, fitmodel = SIR_deter, initState = initState,
 #'   data = epi1
 #'  )
 plotPosteriorFit <- function(trace, fitmodel, initState, data,
@@ -700,7 +700,7 @@ plotPosteriorFit <- function(trace, fitmodel, initState, data,
 ##' @importFrom ggplot2 ggplot facet_wrap geom_line aes theme_bw
 ##' @examples
 ##' data(mcmcEpi)
-##' plotEssBurn(mcmcEpi1$trace)
+##' plotEssBurn(mcmcEpi1)
 plotEssBurn <- function(trace, longestBurnIn = ifelse(
   is.data.frame(trace) | is.mcmc(trace), nrow(trace), nrow(trace[[1]])
 ) / 2, stepSize = round(longestBurnIn / 50)) {

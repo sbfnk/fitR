@@ -31,7 +31,7 @@ Plot the posterior density.
 }
 \examples{
 data(mcmcEpi)
-plotPosteriorDensity(mcmcEpi1$trace)
+plotPosteriorDensity(mcmcEpi1)
 }
 \seealso{
 burnAndThin

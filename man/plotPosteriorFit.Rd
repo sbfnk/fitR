@@ -86,7 +86,7 @@ data(mcmcEpi)
 data(models)
 initState <- c(S = 999, I = 1, R = 0)
 plotPosteriorFit(
-  trace = mcmcEpi1$trace, fitmodel = SIR_deter, initState = initState,
+  trace = mcmcEpi1, fitmodel = SIR_deter, initState = initState,
   data = epi1
  )
 }

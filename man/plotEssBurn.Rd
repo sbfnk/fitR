@@ -30,5 +30,5 @@ Takes an mcmc trace and tests the ESS at different values of burn-in
 }
 \examples{
 data(mcmcEpi)
-plotEssBurn(mcmcEpi1$trace)
+plotEssBurn(mcmcEpi1)
 }
