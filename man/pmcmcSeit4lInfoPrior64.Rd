@@ -22,3 +22,4 @@ dataset in the number of particles.
   \item \code{covmatEmprical} the covariance matrix of parameter samples
 }
 }
+\keyword{internal}

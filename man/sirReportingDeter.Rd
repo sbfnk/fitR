@@ -29,3 +29,4 @@ You can look at the code of the \R-functions by typing
 \code{sirReportingDeter$simulate} for instance. There are some comments
 included.
 }
+\keyword{internal}

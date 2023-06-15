@@ -17,3 +17,4 @@ A dataset containing the MCMC trace of a fit of the `sirDeter` model to the
   \item \code{D_inf} duration of infection
 }
 }
+\keyword{internal}

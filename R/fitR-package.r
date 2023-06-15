@@ -12,6 +12,7 @@
 #' @format A data frame with 59 rows and 3 variables
 #' @source \url{http://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=pubmed&id=4511951&retmode=ref&cmd=prlinks} # nolint
 #' @name fluTdc1971
+#' @keywords internal
 NULL
 
 #' A simple deterministic SIR model with constant population size
@@ -37,6 +38,7 @@ NULL
 #' @format A \code{\link{fitmodel}} object, that is a list with the following
 #'   elements:
 #' @name sirDeter
+#' @keywords internal
 NULL
 
 #' A simple stochastic SIR model with constant population size
@@ -62,6 +64,7 @@ NULL
 #' @format A \code{\link{fitmodel}} object, that is a list with the following
 #'   elements:
 #' @name sirStoch
+#' @keywords internal
 NULL
 
 #' A simple deterministic SIR model with constant population size and reporting
@@ -89,6 +92,7 @@ NULL
 #' @format A \code{\link{fitmodel}} object, that is a list with the following
 #'   elements:
 #' @name sirReportingDeter
+#' @keywords internal
 NULL
 
 #' A simple deterministic SIR model with constant population size and parameters
@@ -116,6 +120,7 @@ NULL
 #' @format A \code{\link{fitmodel}} object, that is a list with the following
 #'   elements:
 #' @name sirExpDeter
+#' @keywords internal
 NULL
 
 #' The deterministic SIR model with two populations.
@@ -141,6 +146,7 @@ NULL
 #' @format A \code{\link{fitmodel}} object, that is a list with the following
 #'   elements:
 #' @name sir2popDeter
+#' @keywords internal
 NULL
 
 
@@ -167,6 +173,7 @@ NULL
 #' @format A \code{\link{fitmodel}} object, that is a list with the following
 #'   elements:
 #' @name seitlDeter
+#' @keywords internal
 NULL
 
 #' The stochastic SEITL model with constant population size
@@ -192,6 +199,7 @@ NULL
 #' @format A \code{\link{fitmodel}} object, that is a list with the following
 #'   elements:
 #' @name seitlStoch
+#' @keywords internal
 NULL
 
 #' The deterministic SEIT2L model with constant population size
@@ -217,6 +225,7 @@ NULL
 #' @format A \code{\link{fitmodel}} object, that is a list with the following
 #'   elements:
 #' @name seit2lDeter
+#' @keywords internal
 NULL
 
 #' The stochastic SEIT2L model with constant population size
@@ -242,6 +251,7 @@ NULL
 #' @format A \code{\link{fitmodel}} object, that is a list with the following
 #'   elements:
 #' @name seit2lStoch
+#' @keywords internal
 NULL
 
 #' The deterministic SEIT4L model with constant population size
@@ -267,6 +277,7 @@ NULL
 #' @format A \code{\link{fitmodel}} object, that is a list with the following
 #'   elements:
 #' @name seit4lDeter
+#' @keywords internal
 NULL
 
 #' The stochastic SEIT4L model with constant population size
@@ -292,6 +303,7 @@ NULL
 #' @format A \code{\link{fitmodel}} object, that is a list with the following
 #'   elements:
 #' @name seit4lStoch
+#' @keywords internal
 NULL
 
 #' The stochastic SEIT4L model with constant population size
@@ -317,6 +329,7 @@ NULL
 #' @format A \code{\link{fitmodel}} object, that is a list with the following
 #'   elements:
 #' @name seit4lStoch
+#' @keywords internal
 NULL
 
 #' Time-series of an outbreak simulated using an SIR model.
@@ -332,6 +345,7 @@ NULL
 #'
 #' @format A data frame with 38 rows and 2 variables
 #' @name epi1
+#' @keywords internal
 NULL
 
 #' Time-series of an outbreak simulated using an SIR model with underreporting.
@@ -348,6 +362,7 @@ NULL
 #'
 #' @format A data frame with 26 rows and 2 variables
 #' @name epi2
+#' @keywords internal
 NULL
 
 #' Time-series of an outbreak simulated using an SIR model.
@@ -363,6 +378,7 @@ NULL
 #'
 #' @format A data frame with 44 rows and 2 variables
 #' @name epi3
+#' @keywords internal
 NULL
 
 #' Time-series of an outbreak simulated using an SIR model with underreporting.
@@ -379,6 +395,7 @@ NULL
 #'
 #' @format A data frame with 100 rows and 2 variables
 #' @name epi4
+#' @keywords internal
 NULL
 
 #' Markov-chain Monte Carlo (MCMC) trace of a fit of the SIR model to a
@@ -394,6 +411,7 @@ NULL
 #'
 #' @format A data frame with 10001 rows and 2 variables
 #' @name mcmcEpi1
+#' @keywords internal
 NULL
 
 #' Markov-chain Monte Carlo (MCMC) trace of a fit of the SIR model to a
@@ -409,6 +427,7 @@ NULL
 #'
 #' @format A data frame with 10001 rows and 2 variables
 #' @name mcmcEpi3
+#' @keywords internal
 NULL
 
 #' Markov-chain Monte Carlo (MCMC) trace of a fit of the SIR model to a
@@ -425,6 +444,7 @@ NULL
 #'
 #' @format A data frame with 10001 rows and 2 variables
 #' @name mcmcEpi4
+#' @keywords internal
 NULL
 
 #' Markov-chain Monte Carlo (MCMC) outputs of a fit of the SEITL model to the
@@ -441,6 +461,7 @@ NULL
 #'
 #' @format A list with three elements describing the MCMC outputs
 #' @name mcmcSeitl
+#' @keywords internal
 NULL
 
 #' Markov-chain Monte Carlo (MCMC) outputs of a fit of the SEITL model to the
@@ -458,6 +479,7 @@ NULL
 #'
 #' @format A list with three elements describing the MCMC outputs
 #' @name mcmcSeitlTheta1
+#' @keywords internal
 NULL
 
 #' Markov-chain Monte Carlo (MCMC) outputs of a fit of the SEITL model to the
@@ -475,6 +497,7 @@ NULL
 #'
 #' @format A list with three elements describing the MCMC outputs
 #' @name mcmcSeitlTheta2
+#' @keywords internal
 NULL
 
 #' Markov-chain Monte Carlo (MCMC) outputs of a fit of the SEITL model to the
@@ -494,6 +517,7 @@ NULL
 #'
 #' @format A list with three elements describing the MCMC outputs
 #' @name mcmcSeitlInfoPriorTheta1
+#' @keywords internal
 NULL
 
 #' Markov-chain Monte Carlo (MCMC) outputs of a fit of the SEITL model to the
@@ -513,6 +537,7 @@ NULL
 #'
 #' @format A list with three elements describing the MCMC outputs
 #' @name mcmcSeitlInfoPriorTheta2
+#' @keywords internal
 NULL
 
 #' Markov-chain Monte Carlo (MCMC) outputs of a fit of the stochastic SEIT4L
@@ -533,6 +558,7 @@ NULL
 #' @format A list with of length 8 with each element containing three elements
 #'   describing the MCMC outputs
 #' @name pmcmcSeit4lInfoPrior8
+#' @keywords internal
 NULL
 
 #' Markov-chain Monte Carlo (MCMC) outputs of a fit of the stochastic SEIT4L
@@ -553,6 +579,7 @@ NULL
 #' @format A list with of length 8 with each element containing three elements
 #'   describing the MCMC outputs
 #' @name pmcmcSeit4lInfoPrior64
+#' @keywords internal
 NULL
 
 #' A data set resulting from calibrating the number of particles in a
@@ -575,4 +602,5 @@ NULL
 #' @format A data frame with 11 rows and 5 columns describing the results of the
 #'   calibration procedure
 #' @name calibrateSmc
+#' @keywords internal
 NULL

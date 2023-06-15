@@ -21,3 +21,4 @@ theta.
   \item \code{covmatEmprical} the covariance matrix of parameter samples
 }
 }
+\keyword{internal}

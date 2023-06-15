@@ -48,3 +48,4 @@ each of these elements.
 You can look at the code of the \R-functions by typing
 \code{seit4lStoch$simulate} for instance. There are some comments included.
 }
+\keyword{internal}

@@ -24,3 +24,4 @@ using 100 replicates of the estimation procedure.
   \item \code{days} number of days the 100 replicated took to estimate
 }
 }
+\keyword{internal}

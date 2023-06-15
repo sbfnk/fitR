@@ -18,3 +18,4 @@ the `fluTdc1971` data set (5000 iterations).
   \item \code{covmatEmprical} the covariance matrix of parameter samples
 }
 }
+\keyword{internal}

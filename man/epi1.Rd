@@ -17,3 +17,4 @@ a population of 999 susceptibles and a single infected person.
   \item \code{obs} number of observations
 }
 }
+\keyword{internal}

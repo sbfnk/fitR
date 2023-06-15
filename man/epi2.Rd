@@ -18,3 +18,4 @@ person.
   \item \code{obs} number of observations
 }
 }
+\keyword{internal}

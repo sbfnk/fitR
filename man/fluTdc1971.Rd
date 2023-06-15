@@ -20,3 +20,4 @@ A/H3N2 two-wave epidemic on the island of Tristan-da-Cunha.
   \item \code{Inc} daily count incidence of influenza-like-illness
 }
 }
+\keyword{internal}
