@@ -1,6 +1,6 @@
 Package: fitR
 Title: Tool box for fitting dynamic infectious disease models to time series
-Version: 0.1
+Version: 0.2
 Authors@R: c(person(given="Anton", family="Camacho", email="ntncmch@gmail.com",
     role=c("aut")),person(given="Sebastian", family="Funk",
     email="sebastian.funk@lshtm.ac.uk", role=c("aut", "cre")))
