@@ -540,6 +540,99 @@ NULL
 #' @keywords internal
 NULL
 
+#' Markov-chain Monte Carlo (MCMC) outputs of a fit of the SEIT4L model to the
+#' influenza outbreak on Tristan da Cunha (short run)
+#'
+#' A dataset containing the MCMC outputs of a fit of the `seit4lDeter` model to
+#' the `fluTdc1971` data set (5000 iterations).
+#'
+#' \itemize{
+#'   \item \code{trace} data frame containing the MCMC trace
+#'   \item \code{acceptanceRate} a single value denoting the acceptance rate
+#'   \item \code{covmatEmprical} the covariance matrix of parameter samples
+#' }
+#'
+#' @format A list with three elements describing the MCMC outputs
+#' @name mcmcSeit4l
+#' @keywords internal
+NULL
+
+#' Markov-chain Monte Carlo (MCMC) outputs of a fit of the SEIT4L model to the
+#' influenza outbreak on Tristan da Cunha (long run)
+#'
+#' A dataset containing the MCMC outputs of a fit of the `seit4lDeter` model to
+#' the `fluTdc1971` data set (50000 iterations). This differs from the
+#' `mcmcSeit4lTheta2` dataset in the choice of initial parameter set theta.
+#'
+#' \itemize{
+#'   \item \code{trace} data frame containing the MCMC trace
+#'   \item \code{acceptanceRate} a single value denoting the acceptance rate
+#'   \item \code{covmatEmprical} the covariance matrix of parameter samples
+#' }
+#'
+#' @format A list with three elements describing the MCMC outputs
+#' @name mcmcSeit4lTheta1
+#' @keywords internal
+NULL
+
+#' Markov-chain Monte Carlo (MCMC) outputs of a fit of the SEIT4L model to the
+#' influenza outbreak on Tristan da Cunha (long run)
+#'
+#' A dataset containing the MCMC outputs of a fit of the `seit4lDeter` model to
+#' the `fluTdc1971` data set (50000 iterations). This differs from the
+#' `mcmcSeit4lTheta1` dataset in the choice of initial parameter set theta.
+#'
+#' \itemize{
+#'   \item \code{trace} data frame containing the MCMC trace
+#'   \item \code{acceptanceRate} a single value denoting the acceptance rate
+#'   \item \code{covmatEmprical} the covariance matrix of parameter samples
+#' }
+#'
+#' @format A list with three elements describing the MCMC outputs
+#' @name mcmcSeit4lTheta2
+#' @keywords internal
+NULL
+
+#' Markov-chain Monte Carlo (MCMC) outputs of a fit of the SEIT4L model to the
+#' influenza outbreak on Tristan da Cunha (long run)
+#'
+#' A dataset containing the MCMC outputs of a fit of the `seit4lDeter` model to
+#' the `fluTdc1971` data set with informative priors (50000 iterations). This
+#' differs from the `mcmcSeit4lTheta1` dataset in the choice of priors and from
+#' the `mcmcSeit4lInfoPriorTheta2` dataset in the choice of initial parameter
+#' set theta.
+#'
+#' \itemize{
+#'   \item \code{trace} data frame containing the MCMC trace
+#'   \item \code{acceptanceRate} a single value denoting the acceptance rate
+#'   \item \code{covmatEmprical} the covariance matrix of parameter samples
+#' }
+#'
+#' @format A list with three elements describing the MCMC outputs
+#' @name mcmcSeit4lInfoPriorTheta1
+#' @keywords internal
+NULL
+
+#' Markov-chain Monte Carlo (MCMC) outputs of a fit of the SEIT4L model to the
+#' influenza outbreak on Tristan da Cunha (long run)
+#'
+#' A dataset containing the MCMC outputs of a fit of the `seit4lDeter` model to
+#' the `fluTdc1971` data set with informative priors (50000 iterations). This
+#' differs from the `mcmcSeit4lTheta2` dataset in the choice of priors and from
+#' the `mcmcSeit4lInfoPriorTheta1` dataset in the choice of initial parameter
+#' set theta.
+#'
+#' \itemize{
+#'   \item \code{trace} data frame containing the MCMC trace
+#'   \item \code{acceptanceRate} a single value denoting the acceptance rate
+#'   \item \code{covmatEmprical} the covariance matrix of parameter samples
+#' }
+#'
+#' @format A list with three elements describing the MCMC outputs
+#' @name mcmcSeit4lInfoPriorTheta2
+#' @keywords internal
+NULL
+
 #' Markov-chain Monte Carlo (MCMC) outputs of a fit of the stochastic SEIT4L
 #' model to the influenza outbreak on Tristan da Cunha
 #'
