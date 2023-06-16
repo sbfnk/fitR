@@ -1,9 +1,9 @@
 
 [![License:
 MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/license/mit/)
-[![R-CMD-check](https://github.com/%7B%7B%20gh_repo%20%7D%7D/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/%7B%7B%20gh_repo%20%7D%7D/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/sbfnk/fitR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sbfnk/fitR/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
-coverage](https://codecov.io/gh/%7B%7B%20gh_repo%20%7D%7D/branch/main/graph/badge.svg)](https://app.codecov.io/gh/%7B%7B%20gh_repo%20%7D%7D?branch=main)
+coverage](https://codecov.io/gh/sbfnk/fitR/branch/main/graph/badge.svg)](https://app.codecov.io/gh/sbfnk/fitR?branch=main)
 
 # fitR: Functions for model fitting and inference
 
@@ -18,11 +18,11 @@ particularly efficient of stable. For vastly superior alternative
 options for fitting models to data in R we recommend to consider,
 amongst others
 
-- [https://github.com/stan-dev/rstan](rstan), an interface to
+- [rstan](https://github.com/stan-dev/rstan), an interface to
   [Stan](https://mc-stan.org/).
-- [https://github.com/sbfnk/RBi](rbi), an interface to
+- [rbi](https://github.com/sbfnk/RBi), an interface to
   [LibBi](https://libbi.org/).
-- [https://github.com/kingaa/pomp](pomp), for partially observed Markov
+- [pomp](https://github.com/kingaa/pomp), for partially observed Markov
   processes.
 
 ## Installation
@@ -32,5 +32,5 @@ The easiest way to install `fitR` is to use the `remotes` package:
 ``` r
 # install.packages("remotes")
 library(remotes)
-install_github("sbfnk/fitR")
+install_github("sbfnk/fitR", dependencies = TRUE)
 ```
