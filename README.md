@@ -32,5 +32,5 @@ The easiest way to install `fitR` is to use the `remotes` package:
 ``` r
 # install.packages("remotes")
 library(remotes)
-install_github("sbfnk/fitR")
+install_github("sbfnk/fitR", dependencies = TRUE)
 ```
