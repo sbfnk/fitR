@@ -638,7 +638,7 @@ NULL
 #'
 #' A dataset containing the MCMC outputs of a fit of the `seit4lStoch` model to
 #' the `fluTdc1971` data set with informative priors (8 chains of 3000
-#' iterations each), using a particle filter with 8 particles to estimate the
+#' iterations each), using a particle filter with 16 particles to estimate the
 #' likelihood at each MCMC setup. This differs from the `pMcmcSeitlInfoPrior64`
 #' dataset in the number of particles.
 #'
@@ -650,7 +650,7 @@ NULL
 #'
 #' @format A list with of length 8 with each element containing three elements
 #'   describing the MCMC outputs
-#' @name pmcmcSeit4lInfoPrior8
+#' @name pmcmcSeit4lInfoPrior16
 #' @keywords internal
 NULL
 
@@ -659,7 +659,7 @@ NULL
 #'
 #' A dataset containing the MCMC outputs of a fit of the `seit4lStoch` model to
 #' the `fluTdc1971` data set with informative priors (8 chains of 3000
-#' iterations each), using a particle filter with 64 particles to estimate the
+#' iterations each), using a particle filter with 128 particles to estimate the
 #' likelihood at each MCMC setup. This differs from the `pMcmcSeitlInfoPrior8`
 #' dataset in the number of particles.
 #'
@@ -671,7 +671,7 @@ NULL
 #'
 #' @format A list with of length 8 with each element containing three elements
 #'   describing the MCMC outputs
-#' @name pmcmcSeit4lInfoPrior64
+#' @name pmcmcSeit4lInfoPrior128
 #' @keywords internal
 NULL
 
