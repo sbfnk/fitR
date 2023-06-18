@@ -18,6 +18,7 @@ The main purpose of this package is to be a teaching tool, and the implementatio
 - [pomp](https://github.com/kingaa/pomp), for partially observed Markov processes.
 
 ## Installation
+
 The easiest way to install `fitR` is to use the `remotes` package:
 
 ```{r eval = FALSE}
@@ -25,3 +26,7 @@ The easiest way to install `fitR` is to use the `remotes` package:
 library(remotes)
 install_github("sbfnk/fitR", dependencies = TRUE)
 ```
+
+## Included data sets
+
+The package includes a number of data sets that are used for the course. They havae been generated using the scripts in the `scripts/generate-data` directory of the corresponding [github repo](https://github.com/sbfnk/mfiidd).
