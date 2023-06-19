@@ -639,7 +639,7 @@ NULL
 #' A dataset containing the MCMC outputs of a fit of the `seit4lStoch` model to
 #' the `fluTdc1971` data set with informative priors (8 chains of 3000
 #' iterations each), using a particle filter with 16 particles to estimate the
-#' likelihood at each MCMC setup. This differs from the `pMcmcSeitlInfoPrior64`
+#' likelihood at each MCMC setup. This differs from the `pMcmcSeitlInfoPrior128`
 #' dataset in the number of particles.
 #'
 #' \itemize{
