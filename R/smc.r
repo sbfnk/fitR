@@ -14,8 +14,7 @@
 #' @export
 #' @seealso plotSMC
 #' @importFrom utils txtProgressBar setTxtProgressBar
-#' @importFrom furrr future_map furrr_options
-#' @importFrom future plan
+#' @importFrom purrr map
 #' @return A list of 3 elements:
 #' \itemize{
 #' \item \code{dPointObs} the marginal log-likelihood of the theta.
@@ -26,14 +25,6 @@
 #' }
 particleFilter <- function(fitmodel, theta, initState, data, nParticles,
                            progress = FALSE) {
-  if (inherits(future::plan(), "sequential")) {
-    warning(
-      "Parallel processing is disabled. To enable, call `future::plan` ",
-      "with a parallel strategy, e.g. `future::plan(\"multisession\")`. ",
-      "For more details, read the corresponding manual page using ",
-      "`?future::plan`."
-    )
-  }
 
   # marginal log-likelihood of theta
   margLogLike <- 0
@@ -80,7 +71,7 @@ particleFilter <- function(fitmodel, theta, initState, data, nParticles,
     currentStateParticles <- currentStateParticles[indexResampled]
 
     # propagate particles (this for loop could be parallelized)
-    propagate <- future_map(currentStateParticles, \(currentState) {
+    propagate <- map(currentStateParticles, \(currentState) {
       # simulate from previous observation to current observation time
       traj <- fitmodel$simulate(
         theta = theta, initState = currentState, times = times
@@ -93,16 +84,16 @@ particleFilter <- function(fitmodel, theta, initState, data, nParticles,
       )
 
       return(list(state = modelPoint, weight = weight))
-    }, .options = furrr_options(seed = TRUE))
+    })
 
     # collect parallel jobs
-    currentStateParticles <- future_map(propagate, \(x) {
+    currentStateParticles <- map(propagate, \(x) {
       x$state
     })
-    weightParticles <- unlist(future_map(propagate, \(x) {
+    weightParticles <- unlist(map(propagate, \(x) {
       x$weight
     }))
-    trajParticles <- future_map(seq_along(propagate), \(j) {
+    trajParticles <- map(seq_along(propagate), \(j) {
       rbind(trajParticles[[j]], c(dataPoint["time"], propagate[[j]]$state))
     })
 

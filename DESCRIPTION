@@ -19,19 +19,19 @@ Imports:
     dplyr,
     emdbook,
     rlang,
-    furrr,
-    future,
+    purrr,
     tidyr,
     tidyselect
 Suggests:
     here,
-    purrr,
     testthat (>= 3.0.0),
     covr,
     deSolve,
     knitr,
     rmarkdown,
-    spelling
+    spelling,
+    future,
+    furrr
 License: MIT + file LICENSE
 RoxygenNote: 7.2.3
 Config/testthat/edition: 3

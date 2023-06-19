@@ -48,6 +48,7 @@
 #' @importFrom dplyr mutate filter
 #' @importFrom tidyselect all_of
 #' @importFrom tidyr pivot_longer
+#' @importFrom purrr map
 #' @importFrom rlang .data inherits_any
 #' @importFrom stats quantile
 #' @seealso \code{\link{simulateModelReplicates}}
@@ -104,7 +105,7 @@ plotTraj <- function(traj = NULL, stateNames = NULL, data = NULL,
         infected = eval(parse(text = paste(nonExtinct, collapse = "+")), traj)
       )
       dfPExt <- split(traj, f = traj[[timeColumn]])
-      dfPExt <- future_map(dfPExt, \(df) {
+      dfPExt <- map(dfPExt, \(df) {
         tmp <- data.frame(value = sum(df$infected == 0) / nrow(df))
         tmp[[timeColumn]] <- unique(df[[timeColumn]])
         return(tmp)
@@ -128,7 +129,7 @@ plotTraj <- function(traj = NULL, stateNames = NULL, data = NULL,
       message("Compute confidence intervals")
 
       trajCI <- split(dfTraj, dfTraj[c(timeColumn, "state")])
-      trajCI <- future_map(trajCI, \(df) {
+      trajCI <- map(trajCI, \(df) {
         tmp <- as.data.frame(
           t(quantile(df$value, prob = c(0.025, 0.25, 0.5, 0.75, 0.975)))
         )
@@ -341,7 +342,7 @@ plotFit <- function(fitmodel, theta, initState, data, nReplicates = 1,
 #' @param smc output of \code{\link{particleFilter}}
 #' @inheritParams plotTraj
 #' @inheritParams plotFit
-#' @importFrom furrr future_map
+#' @importFrom purrr map
 #' @importFrom dplyr bind_rows left_join
 #' @export
 #' @seealso particleFilter
@@ -350,7 +351,7 @@ plotSMC <- function(smc, fitmodel, theta, data = NULL, summary = TRUE,
   traj <- smc$traj
   names(traj) <- seq_along(traj)
 
-  traj <- future_map(traj, function(df) {
+  traj <- map(traj, function(df) {
     obs <- apply(df, 1, \(x) fitmodel$rPointObs(x, theta = theta))
     trajObs <- left_join(df, obs, by = "time")
 
@@ -429,7 +430,7 @@ plotTrace <- function(trace, estimatedOnly = FALSE) {
 #' @inheritParams plotTraj
 #' @export
 #' @importFrom rlang inherits_any
-#' @importFrom furrr future_map
+#' @importFrom purrr map
 #' @importFrom dplyr n_distinct bind_rows
 #' @importFrom ggplot2 ggplot aes facet_wrap geom_density geom_histogram
 #'   geom_area theme_bw xlab after_stat
@@ -445,7 +446,7 @@ plotPosteriorDensity <- function(trace, prior = NULL, colour = NULL,
 
   if (inherits_any(trace, c("mcmc.list", "list"))) {
     ## convert to data farmes
-    trace <- future_map(trace, \(x) {
+    trace <- map(trace, \(x) {
       as.data.frame(as.matrix(x))
     })
 
@@ -570,7 +571,7 @@ plotHPDregion2D <- function(trace, vars, prob = c(0.95, 0.75, 0.5, 0.25, 0.1),
 #' @inheritParams plotTraj
 #' @inheritParams plotFit
 #' @importFrom dplyr bind_rows
-#' @importFrom furrr future_map furrr_options
+#' @importFrom purrr map
 #' @importFrom stats median
 #' @importFrom rlang .data
 #' @export
@@ -604,7 +605,7 @@ plotPosteriorFit <- function(trace, fitmodel, initState, data,
   if (inherits(trace, "mcmc")) {
     trace <- as.data.frame(trace)
   } else if (inherits(trace, "mcmc.list")) {
-    trace <- future_map(trace, \(x) {
+    trace <- map(trace, \(x) {
       as.data.frame(as.matrix(x))
     })
     trace <- bind_rows(trace)
@@ -642,7 +643,7 @@ plotPosteriorFit <- function(trace, fitmodel, initState, data,
 
     index <- sample(seq_len(nrow(trace)), sampleSize, replace = TRUE)
 
-    traj <- future_map(index, function(ind) {
+    traj <- map(index, function(ind) {
       # extract posterior parameter set
       theta <- trace[ind, thetaNames]
 
@@ -651,7 +652,7 @@ plotPosteriorFit <- function(trace, fitmodel, initState, data,
       traj$replicate <- ind
 
       return(traj)
-    }, .progress = TRUE, .options = furrr_options(seed = TRUE))
+    }, .progress = TRUE)
     names(traj) <- index
     traj <- bind_rows(traj)
 
@@ -694,7 +695,7 @@ plotPosteriorFit <- function(trace, fitmodel, initState, data,
 ##' @export
 ##' @importFrom coda is.mcmc
 ##' @importFrom dplyr bind_rows
-##' @importFrom furrr future_map
+##' @importFrom purrr map
 ##' @importFrom tidyr pivot_longer
 ##' @importFrom coda effectiveSize as.mcmc
 ##' @importFrom ggplot2 ggplot facet_wrap geom_line aes theme_bw
@@ -718,7 +719,7 @@ plotEssBurn <- function(trace, longestBurnIn = ifelse(
     names(trace) <- seq_along(trace)
   }
 
-  dfEssBurnIn <- future_map(trace, function(oneTrace) {
+  dfEssBurnIn <- map(trace, function(oneTrace) {
     # initialise data.frame of ess estimates
     essBurnIn <- data.frame(t(effectiveSize(oneTrace)))
     for (burnIn in testBurnIn[-1]) {
