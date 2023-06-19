@@ -18,10 +18,10 @@ test_that("mcmcMh for deterministic SEITL model", {
 
   # default covariance matrix
   suppressMessages(ans <- mcmcMh(
-      target = target, initTheta = theta, nIterations = 100,
-      adaptSizeStart = 10, adaptSizeCooling = 0.99, adaptShapeStart = 10,
-      printInfoEvery = NULL
-    ))
+    target = target, initTheta = theta, nIterations = 100,
+    adaptSizeStart = 10, adaptSizeCooling = 0.99, adaptShapeStart = 10,
+    printInfoEvery = NULL
+  ))
 
   expect_true(is.matrix(ans$trace))
   expect_true(is.numeric(ans$acceptanceRate))
@@ -67,21 +67,21 @@ test_that("mcmcMh for stochastic SEITL model", {
   data("fluTdc1971", envir = environment())
   data <- fluTdc1971[1:5, ]
 
-  previousPlan <- future::plan()
-  future::plan("multisession")
   target <- function(theta) {
     return(dLogPosterior(
       fitmodel = seitlStoch, theta = theta, initState = initState, data = data,
       margLogLike = margLogLikeSto, nParticles = 10
     ))
   }
-  future::plan(previousPlan)
 
-  # default covariance matrix
+  previousPlan <- future::plan()
+  future::plan("multisession")
+   # default covariance matrix
   suppressMessages(ans <- mcmcMh(
     target = target, initTheta = theta, nIterations = 100, adaptSizeStart = 10,
     adaptSizeCooling = 0.99, adaptShapeStart = 10, printInfoEvery = NULL
   ))
+  future::plan(previousPlan)
 
   expect_true(is.matrix(ans$trace))
   expect_true(is.numeric(ans$acceptanceRate))
@@ -100,21 +100,21 @@ test_that("mcmcMh for stochastic SEIT2L model", {
   data("fluTdc1971", envir = environment())
   data <- fluTdc1971[1:5, ]
 
-  previousPlan <- future::plan()
-  future::plan("multisession")
-  target <- function(theta) {
+ target <- function(theta) {
     return(dLogPosterior(
       fitmodel = seit2lStoch, theta = theta, initState = initState,
       data = data, margLogLike = margLogLikeSto, nParticles = 10
     ))
   }
-  future::plan(previousPlan)
 
-  # default covariance matrix
+  previousPlan <- future::plan()
+  future::plan("multisession")
+   # default covariance matrix
   suppressMessages(ans <- mcmcMh(
     target = target, initTheta = theta, nIterations = 100, adaptSizeStart = 10,
     adaptSizeCooling = 0.99, adaptShapeStart = 10, printInfoEvery = NULL
   ))
+  future::plan(previousPlan)
 
   expect_true(is.matrix(ans$trace))
   expect_true(is.numeric(ans$acceptanceRate))
