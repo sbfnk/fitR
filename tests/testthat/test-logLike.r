@@ -39,13 +39,10 @@ test_that("log-like sto of SEITL", {
   data(fluTdc1971, envir = environment())
   data <- fluTdc1971[1:5, ]
 
-  previousPlan <- future::plan()
-  future::plan("multisession")
   x <- margLogLikeSto(
     fitmodel = seitlStoch, theta = theta, initState = initState, data = data,
     nParticles = 10
   )
-  future::plan(previousPlan)
   expect_true(is.numeric(x))
 })
 
@@ -60,13 +57,10 @@ test_that("log-like sto of SEIT2L", {
   data(fluTdc1971, envir = environment())
   data <- fluTdc1971[1:5, ]
 
-  previousPlan <- future::plan()
-  future::plan("multisession")
   x <- margLogLikeSto(
     fitmodel = seit2lStoch, theta = theta, initState = initState, data = data,
     nParticles = 10
   )
-  future::plan(previousPlan)
   expect_true(is.numeric(x))
 })
 
@@ -112,13 +106,10 @@ test_that("posterior sto of SEITL", {
   data(fluTdc1971, envir = environment())
   data <- fluTdc1971[1:5, ]
 
-  previousPlan <- future::plan()
-  future::plan("multisession")
   x <- dLogPosterior(
     fitmodel = seitlStoch, theta = theta, initState = initState, data = data,
     margLogLike = margLogLikeSto, nParticles = 10
   )
-  future::plan(previousPlan)
   expect_true(is.numeric(x$logDensity))
 })
 
@@ -133,12 +124,9 @@ test_that("posterior sto of SEIT2L", {
   data(fluTdc1971, envir = environment())
   data <- fluTdc1971[1:5, ]
 
-  previousPlan <- future::plan()
-  future::plan("multisession")
   x <- dLogPosterior(
     fitmodel = seit2lStoch, theta = theta, initState = initState, data = data,
     margLogLike = margLogLikeSto, nParticles = 10
   )
-  future::plan(previousPlan)
   expect_true(is.numeric(x$logDensity))
 })

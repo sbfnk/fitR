@@ -100,7 +100,7 @@ test_that("mcmcMh for stochastic SEIT2L model", {
   data("fluTdc1971", envir = environment())
   data <- fluTdc1971[1:5, ]
 
- target <- function(theta) {
+  target <- function(theta) {
     return(dLogPosterior(
       fitmodel = seit2lStoch, theta = theta, initState = initState,
       data = data, margLogLike = margLogLikeSto, nParticles = 10

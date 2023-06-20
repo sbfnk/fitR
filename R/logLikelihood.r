@@ -127,7 +127,7 @@ dLogPosteriorWrapper <- function(fitmodel, initState, data, margLogLike, ...) {
 #' @param times the times at which to generate observations
 #' @export
 #' @seealso \code{\link{dTrajObs}}
-#' @importFrom furrr future_map furrr_options
+#' @importFrom purrr map
 #' @importFrom dplyr bind_rows left_join
 #' @return data.frame
 rTrajObs <- function(fitmodel, theta, initState, times) {
@@ -138,12 +138,12 @@ rTrajObs <- function(fitmodel, theta, initState, times) {
   ## each row of traj. The parameter value theta as passed as
   ## extra argument to fitmodel$rPointObs
   obs <- split(traj, f = traj$time)
-  obs <- future_map(obs, \(x) {
+  obs <- map(obs, \(x) {
     data.frame(
       time = unique(x$time),
       obs = fitmodel$rPointObs(x, theta = theta)
     )
-  }, .options = furrr_options(seed = TRUE))
+  })
   obs <- bind_rows(obs)
   traj <- left_join(traj, obs, by = "time")
 
