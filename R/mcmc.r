@@ -145,17 +145,29 @@ mcmcMh <- function(
   # evaluate target at theta init
   targetThetaCurrent <- target(thetaCurrent)
 
+  # if return value is a vector, set log.density and trace
+  if (is(targetThetaCurrent, "numeric")) {
+    targetThetaCurrent <- list(
+      logDensity = targetThetaCurrent,
+      trace = thetaCurrent
+    )
+  }
+
   if (!is.null(printInfoEvery)) {
     message(
       Sys.time(), ", Init: ",
       printNamedVector(thetaCurrent[thetaEstimatedNames]),
-      ", target: ", targetThetaCurrent
+      ", target: ", targetThetaCurrent[["logDensity"]]
     )
   }
 
   # trace
-  trace <- matrix(ncol = length(thetaEstimatedNames) + 1, nrow = nIterations, 0)
-  colnames(trace) <- c(thetaEstimatedNames, "logDensity")
+  trace <- matrix(
+    ncol = length(targetThetaCurrent[["trace"]]) + 1,
+    nrow = nIterations,
+    0
+  )
+  colnames(trace) <- c(names(targetThetaCurrent[["trace"]]), "logDensity")
 
   # acceptance rate
   acceptanceRate <- 0
@@ -231,7 +243,7 @@ mcmcMh <- function(
           appendLF = FALSE
         )
       }
-      message(", state: ", (printNamedVector(thetaCurrent)))
+      message(", state: ", (printNamedVector(targetThetaCurrent[["theta"]])))
       message(", logdensity: ", targetThetaCurrent)
     }
 
@@ -257,13 +269,21 @@ mcmcMh <- function(
     # evaluate posterior of proposed parameter
     targetThetaPropose <- target(thetaPropose)
     # if return value is a vector, set logDensity and trace
+    if (is(targetThetaCurrent, "numeric")) {
+      targetThetaPropose <- list(
+        logDensity = targetThetaPropose,
+        trace = thetaPropose
+      )
+    }
 
-    if (!is.finite(targetThetaPropose)) {
+
+    if (!is.finite(targetThetaPropose[["logDensity"]])) {
       # if posterior is 0 then do not compute anything else and don't accept
       logAcceptance <- -Inf
     } else {
       # compute Metropolis-Hastings ratio (acceptance probability)
-      logAcceptance <- targetThetaPropose - targetThetaCurrent
+      logAcceptance <- targetThetaPropose[["logDensity"]] -
+        targetThetaCurrent[["logDensity"]]
       logAcceptance <- logAcceptance +
         dtmvnorm(
           x = thetaCurrent[thetaEstimatedNames],
@@ -316,7 +336,7 @@ mcmcMh <- function(
       message("rejected")
     }
     trace[iIteration, ] <- c(
-      thetaCurrent[thetaEstimatedNames], targetThetaCurrent
+      targetThetaCurrent[["trace"]], targetThetaCurrent[["logDensity"]]
     )
 
     # update acceptance rate

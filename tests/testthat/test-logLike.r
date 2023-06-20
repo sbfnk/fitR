@@ -76,7 +76,7 @@ test_that("posterior deter of SEITL", {
     fitmodel = seitlDeter, theta = theta, initState = initState, data = data,
     margLogLike = dTrajObs
   )
-  expect_true(is.numeric(x))
+  expect_true(is.numeric(x$logDensity))
 })
 
 
@@ -94,7 +94,7 @@ test_that("posterior deter of SEIT2L", {
     fitmodel = seit2lDeter, theta = theta, initState = initState, data = data,
     margLogLike = dTrajObs
   )
-  expect_true(is.numeric(x))
+  expect_true(is.numeric(x$logDensity))
 })
 
 
@@ -110,7 +110,7 @@ test_that("posterior sto of SEITL", {
     fitmodel = seitlStoch, theta = theta, initState = initState, data = data,
     margLogLike = margLogLikeSto, nParticles = 10
   )
-  expect_true(is.numeric(x))
+  expect_true(is.numeric(x$logDensity))
 })
 
 
@@ -128,5 +128,5 @@ test_that("posterior sto of SEIT2L", {
     fitmodel = seit2lStoch, theta = theta, initState = initState, data = data,
     margLogLike = margLogLikeSto, nParticles = 10
   )
-  expect_true(is.numeric(x))
+  expect_true(is.numeric(x$logDensity))
 })

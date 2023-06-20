@@ -91,7 +91,15 @@ dLogPosterior <- function(fitmodel, theta, initState, data,
 
   logPosterior <- logPrior + logLikelihood
 
-  return(logPosterior)
+  return(list(
+    logDensity = logPosterior,
+    trace = c(
+      theta,
+      logPrior = logPrior,
+      logLikelihood = logLikelihood,
+      logPosterior = logPosterior
+    )
+  ))
 }
 
 

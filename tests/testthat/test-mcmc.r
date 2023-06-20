@@ -18,10 +18,10 @@ test_that("mcmcMh for deterministic SEITL model", {
 
   # default covariance matrix
   suppressMessages(ans <- mcmcMh(
-      target = target, initTheta = theta, nIterations = 100,
-      adaptSizeStart = 10, adaptSizeCooling = 0.99, adaptShapeStart = 10,
-      printInfoEvery = NULL
-    ))
+    target = target, initTheta = theta, nIterations = 100,
+    adaptSizeStart = 10, adaptSizeCooling = 0.99, adaptShapeStart = 10,
+    printInfoEvery = NULL
+  ))
 
   expect_true(is.matrix(ans$trace))
   expect_true(is.numeric(ans$acceptanceRate))
@@ -74,11 +74,14 @@ test_that("mcmcMh for stochastic SEITL model", {
     ))
   }
 
-  # default covariance matrix
+  previousPlan <- future::plan()
+  future::plan("multisession")
+   # default covariance matrix
   suppressMessages(ans <- mcmcMh(
     target = target, initTheta = theta, nIterations = 100, adaptSizeStart = 10,
     adaptSizeCooling = 0.99, adaptShapeStart = 10, printInfoEvery = NULL
   ))
+  future::plan(previousPlan)
 
   expect_true(is.matrix(ans$trace))
   expect_true(is.numeric(ans$acceptanceRate))
@@ -104,11 +107,14 @@ test_that("mcmcMh for stochastic SEIT2L model", {
     ))
   }
 
-  # default covariance matrix
+  previousPlan <- future::plan()
+  future::plan("multisession")
+   # default covariance matrix
   suppressMessages(ans <- mcmcMh(
     target = target, initTheta = theta, nIterations = 100, adaptSizeStart = 10,
     adaptSizeCooling = 0.99, adaptShapeStart = 10, printInfoEvery = NULL
   ))
+  future::plan(previousPlan)
 
   expect_true(is.matrix(ans$trace))
   expect_true(is.numeric(ans$acceptanceRate))
