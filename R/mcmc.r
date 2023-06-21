@@ -269,7 +269,7 @@ mcmcMh <- function(
     # evaluate posterior of proposed parameter
     targetThetaPropose <- target(thetaPropose)
     # if return value is a vector, set logDensity and trace
-    if (is(targetThetaCurrent, "numeric")) {
+    if (is(targetThetaPropose, "numeric")) {
       targetThetaPropose <- list(
         logDensity = targetThetaPropose,
         trace = thetaPropose
