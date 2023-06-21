@@ -243,8 +243,8 @@ mcmcMh <- function(
           appendLF = FALSE
         )
       }
-      message(", state: ", (printNamedVector(targetThetaCurrent[["theta"]])))
-      message(", logdensity: ", targetThetaCurrent)
+      message(", state: ", printNamedVector(targetThetaCurrent[["trace"]]))
+      message(", logdensity: ", targetThetaCurrent[["logDensity"]])
     }
 
     # propose another parameter set
