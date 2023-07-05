@@ -8,8 +8,9 @@ Description: This package contains helper functions for model fitting and
     inference for infectious disease dynamics. It has been designed mainly as
     a teaching tool for a one-week course on the topic.
 Depends:
-    R (>= 4.0.0),
-    adaptivetau
+    R (>= 4.0.0)
+    adaptivetau,
+    deSolve
 Imports:
     ggplot2,
     tmvtnorm,
@@ -26,7 +27,6 @@ Suggests:
     here,
     testthat (>= 3.0.0),
     covr,
-    deSolve,
     knitr,
     rmarkdown,
     spelling,
