@@ -129,7 +129,7 @@ plotTraj <- function(traj = NULL, stateNames = NULL, data = NULL,
       message("Compute confidence intervals")
 
       trajCI <- split(dfTraj, dfTraj[c(timeColumn, "state")])
-      trajCI <- map(trajCI, function (df) {
+      trajCI <- map(trajCI, function(df) {
         tmp <- as.data.frame(
           t(quantile(df$value, prob = c(0.025, 0.25, 0.5, 0.75, 0.975)))
         )
@@ -352,7 +352,7 @@ plotSMC <- function(smc, fitmodel, theta, data = NULL, summary = TRUE,
   names(traj) <- seq_along(traj)
 
   traj <- map(traj, function(df) {
-    obs <- apply(df, 1, function (x) fitmodel$rPointObs(x, theta = theta))
+    obs <- apply(df, 1, function(x) fitmodel$rPointObs(x, theta = theta))
     trajObs <- left_join(df, obs, by = "time")
 
     return(trajObs)

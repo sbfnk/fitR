@@ -87,13 +87,13 @@ particleFilter <- function(fitmodel, theta, initState, data, nParticles,
     })
 
     # collect parallel jobs
-    currentStateParticles <- map(propagate, function (x) {
+    currentStateParticles <- map(propagate, function(x) {
       x$state
     })
-    weightParticles <- unlist(map(propagate, function (x) {
+    weightParticles <- unlist(map(propagate, function(x) {
       x$weight
     }))
-    trajParticles <- map(seq_along(propagate), function (j) {
+    trajParticles <- map(seq_along(propagate), function(j) {
       rbind(trajParticles[[j]], c(dataPoint["time"], propagate[[j]]$state))
     })
 

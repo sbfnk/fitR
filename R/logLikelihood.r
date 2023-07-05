@@ -137,7 +137,7 @@ rTrajObs <- function(fitmodel, theta, initState, times) {
   ## each row of traj. The parameter value theta as passed as
   ## extra argument to fitmodel$rPointObs
   obs <- split(traj, f = traj$time)
-  obs <- map(obs, function (x) {
+  obs <- map(obs, function(x) {
     data.frame(
       time = unique(x$time),
       obs = fitmodel$rPointObs(x, theta = theta)
