@@ -19,7 +19,7 @@ Imports:
     dplyr,
     emdbook,
     rlang,
-    purrr,
+    purrr (>= 1.0.0),
     tidyr,
     tidyselect
 Suggests:
