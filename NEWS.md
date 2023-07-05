@@ -1,3 +1,7 @@
+# fitR 0.2.1
+
+* Replace all instances of `\(x)` with `function(x)` for R 4.0 compatibility
+
 # fitR 0.2
 
 * Complete restyled package using `lintr`
