@@ -71,7 +71,7 @@ particleFilter <- function(fitmodel, theta, initState, data, nParticles,
     currentStateParticles <- currentStateParticles[indexResampled]
 
     # propagate particles (this for loop could be parallelized)
-    propagate <- map(currentStateParticles, \(currentState) {
+    propagate <- map(currentStateParticles, function (currentState) {
       # simulate from previous observation to current observation time
       traj <- fitmodel$simulate(
         theta = theta, initState = currentState, times = times
@@ -87,13 +87,13 @@ particleFilter <- function(fitmodel, theta, initState, data, nParticles,
     })
 
     # collect parallel jobs
-    currentStateParticles <- map(propagate, \(x) {
+    currentStateParticles <- map(propagate, function (x) {
       x$state
     })
-    weightParticles <- unlist(map(propagate, \(x) {
+    weightParticles <- unlist(map(propagate, function (x) {
       x$weight
     }))
-    trajParticles <- map(seq_along(propagate), \(j) {
+    trajParticles <- map(seq_along(propagate), function (j) {
       rbind(trajParticles[[j]], c(dataPoint["time"], propagate[[j]]$state))
     })
 
