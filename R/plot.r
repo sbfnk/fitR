@@ -105,7 +105,7 @@ plotTraj <- function(traj = NULL, stateNames = NULL, data = NULL,
         infected = eval(parse(text = paste(nonExtinct, collapse = "+")), traj)
       )
       dfPExt <- split(traj, f = traj[[timeColumn]])
-      dfPExt <- map(dfPExt, \(df) {
+      dfPExt <- map(dfPExt, function(df) {
         tmp <- data.frame(value = sum(df$infected == 0) / nrow(df))
         tmp[[timeColumn]] <- unique(df[[timeColumn]])
         return(tmp)
@@ -129,7 +129,7 @@ plotTraj <- function(traj = NULL, stateNames = NULL, data = NULL,
       message("Compute confidence intervals")
 
       trajCI <- split(dfTraj, dfTraj[c(timeColumn, "state")])
-      trajCI <- map(trajCI, \(df) {
+      trajCI <- map(trajCI, function (df) {
         tmp <- as.data.frame(
           t(quantile(df$value, prob = c(0.025, 0.25, 0.5, 0.75, 0.975)))
         )
@@ -352,7 +352,7 @@ plotSMC <- function(smc, fitmodel, theta, data = NULL, summary = TRUE,
   names(traj) <- seq_along(traj)
 
   traj <- map(traj, function(df) {
-    obs <- apply(df, 1, \(x) fitmodel$rPointObs(x, theta = theta))
+    obs <- apply(df, 1, function (x) fitmodel$rPointObs(x, theta = theta))
     trajObs <- left_join(df, obs, by = "time")
 
     return(trajObs)
@@ -446,7 +446,7 @@ plotPosteriorDensity <- function(trace, prior = NULL, colour = NULL,
 
   if (inherits_any(trace, c("mcmc.list", "list"))) {
     ## convert to data farmes
-    trace <- map(trace, \(x) {
+    trace <- map(trace, function(x) {
       as.data.frame(as.matrix(x))
     })
 
@@ -605,7 +605,7 @@ plotPosteriorFit <- function(trace, fitmodel, initState, data,
   if (inherits(trace, "mcmc")) {
     trace <- as.data.frame(trace)
   } else if (inherits(trace, "mcmc.list")) {
-    trace <- map(trace, \(x) {
+    trace <- map(trace, function(x) {
       as.data.frame(as.matrix(x))
     })
     trace <- bind_rows(trace)
